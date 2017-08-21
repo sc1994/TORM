@@ -4,7 +4,7 @@
 ## 依赖项
 ---
   1. Dapper (如果nuget没能还原此包需要手动安装下)
-  2. Configuration .net 程序集中引用
+  2. Configuration (.net 程序集中引用此依赖)
 ---
 
 ## 示例
@@ -17,4 +17,35 @@ sh.AddWhere(""); // 添加查询条件 具体参数见代码
 sh.AddJoin("","",....); // 添加多表链接 具体参数见代码 (复杂关系可以直接传入链接字符串)
 var data = sh.Select(); // 查询返回 IEnumerable<User>
 ```
+##### 分页
+```
+var sh = new SqlHelper<User>
+{
+  PageConfig = new PageConfig
+  {
+    // 分页配置信息
+  }
+};
+sh.AddShow("");
+.
+.
+.
+var data = sh.Select();
+var total = sh.Total;
+var sql = sh.SqlString.ToString();
+```
+##### 新增
+```
+var sh = new SqlHelper<User>(new User
+{
+  Name = "123",
+  Pwd = "456"
+});
+sh.Insert(); // 插入
+```
+
+
+
+
+
 
