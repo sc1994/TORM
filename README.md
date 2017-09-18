@@ -65,6 +65,20 @@ sh.Insert(); // 插入
 var sh = new SqlHelper<User>();
 sh.AddUpdate("Name","sc"); 
 sh.AddUpdate("Sex","先生"); // 添加更新内容
-sh.AddWhere("Id","666"); // 更新条件
+sh.AddWhere("Id",666); // 更新条件
 sh.Update(); // 仔细更新
+```
+##### 删除
+```
+var sh = new SqlHelper<User>();
+sh.AddWhere("Id",666); // 删除条件,可为多
+sh.Delete(); // 执行删除
+```
+```
+var sh = new SqlHelper<User>();
+sh.DeleteByPrimaryKey(666); // 依据主键删除
+```
+```
+var sh = new SqlHelper<User>();
+sh.Delete(" AND Id = 666 "); // 删除满足当前条件的数据
 ```
