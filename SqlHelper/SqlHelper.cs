@@ -157,12 +157,12 @@ namespace SqlHelper
         #endregion
 
 
-        #region AddWhere
+        #region Where
         /// <summary>
         /// 添加条件 (不支持参数化)
         /// </summary>
         /// <param name="where">适用于复杂的添加关系,如 AND (x=x OR a=a)</param>
-        public void AddWhere(string where)
+        public void Where(string where)
         {
             _whereStr.Add(where);
         }
@@ -172,7 +172,7 @@ namespace SqlHelper
         /// </summary>
         /// <param name="field">字段</param>
         /// <param name="value">值</param>
-        public void AddWhere(string field, object value)
+        public void Where(string field, object value)
         {
             _whereList.Add(new WhereDictionary
             {
@@ -189,7 +189,7 @@ namespace SqlHelper
         /// <param name="field">字段</param>
         /// <param name="value">值</param>
         /// <param name="relation">字段以及值之间的关系</param>
-        public void AddWhere(string field, object value, RelationEnum relation)
+        public void Where(string field, object value, RelationEnum relation)
         {
             _whereList.Add(new WhereDictionary
             {
@@ -207,7 +207,7 @@ namespace SqlHelper
         /// <param name="value">值</param>
         /// <param name="relation">字段以及值之间的关系</param>
         /// <param name="coexist">此条件相对于之前条件之间的关系</param>
-        public void AddWhere(string field, object value, RelationEnum relation, CoexistEnum coexist)
+        public void Where(string field, object value, RelationEnum relation, CoexistEnum coexist)
         {
             _whereList.Add(new WhereDictionary
             {
@@ -223,7 +223,7 @@ namespace SqlHelper
         /// </summary>
         /// <param name="field">字段</param>
         /// <param name="value">值</param>
-        public void AddWhere(Enum field, object value)
+        public void Where(Enum field, object value)
         {
             _whereList.Add(new WhereDictionary
             {
@@ -240,7 +240,7 @@ namespace SqlHelper
         /// <param name="field">字段</param>
         /// <param name="value">值</param>
         /// <param name="relation">字段以及值之间的关系</param>
-        public void AddWhere(Enum field, object value, RelationEnum relation)
+        public void Where(Enum field, object value, RelationEnum relation)
         {
             _whereList.Add(new WhereDictionary
             {
@@ -258,7 +258,7 @@ namespace SqlHelper
         /// <param name="value">值</param>
         /// <param name="relation">字段以及值之间的关系</param>
         /// <param name="coexist">此条件相对于之前条件之间的关系</param>
-        public void AddWhere(Enum field, object value, RelationEnum relation, CoexistEnum coexist)
+        public void Where(Enum field, object value, RelationEnum relation, CoexistEnum coexist)
         {
             _whereList.Add(new WhereDictionary
             {
@@ -410,7 +410,7 @@ namespace SqlHelper
         }
 
         /// <summary>
-        /// 批量删除 (必须:AddWhere)
+        /// 批量删除 (必须:Where)
         /// </summary>
         /// <returns></returns>
         public int Delete()
@@ -432,7 +432,7 @@ namespace SqlHelper
         /// 添加显示字段
         /// </summary>
         /// <param name="shows"></param>
-        public void AddShow(string shows)
+        public void Show(string shows)
         {
             _showStr.Add(shows);
         }
@@ -441,7 +441,7 @@ namespace SqlHelper
         /// 添加显示字段
         /// </summary>
         /// <param name="show"></param>
-        public void AddShow(Enum show)
+        public void Show(Enum show)
         {
             _showStr.Add(show.ToString());
         }
