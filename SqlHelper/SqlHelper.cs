@@ -14,6 +14,7 @@ namespace SqlHelper
     /// <typeparam name="T"></typeparam>
     public class SqlHelper<T> where T : class
     {
+        #region 私有变量
         private readonly T _model = Activator.CreateInstance<T>();
         private readonly string _tableName;
         private readonly Dictionary<string, object> _updateList = new Dictionary<string, object>();
@@ -26,7 +27,46 @@ namespace SqlHelper
         private readonly List<string> _sortStr = new List<string>();
         private readonly Dictionary<string, SortEnum> _sortList = new Dictionary<string, SortEnum>();
         private readonly List<string> _groupStr = new List<string>();
-        private readonly Type _properties;
+        private readonly Type _properties; 
+        #endregion
+
+        #region 共有变量
+        /// <summary>
+        /// 获取自增键
+        /// </summary>
+        public string IdentityKey { get; }
+
+        /// <summary>
+        /// 获取主键
+        /// </summary>
+        public string PrimaryKey { get; }
+
+        /// <summary>
+        /// 获取或设置 top 值
+        /// </summary>
+        public int Top { get; set; } = 0;
+
+        /// <summary>
+        /// 需要分页时的配置
+        /// </summary>
+        public PageConfig PageConfig { get; set; } = new PageConfig();
+
+        /// <summary>
+        /// 获取分页数据总数
+        /// </summary>
+        public int Total { get; private set; }
+
+        /// <summary>
+        /// 方便与排查异常
+        /// </summary>
+        public StringBuilder SqlString { get; private set; } = new StringBuilder();
+
+        /// <summary>
+        /// 主表的别名 使用到AddJoin时,必选设置此属性
+        /// </summary>
+        public string Alia { get; set; } = string.Empty;
+        #endregion
+
 
         #region 构造函数
         /// <summary>
@@ -113,44 +153,8 @@ namespace SqlHelper
             PrimaryKey = primaryKey;
             IdentityKey = identityKey;
             _tableName = $"{ConfigurationManager.ConnectionStrings["DATABASE"].ConnectionString}.dbo.[{tableName}]";
-        }      
+        }
         #endregion
-
-
-        /// <summary>
-        /// 获取自增键
-        /// </summary>
-        public string IdentityKey { get; }
-
-        /// <summary>
-        /// 获取主键
-        /// </summary>
-        public string PrimaryKey { get; }
-
-        /// <summary>
-        /// 获取或设置 top 值
-        /// </summary>
-        public int Top { get; set; } = 0;
-
-        /// <summary>
-        /// 需要分页时的配置
-        /// </summary>
-        public PageConfig PageConfig { get; set; } = new PageConfig();
-
-        /// <summary>
-        /// 获取分页数据总数
-        /// </summary>
-        public int Total { get; private set; }
-
-        /// <summary>
-        /// 方便与排查异常
-        /// </summary>
-        public StringBuilder SqlString { get; private set; } = new StringBuilder();
-
-        /// <summary>
-        /// 主表的别名 使用到AddJoin时,必选设置此属性
-        /// </summary>
-        public string Alia { get; set; } = string.Empty;
 
 
         #region AddWhere
@@ -867,233 +871,5 @@ namespace SqlHelper
             return string.IsNullOrEmpty(str.Trim());
         }
         #endregion
-
     }
-
-    #region 分页配置
-    /// <summary>
-    /// 分页配置
-    /// </summary>
-    public class PageConfig
-    {
-        /// <summary>
-        /// 当前页
-        /// </summary>
-        public int PageIndex { get; set; } = 0;
-
-        /// <summary>
-        /// 页大小
-        /// </summary>
-        public int PageSize { get; set; } = 0;
-
-        /// <summary>
-        /// 分页关键排序
-        /// </summary>
-        public string PageSortField { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 排序类型
-        /// </summary>
-        public SortEnum SortEnum { get; set; }
-
-        /// <summary>
-        /// 多排序或者复杂排序用此字段
-        /// </summary>
-        public string PageSortSql { get; set; } = string.Empty;
-    }
-    #endregion
-
-    class WhereDictionary
-    {
-        public string Field { get; set; } = string.Empty;
-        public object Value { get; set; } = new object();
-        public RelationEnum Relation { get; set; }
-        public CoexistEnum Coexist { get; set; }
-    }
-
-    class SqlAndParameter
-    {
-        public string SqlStr { get; set; } = string.Empty;
-        public DynamicParameters Parameter { get; set; } = new DynamicParameters();
-    }
-
-    class JoinDictionary
-    {
-        public JoinEnum RelationJoin { get; set; }
-        public string ThatTable { get; set; } = string.Empty;
-        public string ThatAlia { get; set; } = string.Empty;
-        public string RelationField { get; set; } = string.Empty;
-        public string ThatRelationField { get; set; } = string.Empty;
-        public string Where { get; set; } = string.Empty;
-    }
-
-    #region 键值关系
-    /// <summary>
-    /// 键值关系
-    /// </summary>
-    public enum RelationEnum
-    {
-        /// <summary>
-        /// 等于
-        /// </summary>
-        [Description("=")]
-        Equal,
-        /// <summary>
-        /// 不等于
-        /// </summary>
-        [Description("<>")]
-        NotEqual,
-        /// <summary>
-        /// in
-        /// </summary>
-        [Description("IN")]
-        In,
-        /// <summary>
-        /// NotIn
-        /// </summary>
-        [Description("NOT IN")]
-        NotIn,
-        /// <summary>
-        /// 大于
-        /// </summary>
-        [Description(">")]
-        Greater,
-        /// <summary>
-        /// 大于等于
-        /// </summary>
-        [Description(">=")]
-        GreaterEqual,
-        /// <summary>
-        /// 小于
-        /// </summary>
-        [Description("<")]
-        Less,
-        /// <summary>
-        /// 小于等于
-        /// </summary>
-        [Description("<=")]
-        LessEqual,
-        /// <summary>
-        /// 匹配
-        /// </summary>
-        [Description("LIKE")]
-        Like,
-        /// <summary>
-        /// 右匹配
-        /// </summary>
-        [Description("LIKE")]
-        RightLike,
-        /// <summary>
-        /// 左匹配
-        /// </summary>
-        [Description("LIKE")]
-        LeftLike,
-        /// <summary>
-        /// 是
-        /// </summary>
-        [Description("IS")]
-        IsNull,
-        /// <summary>
-        /// 不是
-        /// </summary>
-        [Description("IS NOT NULL")]
-        IsNotNull
-    }
-    #endregion
-
-    #region 向前条件的并存关系
-    /// <summary>
-    /// 向前条件的并存关系
-    /// </summary>
-    public enum CoexistEnum
-    {
-        /// <summary>
-        /// AND 关系
-        /// </summary>
-        [Description("AND")]
-        And,
-        /// <summary>
-        /// OR 关系
-        /// </summary>
-        [Description("OR")]
-        Or
-    }
-    #endregion
-
-    #region 排序关系
-    /// <summary>
-    /// 排序关系
-    /// </summary>
-    public enum SortEnum
-    {
-        /// <summary>
-        /// 正序
-        /// </summary>
-        [Description("ASC")]
-        Asc,
-        /// <summary>
-        /// 倒序
-        /// </summary>
-        [Description("DESC")]
-        Desc,
-    }
-    #endregion
-
-    #region 表链接 关系
-    /// <summary>
-    /// 表链接 关系
-    /// </summary>
-    public enum JoinEnum
-    {
-        /// <summary>
-        /// 链接
-        /// </summary>
-        [Description("JOIN")]
-        Join,
-        /// <summary>
-        /// 链接
-        /// </summary>
-        [Description("INNER JOIN")]
-        InnerJoin,
-        /// <summary>
-        /// 左链接
-        /// </summary>
-        [Description("LEFT JOIN")]
-        LeftJoin,
-        /// <summary>
-        /// 有链接
-        /// </summary>
-        [Description("RIGHT JOIN")]
-        RightJoin
-    }
-    #endregion
-
-    #region 错误枚举
-    /// <summary>
-    /// 错误枚举
-    /// </summary>
-    public enum ErrorEnum
-    {
-        /// <summary>
-        /// 当前表结构缺少PrimaryKey
-        /// </summary>
-        [Description("当前表结构缺少PrimaryKey")]
-        E1000,
-        /// <summary>
-        /// 当前操作必须传入条件限制
-        /// </summary>
-        [Description("当前操作必须传入条件限制")]
-        E1001,
-        /// <summary>
-        /// 当前操作必须传入UPDATE字段和值
-        /// </summary>
-        [Description("当前操作必须传入UPDATE字段和值")]
-        E1002,
-        /// <summary>
-        /// 当您尝试 JOIN 时,请先设置 Alia 值
-        /// </summary>
-        [Description("当您尝试 JOIN 时,请先设置 Alia 值")]
-        E1003
-    }
-    #endregion
 }
