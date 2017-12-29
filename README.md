@@ -82,3 +82,10 @@ sh.DeleteByPrimaryKey(666); // 依据主键删除
 var sh = new SqlHelper<User>();
 sh.Delete(" AND Id = 666 "); // 删除满足当前条件的数据
 ```
+### 开坑
+- [ ] 代码拆分
+- [ ] 支持多个地址链接
+- [ ] 支持多个库的操作
+- [ ] 精简 Method 命名
+- [ ] 配置显示字段的方法重载 Expression 参数
+
