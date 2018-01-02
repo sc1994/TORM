@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Enum.cs" />
+    <Compile Include="Model\Init.cs" />
     <Compile Include="Model\JoinDictionary.cs" />
     <Compile Include="Model\PageConfig.cs" />
     <Compile Include="DbClient.cs" />
@@ -53,6 +54,9 @@
     <Compile Include="Model\SqlAndParameter.cs" />
     <Compile Include="SqlHelper.cs" />
     <Compile Include="Model\WhereDictionary.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SqlHelper.Private.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
