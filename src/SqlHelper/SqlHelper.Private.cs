@@ -74,9 +74,8 @@ namespace SqlHelper
             {
                 return "";
             }
-
         }
-
+        
         private string GetPrimaryKey()
         {
             var properties = _properties.GetProperties();
@@ -97,7 +96,15 @@ namespace SqlHelper
         }
 
         private bool IsNaN(object value)
-            => !(value is int || value is long || value is double || value is float || value is byte || value is decimal || value is short || value is ushort || value is sbyte);
+            => !(value is int 
+            || value is long 
+            || value is double 
+            || value is float 
+            || value is byte 
+            || value is decimal 
+            || value is short 
+            || value is ushort 
+            || value is sbyte);
 
         private StringBuilder RemoveEndNumber(StringBuilder sbStr, int number)
         {
