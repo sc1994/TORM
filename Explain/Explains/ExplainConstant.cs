@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace Explain
 {
@@ -9,9 +10,9 @@ namespace Explain
     /// </summary>
     public class ExplainConstant : BaseExplain<ConstantExpression>
     {
-        public override void Explain(ConstantExpression exp)
+        public override void Explain(ConstantExpression exp, StringBuilder info)
         {
-            Console.WriteLine(exp.Value);
+            info.Append(exp.Value);
         }
     }
 }

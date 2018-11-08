@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
+using Explain;
 
 namespace MSORM
 {
     public class MSORM<T> : IMSORM<T>
     {
+        private List<string> _show;
+
         public bool Exist()
         {
             throw new NotImplementedException();
@@ -28,6 +30,16 @@ namespace MSORM
         }
 
         public IEnumerable<T> Find()
+        {
+            throw new NotImplementedException();
+        }
+
+        public (IEnumerable<T> data, int total) Page(int index, int size)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
             throw new NotImplementedException();
         }
@@ -119,6 +131,7 @@ namespace MSORM
 
         public ISelect<T> Select<TValue>(Expression<Func<T, TValue>> exp)
         {
+            ExplainTool.Explain(exp);
             throw new NotImplementedException();
         }
 
@@ -151,6 +164,28 @@ namespace MSORM
         {
             throw new NotImplementedException();
         }
+
+        public int Update(int top = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<UpdateRecord> Update(int top = 0, bool record = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddSelect(string field, string alias = null)
+        {
+            if (alias != null)
+            {
+                _show.Add($"\r\n{field} AS {alias}");
+            }
+            else
+            {
+                _show.Add($"\r\n{field}");
+            }
+        }
     }
 
     public interface IMSORM<T> : ISelect<T>
@@ -176,7 +211,7 @@ namespace MSORM
         IJoin<T> JoinF<TFJoin>(Expression<Func<T, TFJoin, bool>> exp);
     }
 
-    public interface IWhere<T> : IOrder<T>
+    public interface IWhere<T> : IOrder<T>, IUpdate
     {
         IWhere<T> Where(params Expression<Func<T, bool>>[] exps);
         IWhere<T> Where(Expression<Func<T, bool[]>> exp);
@@ -201,10 +236,24 @@ namespace MSORM
         TOther First<TOther>();
         IEnumerable<TOther> Find<TOther>();
         IEnumerable<T> Find();
-        (IEnumerable<T> data, int total) Page();
-        (IEnumerable<TOther> data, int total) Page<TOther>();
+        (IEnumerable<T> data, int total) Page(int index, int size);
+        (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size);
     }
 
+    public interface IUpdate
+    {
+        int Update(int top = 0);
+        List<UpdateRecord> Update(int top = 0, bool record = false);
+    }
+
+    public class UpdateRecord
+    {
+        public string Field { get; set; }
+
+        public object Old { get; set; }
+
+        public object New { get; set; }
+    }
 
     public class Test
     {
@@ -225,7 +274,7 @@ namespace MSORM
                 .In(x => x.Id, new List<long> { 1, 2, 34, 5 })
                 .LikeF(x => x.Name, "s")
                 .OrderA(x => x.Name, x => x.Id)
-                .Page();
+                .Page(1, 3);
 
             var a = data.data;
             var b = data.total;

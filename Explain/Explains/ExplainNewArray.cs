@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Text;
 
 namespace Explain
 {
@@ -8,11 +9,11 @@ namespace Explain
     /// </summary>
     public class ExplainNewArray : BaseExplain<NewArrayExpression>
     {
-        public override void Explain(NewArrayExpression exp)
+        public override void Explain(NewArrayExpression exp, StringBuilder info)
         {
             foreach (var item in exp.Expressions) // 循环解析表达式
             {
-                ExplainTool.Explain(item);
+                ExplainTool.Explain(item, info);
             }
         }
     }

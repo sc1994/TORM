@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace Explain
 {
@@ -9,10 +10,10 @@ namespace Explain
     /// </summary>
     public class ExplainMethodCall : BaseExplain<MethodCallExpression>
     {
-        public override void Explain(MethodCallExpression exp)
+        public override void Explain(MethodCallExpression exp, StringBuilder info)
         {
             // 计算方法返回的结果
-            Console.WriteLine(Expression.Lambda(exp).Compile().DynamicInvoke());
+            info.Append(Expression.Lambda(exp).Compile().DynamicInvoke());
         }
     }
 }

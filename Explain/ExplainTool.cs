@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace Explain
 {
@@ -29,12 +31,18 @@ namespace Explain
         /// 解释器
         /// </summary>
         /// <param name="exp"></param>
-        public static void Explain(Expression exp)
+        /// <param name="info"></param>
+        public static void Explain(Expression exp, StringBuilder info)
         {
             if (exp != null)
             {
-                GetPort(exp).Explain(exp);
+                GetPort(exp).Explain(exp, info);
             }
+        }
+
+        public static void Log(string module, string info)
+        {
+            File.AppendAllLines("d:/1.txt", new[] { $"\r\n\r\n------{DateTime.Now:s}--{module}------\r\ninfo：{info}\r\n------{DateTime.Now:s}--{module}------\r\n" });
         }
 
         /// <summary>
@@ -129,6 +137,14 @@ namespace Explain
                 default:
                     throw new Exception(nameof(exp));
             }
+        }
+    }
+
+    public static class Extend
+    {
+        public static void Appinfo(this StringBuilder that, string info)
+        {
+            that.Append(info + "!");
         }
     }
 }

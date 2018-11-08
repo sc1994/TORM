@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace Demo
 {
@@ -9,11 +10,11 @@ namespace Demo
         {
             Console.WriteLine("Hello World!");
 
-            var name = "123";
-            Expression<Func<Model, bool>> exp = x => x.Name == "123";
+            Expression<Func<Model, bool>> exp = x => x.Date == DateTime.Today;
+            var info = new StringBuilder();
+            Explain.ExplainTool.Explain(exp, info);
 
-            Explain.ExplainTool.Explain(exp);
-
+            Console.WriteLine(info.ToString());
             Console.ReadLine();
         }
     }
@@ -21,5 +22,7 @@ namespace Demo
     class Model
     {
         public string Name { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }
