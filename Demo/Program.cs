@@ -40,8 +40,8 @@ namespace Demo
             //ExplainTool.Explain(exp2);
 
             //Expression<Func<Model, []object>> exp5 =x=> ;
-            //Expression<Func<Model, object[]>> exp5 = x => new object[] { x.Name, x.Birthday };
-            var a = new [] { "1", "2" };
+            Expression<Func<Model, bool>> exp5 = x => x.Birthday ==  DateTime.Now.Date;
+            ExplainTool.Explain(exp5);
             Console.ReadLine();
         }
 
