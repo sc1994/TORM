@@ -178,7 +178,6 @@ namespace MSORM
 
     public interface IWhere<T> : IOrder<T>
     {
-        IWhere<T> Where(Expression<Func<T, bool>> exp);
         IWhere<T> Where(params Expression<Func<T, bool>>[] exps);
         IWhere<T> Where(Expression<Func<T, bool[]>> exp);
         IWhere<T> In<TValue>(Expression<Func<T, TValue>> exp, IEnumerable<TValue> values);
