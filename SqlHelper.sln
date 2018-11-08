@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlHelper", "src\SqlHelper\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSORM", "MSORM\MSORM.csproj", "{7EBED340-01C1-4B79-896A-3696DCC21861}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explain", "Explain\Explain.csproj", "{F947C2AC-480D-4042-A475-52C25193C903}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7EBED340-01C1-4B79-896A-3696DCC21861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EBED340-01C1-4B79-896A-3696DCC21861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EBED340-01C1-4B79-896A-3696DCC21861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F947C2AC-480D-4042-A475-52C25193C903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F947C2AC-480D-4042-A475-52C25193C903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F947C2AC-480D-4042-A475-52C25193C903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F947C2AC-480D-4042-A475-52C25193C903}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
