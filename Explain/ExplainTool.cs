@@ -142,7 +142,7 @@ namespace Explain
 
     public static class Extend
     {
-        public static void Appinfo(this StringBuilder that, string info)
+        public static void Appinfo(this StringBuilder that, object info)
         {
             that.Append(info + "!");
         }

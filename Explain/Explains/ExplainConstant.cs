@@ -12,7 +12,7 @@ namespace Explain
     {
         public override void Explain(ConstantExpression exp, StringBuilder info)
         {
-            info.Append(exp.Value);
+            info.Appinfo(exp.Value);
         }
     }
 }

@@ -10,14 +10,14 @@ namespace Explain
         {
             if (exp.Left is MemberExpression member) // 树的左边直接解析
             {
-                info.Append(member.Member.Name);
+                info.Appinfo(member.Member.Name);
             }
             else
             {
                 throw new Exception("输入的表达式左边必须是字段");
             }
 
-            info.Append(exp.NodeType.ToString()); // 比较符
+            info.Appinfo(exp.NodeType.ToString()); // 比较符
             ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
         }
     }

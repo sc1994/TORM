@@ -10,7 +10,7 @@ namespace Demo
         {
             Console.WriteLine("Hello World!");
 
-            Expression<Func<Model, bool>> exp = x => x.Date == DateTime.Today;
+            Expression<Func<Model, string[]>> exp = x => new[] { x.Name, x.Name1, x.Name2 };
             var info = new StringBuilder();
             Explain.ExplainTool.Explain(exp, info);
 
@@ -23,6 +23,8 @@ namespace Demo
     {
         public string Name { get; set; }
 
+        public string Name1 { get; set; }
+        public string Name2 { get; set; }
         public DateTime Date { get; set; }
     }
 }

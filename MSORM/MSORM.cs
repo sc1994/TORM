@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Explain;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Explain;
+using System.Text;
 
 namespace MSORM
 {
@@ -131,8 +132,8 @@ namespace MSORM
 
         public ISelect<T> Select<TValue>(Expression<Func<T, TValue>> exp)
         {
-            ExplainTool.Explain(exp);
-            throw new NotImplementedException();
+            //// todo xxxxxxxxxxxx
+            // return this;
         }
 
         public ISelect<T> Select<TValue>(params Expression<Func<T, TValue>>[] exps)

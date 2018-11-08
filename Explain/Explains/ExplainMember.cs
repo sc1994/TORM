@@ -17,18 +17,18 @@ namespace Explain
                 if (exp.Expression is ConstantExpression constant)
                 {
                     // 如果是变量直接取值
-                    info.Append(constant.Value.GetType().InvokeMember(exp.Member.Name, BindingFlags.GetField, null, constant.Value, null));
+                    info.Appinfo(constant.Value.GetType().InvokeMember(exp.Member.Name, BindingFlags.GetField, null, constant.Value, null));
                 }
                 else
                 {
-                    info.Append(exp.Member.Name); // 如果树的右边也是个表达式 比如 Join 方法
+                    info.Appinfo(exp.Member.Name); // 如果树的右边也是个表达式 比如 Join 方法
                 }
             }
             else
             {
                 ExplainTool.Log("MemberExpression", $"{{\r\n  exp.Expression == null,  {exp.Member}\r\n}}");
                 // 目前只有datetime.now之类的右边值会走到这，考虑标记为唯一差异化对待datetime
-                info.Append(exp.Member);
+                info.Appinfo(exp.Member);
             }
         }
     }

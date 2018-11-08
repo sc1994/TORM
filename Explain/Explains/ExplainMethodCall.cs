@@ -13,7 +13,7 @@ namespace Explain
         public override void Explain(MethodCallExpression exp, StringBuilder info)
         {
             // 计算方法返回的结果
-            info.Append(Expression.Lambda(exp).Compile().DynamicInvoke());
+            info.Appinfo(Expression.Lambda(exp).Compile().DynamicInvoke());
         }
     }
 }
