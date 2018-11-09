@@ -77,6 +77,12 @@ namespace ORM
         (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size);
     }
 
+    public interface ISet<T>
+    {
+        ISet<T> Set<TValue>(Expression<Func<T, TValue>> exp, string value);
+        ISet<T> Set<TValue>(params (Expression<Func<T, object>> exp, string value)[] exps);
+    }
+
     public interface IUpdate
     {
         int Update(int top = 0);
