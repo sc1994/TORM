@@ -19,7 +19,8 @@ namespace Explain
             "ConstantExpression",
             "MethodCallExpression",
             "UnaryExpression",
-            "NewArrayExpression"
+            "NewArrayExpression",
+            "ListInitExpression"
         };
 
         /// <summary>

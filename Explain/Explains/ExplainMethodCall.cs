@@ -12,8 +12,20 @@ namespace Explain
     {
         public override void Explain(MethodCallExpression exp, StringBuilder info)
         {
-            // 计算方法返回的结果
-            info.Appinfo(Expression.Lambda(exp).Compile().DynamicInvoke());
+            if (exp.Method.DeclaringType != null && exp.Method.DeclaringType.FullName == "ORM.ORMTool")
+            {
+                foreach (var item in exp.Arguments)
+                {
+                    ExplainTool.Explain(item, info);
+                }
+                info.Appinfo(exp.Method.Name);
+                // todo 
+
+            }
+            else
+            {
+                info.Appinfo(Expression.Lambda(exp).Compile().DynamicInvoke());
+            }
         }
     }
 }
