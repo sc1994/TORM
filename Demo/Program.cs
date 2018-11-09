@@ -10,7 +10,10 @@ namespace Demo
         {
             Console.WriteLine("Hello World!");
 
-            Expression<Func<Model, string[]>> exp = x => new[] { x.Name, x.Name1, x.Name2 };
+            Expression<Func<Model, bool>> exp = x =>
+
+                (x.Date == DateTime.Now || x.Name == "1") && x.Name2 == "3" && (x.Date == DateTime.Now || x.Name == "1" || x.Name2 == "3");
+
             var info = new StringBuilder();
             Explain.ExplainTool.Explain(exp, info);
 

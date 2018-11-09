@@ -132,8 +132,7 @@ namespace MSORM
 
         public ISelect<T> Select<TValue>(Expression<Func<T, TValue>> exp)
         {
-            //// todo xxxxxxxxxxxx
-            // return this;
+            
         }
 
         public ISelect<T> Select<TValue>(params Expression<Func<T, TValue>>[] exps)
