@@ -5,6 +5,6 @@ namespace Explain
 {
     public interface IExplain
     {
-        void Explain(Expression exp, StringBuilder info);
+        void Explain(Expression exp, Content info);
     }
 }

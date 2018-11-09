@@ -10,9 +10,9 @@ namespace Explain
     /// </summary>
     public class ExplainConstant : BaseExplain<ConstantExpression>
     {
-        public override void Explain(ConstantExpression exp, StringBuilder info)
+        public override void Explain(ConstantExpression exp, Content info)
         {
-            info.Appinfo(exp.Value);
+            info.Append(exp.Value);
         }
     }
 }

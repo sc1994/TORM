@@ -16,7 +16,7 @@ namespace ORM
 
     public static class ORMTool
     {
-        public static bool In<TValue>(this object field, IList<TValue> values)
+        public static bool In<TValue>(this object field, IEnumerable<TValue> values)
         {
             return true;
         }

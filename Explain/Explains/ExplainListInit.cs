@@ -6,7 +6,7 @@ namespace Explain
 {
     class ExplainListInit : BaseExplain<ListInitExpression>
     {
-        public override void Explain(ListInitExpression exp, StringBuilder info)
+        public override void Explain(ListInitExpression exp, Content info)
         {
             
         }

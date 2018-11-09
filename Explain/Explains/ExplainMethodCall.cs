@@ -10,21 +10,17 @@ namespace Explain
     /// </summary>
     public class ExplainMethodCall : BaseExplain<MethodCallExpression>
     {
-        public override void Explain(MethodCallExpression exp, StringBuilder info)
+        public override void Explain(MethodCallExpression exp, Content info)
         {
             if (exp.Method.DeclaringType != null && exp.Method.DeclaringType.FullName == "ORM.ORMTool")
             {
-                foreach (var item in exp.Arguments)
-                {
-                    ExplainTool.Explain(item, info);
-                }
-                info.Appinfo(exp.Method.Name);
-                // todo 
-
+                ExplainTool.Explain(exp.Arguments[0], info);
+                info.Append(exp.Method);
+                ExplainTool.Explain(exp.Arguments[1], info);
             }
             else
             {
-                info.Appinfo(Expression.Lambda(exp).Compile().DynamicInvoke());
+                info.Append(Expression.Lambda(exp).Compile().DynamicInvoke());
             }
         }
     }

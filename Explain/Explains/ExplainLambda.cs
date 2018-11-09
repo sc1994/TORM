@@ -5,7 +5,7 @@ namespace Explain
 {
     public class ExplainLambda : BaseExplain<LambdaExpression>
     {
-        public override void Explain(LambdaExpression exp, StringBuilder info)
+        public override void Explain(LambdaExpression exp, Content info)
         {
             ExplainTool.Explain(exp.Body, info);
         }

@@ -33,7 +33,7 @@ namespace Explain
         /// </summary>
         /// <param name="exp"></param>
         /// <param name="info"></param>
-        public static void Explain(Expression exp, StringBuilder info)
+        public static void Explain(Expression exp, Content info)
         {
             if (exp != null)
             {
@@ -141,11 +141,5 @@ namespace Explain
         }
     }
 
-    public static class Extend
-    {
-        public static void Appinfo(this StringBuilder that, object info)
-        {
-            that.Append(info + "!");
-        }
-    }
+
 }

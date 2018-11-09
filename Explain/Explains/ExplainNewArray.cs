@@ -9,7 +9,7 @@ namespace Explain
     /// </summary>
     public class ExplainNewArray : BaseExplain<NewArrayExpression>
     {
-        public override void Explain(NewArrayExpression exp, StringBuilder info)
+        public override void Explain(NewArrayExpression exp, Content info)
         {
             foreach (var item in exp.Expressions) // 循环解析表达式
             {

@@ -5,31 +5,29 @@ namespace Explain
 {
     public class ExplainBinary : BaseExplain<BinaryExpression>
     {
-        public override void Explain(BinaryExpression exp, StringBuilder info)
+        public override void Explain(BinaryExpression exp, Content info)
         {
             if (ExistsBracket(exp.Left))
             {
-                info.Append("(");
+                info.AppBracket("(");
                 ExplainTool.Explain(exp.Left, info);
-                info.Append(")");
+                info.AppBracket(")");
             }
             else
             {
                 ExplainTool.Explain(exp.Left, info);
             }
-            info.Appinfo(exp.NodeType.ToString()); // 比较符
+            info.Append(exp.NodeType); // 比较符
             if (ExistsBracket(exp.Left))
             {
-                info.Append("(");
+                info.AppBracket("(");
                 ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
-                info.Append(")");
+                info.AppBracket(")");
             }
             else
             {
                 ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
             }
-
-
         }
 
         /// <summary>
