@@ -25,7 +25,6 @@ namespace Demo
     class Model
     {
         public string Name { get; set; }
-
         public string Name1 { get; set; }
         public string Name2 { get; set; }
         public DateTime Date { get; set; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace MSORM
+namespace ORM
 {
     public class MSORM<T> : IMSORM<T>
     {
@@ -132,7 +132,7 @@ namespace MSORM
 
         public ISelect<T> Select<TValue>(Expression<Func<T, TValue>> exp)
         {
-            
+            throw new NotImplementedException();
         }
 
         public ISelect<T> Select<TValue>(params Expression<Func<T, TValue>>[] exps)

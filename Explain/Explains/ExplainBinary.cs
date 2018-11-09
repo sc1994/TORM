@@ -9,21 +9,20 @@ namespace Explain
         {
             if (ExistsBracket(exp.Left))
             {
-                info.Appinfo("(");
+                info.Append("(");
                 ExplainTool.Explain(exp.Left, info);
-                info.Appinfo(")");
+                info.Append(")");
             }
             else
             {
                 ExplainTool.Explain(exp.Left, info);
             }
-
             info.Appinfo(exp.NodeType.ToString()); // 比较符
             if (ExistsBracket(exp.Left))
             {
-                info.Appinfo("(");
+                info.Append("(");
                 ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
-                info.Appinfo(")");
+                info.Append(")");
             }
             else
             {
