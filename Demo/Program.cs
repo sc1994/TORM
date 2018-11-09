@@ -13,7 +13,7 @@ namespace Demo
             Expression<Func<Model, bool>> exp = x =>
 
                 (x.Date == DateTime.Now || x.Name == "1") && x.Name2 == "3" && (x.Date == DateTime.Now || x.Name == "1" || x.Name2 == "3");
-
+            // todo 目前的结构不能支持括号改变优先级的写法。可以通过改变api的结构控制执行的优先级
             var b = DateTime.Now;
 
             //Expression<Func<Model, bool>> exp = x => x.Name.In(new List<string> { "1", "2", "3" }.Where(w => Convert.ToInt32(w) > 1));
@@ -27,7 +27,7 @@ namespace Demo
             Console.Write("WHERE 1=1");
             foreach (var item in info.Info)
             {
-                Console.Write($" {item.Prior} {string.Join("", item.Lb)}{item.Field} {item.Type} Value{string.Join("", item.Rb)}");
+                Console.Write($" {item.Prior} {item.Field} {item.Type} Value");
             }
             Console.ReadLine();
         }

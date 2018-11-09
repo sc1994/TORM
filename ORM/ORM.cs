@@ -6,17 +6,29 @@ namespace ORM
 {
     //public class ORM<T> : IORM<T>
     //{
-
+    // todo 尝试收集全部表达式，分组并发解析，提高解析速度
     //}
 
     public interface IORM<T> : ISelect<T>
     {
-
+        // todo 考虑使用高级点的办法初始化实体指定泛型，而不是单纯的new
     }
 
     public static class ORMTool
     {
         public static bool In<TValue>(this object field, IEnumerable<TValue> values)
+        {
+            return true;
+        }
+        public static bool LikeF<TValue>(this string field, string value)
+        {
+            return true;
+        }
+        public static bool LikeR<TValue>(this string field, string value)
+        {
+            return true;
+        }
+        public static bool LikeL<TValue>(this string field, string value)
         {
             return true;
         }
@@ -43,13 +55,8 @@ namespace ORM
 
     public interface IWhere<T> : IOrder<T>, IUpdate
     {
-        IWhere<T> Where(params Expression<Func<T, bool>>[] exps);
-        IWhere<T> Where(Expression<Func<T, bool[]>> exp);
-        IWhere<T> In<TValue>(Expression<Func<T, TValue>> exp, IEnumerable<TValue> values);
-        IWhere<T> NotIn<TValue>(Expression<Func<T, TValue>> exp, IEnumerable<TValue> values);
-        IWhere<T> LikeF<TValue>(Expression<Func<T, TValue>> exp, TValue value);
-        IWhere<T> LikeL<TValue>(Expression<Func<T, TValue>> exp, TValue value);
-        IWhere<T> LikeR<TValue>(Expression<Func<T, TValue>> exp, TValue value);
+        IWhere<T> And(Expression<Func<T, bool>> exp);
+        IWhere<T> Or(Expression<Func<T, bool>> exp);
     }
 
     public interface IOrder<T> : IMethod<T>

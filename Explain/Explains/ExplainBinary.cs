@@ -7,27 +7,13 @@ namespace Explain
     {
         public override void Explain(BinaryExpression exp, Content info)
         {
-            if (ExistsBracket(exp.Left))
+            if (ExistsBracket(exp.Left) || ExistsBracket(exp.Right))
             {
-                info.AppBracket("(");
-                ExplainTool.Explain(exp.Left, info);
-                info.AppBracket(")");
+                throw new System.Exception("表达式中不能支持括号的表示方式，如果需要 (a=1 or b=2) 的代码方式请使用 or 的 api。");
             }
-            else
-            {
-                ExplainTool.Explain(exp.Left, info);
-            }
+            ExplainTool.Explain(exp.Left, info);
             info.Append(exp.NodeType); // 比较符
-            if (ExistsBracket(exp.Left))
-            {
-                info.AppBracket("(");
-                ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
-                info.AppBracket(")");
-            }
-            else
-            {
-                ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
-            }
+            ExplainTool.Explain(exp.Right, info); // 树的右边有多种情况
         }
 
         /// <summary>

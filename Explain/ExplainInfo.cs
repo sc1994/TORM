@@ -6,8 +6,6 @@ namespace Explain
 {
     public class ExplainInfo
     {
-        public List<string> Lb { get; set; } = new List<string>();
-        public List<string> Rb { get; set; } = new List<string>();
         public string Field { get; set; }
         public string Type { get; set; }
         public object Value { get; set; }
@@ -36,14 +34,6 @@ namespace Explain
         {
             last.Value = info;
             Info.Add(new ExplainInfo());
-        }
-
-        public void AppBracket(string bracket)
-        {
-            if (bracket == ")")
-                last.Rb.Add(")");
-            else
-                last.Lb.Add("(");
         }
 
         public void Append(MethodInfo method)
