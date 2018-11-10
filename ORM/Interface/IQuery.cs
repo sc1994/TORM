@@ -2,7 +2,7 @@
 
 namespace ORM.Interface
 {
-    public interface IMethod<T>
+    public interface IQuery<T>
     {
         bool Exist();
         T First();
