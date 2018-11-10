@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Explain;
+using ORM;
 
 namespace Demo
 {
@@ -14,6 +17,7 @@ namespace Demo
                 .Select(x => x.Name, x => x.Date)
                 .Where(x => x.Date == DateTime.Today && x.Name1 == "123123")
                 .Where(x => x.Name == "123345345" || x.Name2 == "88304")
+                .Where(x => x.Name.In(new List<string> { "123", "345", "456" }))
                 .OrderA(x => x.Name1).Exist();
 
             var info = new ContentWhere();

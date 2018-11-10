@@ -6,7 +6,7 @@ namespace Explain
     {
         public override void Explain(ListInitExpression exp, Content info)
         {
-            
+            ExplainTool.Explain(exp.NewExpression, info);
         }
     }
 }

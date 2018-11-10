@@ -20,7 +20,8 @@ namespace Explain
             "UnaryExpression",
             "NewArrayExpression",
             "ListInitExpression",
-            "ParameterExpression"
+            "ParameterExpression",
+            "NewExpression"
         };
 
         /// <summary>

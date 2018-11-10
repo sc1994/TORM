@@ -11,7 +11,6 @@ namespace ORM.Realizes
     public class RealizeQuery<T> : IQuery<T>
     {
         protected List<Expression<Func<T, bool>>> _ands = new List<Expression<Func<T, bool>>>();
-        protected List<Expression<Func<T, bool>>> _ors = new List<Expression<Func<T, bool>>>();
         protected List<Expression<Func<T, object[]>>> _selectss = new List<Expression<Func<T, object[]>>>();
         protected List<Expression<Func<T, object>>> _selects = new List<Expression<Func<T, object>>>();
         protected List<(Expression<Func<T, object>>, string)> _selectAlias = new List<(Expression<Func<T, object>>, string)>();
