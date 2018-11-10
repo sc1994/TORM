@@ -19,6 +19,7 @@ namespace Explain
                 }
                 else
                 {
+                    ExplainTool.Explain(exp.Expression, info);
                     info.Append(exp.Member.Name); // 如果树的右边也是个表达式 比如 Join 方法
                 }
             }
@@ -26,6 +27,7 @@ namespace Explain
             {
                 ExplainTool.Log("MemberExpression", $"{{\r\n  exp.Expression == null,  {exp.Member}\r\n}}");
                 // 目前只有datetime.now之类的右边值会走到这，考虑标记为唯一差异化对待datetime
+                ExplainTool.Explain(exp.Expression, info);
                 info.Append(exp.Member);
             }
         }

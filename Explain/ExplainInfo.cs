@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -6,6 +7,7 @@ namespace Explain
 {
     public class ExplainInfo
     {
+        public Type Table { get; set; }
         /// <summary>
         /// 字段名
         /// </summary>
@@ -28,19 +30,11 @@ namespace Explain
         public ExpressionType? Prior { get; set; } = null;
     }
 
+    /// <summary>
+    /// where 的内容
+    /// </summary>
     public class ContentWhere : Content
     {
-        public ContentWhere()
-        {
-            Info = new List<ExplainInfo>
-            {
-                new ExplainInfo()
-            };
-        }
-        public List<ExplainInfo> Info { get; set; }
-
-        private ExplainInfo Last => Info[Info.Count - 1];
-
         public override void Append(string info)
         {
             Last.Field = info;
@@ -67,20 +61,11 @@ namespace Explain
         }
     }
 
-    public class ContetSelect : Content
+    /// <summary>
+    /// 简单内容（select，order，group）
+    /// </summary>
+    public class ContentEasy : Content
     {
-        public ContetSelect()
-        {
-            Info = new List<ExplainInfo>
-            {
-                new ExplainInfo()
-            };
-        }
-
-        public List<ExplainInfo> Info { get; set; }
-
-        private ExplainInfo Last => Info[Info.Count - 1];
-
         public override void Append(string info)
         {
             Last.Field = info;
@@ -93,8 +78,32 @@ namespace Explain
         }
     }
 
+    public class ContentJoin : Content
+    {
+        public override void Append(string info)
+        {
+            Last.Field = info;
+            Info.Add(new ExplainInfo());
+        }
+    }
+
+    /// <summary>
+    /// 内容基类
+    /// </summary>
     public class Content
     {
+        public Content()
+        {
+            Info = new List<ExplainInfo>
+            {
+                new ExplainInfo()
+            };
+        }
+
+        public List<ExplainInfo> Info { get; set; }
+
+        protected ExplainInfo Last => Info[Info.Count - 1];
+
         public virtual void Append(string info)
         {
 
@@ -113,6 +122,11 @@ namespace Explain
         public virtual void Append(ExpressionType type)
         {
 
+        }
+
+        public virtual void Append(Type info)
+        {
+            Last.Table = info;
         }
     }
 }

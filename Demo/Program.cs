@@ -1,7 +1,6 @@
 ﻿using Explain;
 using System;
 using System.Linq.Expressions;
-using ORM;
 
 namespace Demo
 {
@@ -22,13 +21,21 @@ namespace Demo
 
             //Expression<Func<Model, bool>> exp2 = x => x.Name == string.Join(",", a.Where(y => Convert.ToInt32(y) > 1));
 
-            var info = new ContetSelect();
+            var info = new ContentWhere();
             //ExplainTool.Explain(exp, info);
 
-            Expression<Func<Model, object[]>> exp2 = x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) };
+            Expression<Func<Model, Model2, Model3, bool>> exp2 = (x, y, z) =>
+                x.Name == "1" || y.Name2 == "2" && z.Name3 == "3";
             Explain.ExplainTool.Explain(exp2, info);
 
-            if (info is ContetSelect)
+            if (info is ContentJoin)
+            {
+                foreach (var item in info.Info)
+                {
+                    Console.Write($"{item.Field} ");
+                }
+            }
+            else if (info is ContentEasy)
             {
                 foreach (var item in info.Info)
                 {
@@ -54,5 +61,20 @@ namespace Demo
         public string Name1 { get; set; }
         public string Name2 { get; set; }
         public DateTime Date { get; set; }
+    }
+
+    class Model2
+    {
+        public string Name2 { get; set; }
+        public string Name12 { get; set; }
+        public string Name22 { get; set; }
+        public DateTime Date2 { get; set; }
+    }
+    class Model3
+    {
+        public string Name3 { get; set; }
+        public string Name13 { get; set; }
+        public string Name23 { get; set; }
+        public DateTime Date3 { get; set; }
     }
 }
