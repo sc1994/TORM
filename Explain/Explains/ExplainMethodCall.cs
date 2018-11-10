@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Text;
+﻿using System.Linq.Expressions;
 
 namespace Explain
 {
@@ -16,7 +14,8 @@ namespace Explain
             {
                 ExplainTool.Explain(exp.Arguments[0], info);
                 info.Append(exp.Method);
-                ExplainTool.Explain(exp.Arguments[1], info);
+                if (exp.Arguments.Count > 1)
+                    ExplainTool.Explain(exp.Arguments[1], info);
             }
             else
             {

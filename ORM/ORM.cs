@@ -32,6 +32,18 @@ namespace ORM
         {
             return true;
         }
+        public static int Count(object value)
+        {
+            return 0;
+        }
+        public static int Max(object value)
+        {
+            return 0;
+        }
+        public static int Min(object value)
+        {
+            return 0;
+        }
     }
 
     public interface ISelect<T> : IJoin<T>
@@ -43,25 +55,32 @@ namespace ORM
 
         ISelect<T> Select<TValue>(Expression<Func<T, TValue[]>> exps);
         ISelect<T> Select(Expression<Func<T, object[]>> exps);
+
+        // todo 扩展至子查询
     }
 
     public interface IJoin<T> : IWhere<T>
     {
-        IJoin<T> Join<TJoin>(Expression<Func<T, TJoin, bool>> exp); // todo 扩展支持 "join a on a.id = id and xxx" and后面的语法
+        IJoin<T> Join<TJoin>(Expression<Func<T, TJoin, bool>> exp);
         IJoin<T> JoinL<TLJoin>(Expression<Func<T, TLJoin, bool>> exp);
         IJoin<T> JoinR<TRJoin>(Expression<Func<T, TRJoin, bool>> exp);
         IJoin<T> JoinF<TFJoin>(Expression<Func<T, TFJoin, bool>> exp);
+
+        // todo 扩展支持 "join a on a.id = id and xxx" and后面的语法
     }
 
     public interface IWhere<T> : IOrder<T>, IUpdate
     {
         IWhere<T> And(Expression<Func<T, bool>> exp);
         IWhere<T> Or(Expression<Func<T, bool>> exp);
+
+        // todo 扩展子查询
     }
 
     public interface IOrder<T> : IMethod<T>
     {
-        IOrder<T> OrderA<TValue>(params Expression<Func<T, TValue>>[] exps);
+        IOrder<T> OrderA(Expression<Func<T, object[]>> exp);
+        IOrder<T> OrderD(Expression<Func<T, object[]>> exp);
         IOrder<T> OrderA(params Expression<Func<T, object>>[] exps);
         IOrder<T> OrderD(params Expression<Func<T, object>>[] exps);
     }
@@ -77,7 +96,7 @@ namespace ORM
         (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size);
     }
 
-    public interface ISet<T>
+    public interface ISet<T> : IWhere<T>
     {
         ISet<T> Set<TValue>(Expression<Func<T, TValue>> exp, string value);
         ISet<T> Set<TValue>(params (Expression<Func<T, object>> exp, string value)[] exps);
