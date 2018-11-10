@@ -7,6 +7,10 @@ namespace ORM
     /// </summary>
     public static class ORMTool
     {
+        public static bool NotIn<TValue>(this object field, IEnumerable<TValue> values)
+        {
+            return true;
+        }
         public static bool In<TValue>(this object field, IEnumerable<TValue> values)
         {
             return true;

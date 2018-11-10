@@ -42,15 +42,9 @@ namespace ORM.Realizes
             return this;
         }
 
-        public IWhere<T> And(Expression<Func<T, bool>> exp)
+        public IWhere<T> Where(Expression<Func<T, bool>> exp)
         {
             _ands.Add(exp);
-            return this;
-        }
-
-        public IWhere<T> Or(Expression<Func<T, bool>> exp)
-        {
-            _ors.Add(exp);
             return this;
         }
 

@@ -18,8 +18,7 @@ namespace ORM.Interface
 
     public interface IUpdateWhere<T> : IUpdate
     {
-        IWhere<T> And(Expression<Func<T, bool>> exp);
-        IWhere<T> Or(Expression<Func<T, bool>> exp);
+        IWhere<T> Where(Expression<Func<T, bool>> exp);
     }
 
     public class UpdateRecord

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq.Expressions;
+using Explain;
 
 namespace Demo
 {
@@ -10,9 +12,14 @@ namespace Demo
 
             ORM.ORM.Query<Model>()
                 .Select(x => x.Name, x => x.Date)
-                .And(x => x.Date == DateTime.Today && x.Name1 == "123123")
+                .Where(x => x.Date == DateTime.Today && x.Name1 == "123123")
+                .Where(x => x.Name == "123345345" || x.Name2 == "88304")
                 .OrderA(x => x.Name1).Exist();
 
+            var info = new ContentWhere();
+            Expression<Func<Model, bool>>
+                a = x => x.Name == "234" && x.Date == DateTime.Today && x.Name1 == "123";
+            Explain.ExplainTool.Explain(a, info);
 
             Console.ReadLine();
         }

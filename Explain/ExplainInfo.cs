@@ -15,7 +15,7 @@ namespace Explain
         /// <summary>
         /// 字段和值之间的关系
         /// </summary>
-        public ExpressionType? Type { get; set; } = null;
+        public ExpressionType? Type { get; set; }
         /// <summary>
         /// 字段和值之间的方法
         /// </summary>
@@ -27,7 +27,7 @@ namespace Explain
         /// <summary>
         /// 两个树节点之间的关系
         /// </summary>
-        public ExpressionType? Prior { get; set; } = null;
+        public ExpressionType? Prior { get; set; }
     }
 
     /// <summary>
@@ -127,6 +127,14 @@ namespace Explain
         public virtual void Append(Type info)
         {
             Last.Table = info;
+        }
+
+        public void Rinse()
+        {
+            if (string.IsNullOrEmpty(Last.Field))
+            {
+                Info.RemoveAt(Info.Count - 1);
+            }
         }
     }
 }

@@ -17,12 +17,7 @@ namespace ORM.Realizes
             throw new NotImplementedException();
         }
 
-        public IWhere<T> And(Expression<Func<T, bool>> exp)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IWhere<T> Or(Expression<Func<T, bool>> exp)
+        public IWhere<T> Where(Expression<Func<T, bool>> exp)
         {
             throw new NotImplementedException();
         }
