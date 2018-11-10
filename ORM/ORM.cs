@@ -2,47 +2,20 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
+//todo 尝试收集全部表达式，分组并发解析，提高解析速度
+
 namespace ORM
 {
-    //public class ORM<T> : IORM<T>
-    //{
-    // todo 尝试收集全部表达式，分组并发解析，提高解析速度
-    //}
-
-    public interface IORM<T> : ISelect<T>
+    public class ORM
     {
-        // todo 考虑使用高级点的办法初始化实体指定泛型，而不是单纯的new
-    }
+        public static ISelect<T> Query<T>()
+        {
+            throw new NotImplementedException();
+        }
 
-    public static class ORMTool
-    {
-        public static bool In<TValue>(this object field, IEnumerable<TValue> values)
+        public static ISet<T> Update<T>()
         {
-            return true;
-        }
-        public static bool LikeF<TValue>(this string field, string value)
-        {
-            return true;
-        }
-        public static bool LikeR<TValue>(this string field, string value)
-        {
-            return true;
-        }
-        public static bool LikeL<TValue>(this string field, string value)
-        {
-            return true;
-        }
-        public static int Count(object value)
-        {
-            return 0;
-        }
-        public static int Max(object value)
-        {
-            return 0;
-        }
-        public static int Min(object value)
-        {
-            return 0;
+            throw new NotImplementedException();
         }
     }
 
@@ -137,6 +110,14 @@ namespace ORM
             //    .LikeF(x => x.Name, "s")
             //    .OrderA(x => x.Name, x => x.Id)
             //    .Page(1, 3);
+
+            var data = ORM.Query<Test>()
+                .Select(x => new object[] { x.Name, x.Date })
+                .Select(x => ORMTool.Max(x.Id))
+                .JoinF<Test2>((x, y) => x.Name == y.Name2)
+                .And(x => x.Name == "123" || x.Date == DateTime.Today)
+                .OrderA(x => x.Name)
+                .Find();
 
             //var a = data.data;
             //var b = data.total;

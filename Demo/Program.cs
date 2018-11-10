@@ -22,15 +22,28 @@ namespace Demo
 
             //Expression<Func<Model, bool>> exp2 = x => x.Name == string.Join(",", a.Where(y => Convert.ToInt32(y) > 1));
 
-            var info = new Content();
+            var info = new ContetSelect();
             //ExplainTool.Explain(exp, info);
 
-            Expression<Func<Model, object>> exp2 = x => ORMTool.Count(x.Name);
-            Explain.ExplainTool.Explain(exp, info);
-            foreach (var item in info.Info)
+            Expression<Func<Model, object[]>> exp2 = x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) };
+            Explain.ExplainTool.Explain(exp2, info);
+
+            if (info is ContetSelect)
             {
-                Console.Write($"{item.Prior} {item.Field} {item.Type}{item.Method} Value ");
+                foreach (var item in info.Info)
+                {
+                    Console.Write($"{item.Field} {item.Method}");
+                }
             }
+            else if (info is ContentWhere)
+            {
+                foreach (var item in info.Info)
+                {
+                    Console.Write($"{item.Prior} {item.Field} {item.Type}{item.Method} Value ");
+                }
+            }
+
+
             Console.ReadLine();
         }
     }

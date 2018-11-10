@@ -28,9 +28,9 @@ namespace Explain
         public ExpressionType? Prior { get; set; } = null;
     }
 
-    public class Content
+    public class ContentWhere : Content
     {
-        public Content()
+        public ContentWhere()
         {
             Info = new List<ExplainInfo>
             {
@@ -41,29 +41,78 @@ namespace Explain
 
         private ExplainInfo Last => Info[Info.Count - 1];
 
-        public void Append(string info)
+        public override void Append(string info)
         {
             Last.Field = info;
         }
 
-        public void Append(object info)
+        public override void Append(object info)
         {
             Last.Value = info;
             Info.Add(new ExplainInfo());
         }
 
-        public void Append(MethodInfo method)
+        public override void Append(MethodInfo method)
         {
             Last.Method = method.Name;
         }
 
-        public void Append(ExpressionType type)
+        public override void Append(ExpressionType type)
         {
             if (type == ExpressionType.OrElse || type == ExpressionType.AndAlso)
             {
                 Last.Prior = type;
             }
             Last.Type = type;
+        }
+    }
+
+    public class ContetSelect : Content
+    {
+        public ContetSelect()
+        {
+            Info = new List<ExplainInfo>
+            {
+                new ExplainInfo()
+            };
+        }
+
+        public List<ExplainInfo> Info { get; set; }
+
+        private ExplainInfo Last => Info[Info.Count - 1];
+
+        public override void Append(string info)
+        {
+            Last.Field = info;
+            Info.Add(new ExplainInfo());
+        }
+
+        public override void Append(MethodInfo method)
+        {
+            Info[Info.Count - 2].Method = method.Name;
+        }
+    }
+
+    public class Content
+    {
+        public virtual void Append(string info)
+        {
+
+        }
+
+        public virtual void Append(object info)
+        {
+
+        }
+
+        public virtual void Append(MethodInfo method)
+        {
+
+        }
+
+        public virtual void Append(ExpressionType type)
+        {
+
         }
     }
 }
