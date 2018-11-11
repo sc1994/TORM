@@ -3,22 +3,26 @@ using System.Linq.Expressions;
 
 namespace ORM
 {
-    public enum LikeEnum
+    public enum JoinEnum
     {
-        Right,
-        Left,
-        Full
+        LeftJoin,
+        RightJoin,
+        Join,
+        FullJoin
     }
 
     static class EnumHelper
     {
-        public static string ToString(this LikeEnum that)
+        public static string ToExplain(this JoinEnum that)
         {
-            //switch (that)
-            //{
-            //      LikeEnum.Full  
-            //}
-            return ""; // todo
+            switch (that)
+            {
+                case JoinEnum.FullJoin: return "FULL JOIN";
+                case JoinEnum.RightJoin: return "RIGHT JOIN";
+                case JoinEnum.LeftJoin: return "LEFT JOIN";
+                case JoinEnum.Join: return "JOIN";
+            }
+            return "";
         }
 
         public static string ToExplain(this ExpressionType? that)

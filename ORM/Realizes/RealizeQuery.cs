@@ -10,9 +10,10 @@ namespace ORM.Realizes
 {
     public class RealizeQuery<T> : IQuery<T>
     {
-        protected List<Expression> _ands = new List<Expression>();
+        protected List<Expression> _where = new List<Expression>();
+        protected List<(Expression, JoinEnum)> _join = new List<(Expression, JoinEnum)>();
         protected List<Expression> _selects = new List<Expression>();
-        protected List<(Expression<Func<T, object>>, string)> _selectAlias = new List<(Expression<Func<T, object>>, string)>();
+        protected List<(Expression, string)> _selectAlias = new List<(Expression, string)>();
         protected List<Expression> _orderDs = new List<Expression>();
         protected List<Expression> _orderAs = new List<Expression>();
         protected List<Expression> _groups = new List<Expression>();
@@ -20,7 +21,7 @@ namespace ORM.Realizes
 
         public bool Exist()
         {
-            var sql = $"SELECT COUNT(1) FROM TEST.Model {GetWhere()};";
+            var sql = $"SELECT COUNT(1) FROM TEST.Model {GetJoin()} {GetWhere()};";
             throw new NotImplementedException();
         }
 
@@ -32,34 +33,40 @@ namespace ORM.Realizes
 
         public TOther First<TOther>()
         {
+            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public IEnumerable<TOther> Find<TOther>()
         {
+            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public IEnumerable<T> Find()
         {
+            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public (IEnumerable<T> data, int total) Page(int index, int size)
         {
+            var sql = new StringBuilder($"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};");
+            ToPage(index, size, sql);
             throw new NotImplementedException();
         }
 
         public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
+            var sql = new StringBuilder($"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};");
+            ToPage(index, size, sql);
             throw new NotImplementedException();
         }
-
 
         private StringBuilder GetWhere()
         {
             var result = new StringBuilder("\r\nWHERE 1=1");
-            foreach (var item in _ands)
+            foreach (var item in _where)
             {
                 var c = new ContentWhere();
                 ExplainTool.Explain(item, c);
@@ -152,6 +159,53 @@ namespace ORM.Realizes
                 }
             });
 
+        }
+
+        private StringBuilder GetJoin()
+        {
+            var result = new StringBuilder();
+            _join.ForEach(x =>
+            {
+                var c = new ContentJoin();
+                ExplainTool.Explain(x.Item1, c);
+                c.Rinse();
+                foreach (var info in c.Info)
+                {
+                    string param;
+                    var type = info.Type.ToExplain();
+                    if (info.Value == null && (type == "=" || type == "<>") && info.Table2 == null && string.IsNullOrWhiteSpace(info.Field2))
+                    {
+                        param = "null";
+                        type = type == "=" ? "IS" : "IS NOT";
+                    }
+                    else
+                    {
+                        param = $"@{info.Table.Name}_{info.Field}_{_params.Count}";
+                        _params.Add(param, info.Value);
+                    }
+
+                    if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
+                    {
+                        result.Append($"\r\n  {x.Item2.ToExplain()} {info.Table.Name}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                    }
+                    else
+                    {
+                        result.Append($"\r\n  {info.Prior.ToExplain()} {info.Table.Name}.{info.Field} {type} {param}");
+                    }
+
+                }
+            });
+            return result;
+        }
+
+        private string GetJoinTable()
+        {
+
+        }
+
+        private void ToPage(int index, int size, StringBuilder sql)
+        {
+            // todo 不同数据库的分页有细微差距
         }
     }
 }

@@ -16,6 +16,14 @@ namespace Explain
         /// </summary>
         public string Field { get; set; }
         /// <summary>
+        /// 表名(join或者复杂查询会在一个表达式节点遇到两个表)
+        /// </summary>
+        public Type Table2 { get; set; }
+        /// <summary>
+        /// 字段名(join或者复杂查询会在一个表达式节点遇到两个表)
+        /// </summary>
+        public string Field2 { get; set; }
+        /// <summary>
         /// 字段和值之间的关系
         /// </summary>
         public ExpressionType? Type { get; set; }
@@ -76,23 +84,40 @@ namespace Explain
             Info.Add(new ExplainInfo());
         }
 
-        public override void Append(Type type)
-        {
-            Last.Table = type;
-        }
-
         public override void Append(MethodInfo method)
         {
             Info[Info.Count - 2].Method = method.Name;
         }
     }
 
-    public class ContentJoin : Content
+    /// <summary>
+    /// join
+    /// </summary>
+    public class ContentJoin : ContentWhere
     {
         public override void Append(string info)
         {
-            Last.Field = info;
-            Info.Add(new ExplainInfo());
+            if (string.IsNullOrWhiteSpace(Last.Field))
+            {
+                Last.Field = info;
+            }
+            else
+            {
+                Last.Field2 = info;
+                Info.Add(new ExplainInfo());
+            }
+        }
+
+        public override void Append(Type info)
+        {
+            if (Last.Table == null)
+            {
+                Last.Table = info;
+            }
+            else
+            {
+                Last.Table2 = info;
+            }
         }
     }
 

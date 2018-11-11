@@ -3,7 +3,6 @@ using System;
 using ORM.Realizes;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
-// todo "join a on a.id = id and xxx" and后面的语法
 // todo 子查询 where，select 
 // todo 事务
 // todo 运行时抛出不支持的写法的异常
@@ -15,6 +14,11 @@ namespace ORM
         public static Realize<T> Query<T>()
         {
             return new Realize<T>();
+        }
+
+        public static Realize<T, TJoin> Query<T, TJoin>()
+        {
+            return new Realize<T, TJoin>();
         }
 
         public static IUpdateSet<T> Update<T>()

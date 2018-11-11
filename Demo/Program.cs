@@ -1,8 +1,5 @@
 ﻿using Explain;
-using ORM;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Demo
@@ -13,26 +10,32 @@ namespace Demo
         {
             Console.WriteLine("Hello World!");
 
-            ORM.ORM.Query<Model>()
-                .Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
-                .Select(x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) })
-                .Select(x => x.Name1, "name")
-                .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
-                .Where(x => x.Name.StartsWith("1"))
-                .Where(x => x.Name.EndsWith("2"))
-                .Where(x => x.Name.Contains("3"))
-                .Where(x => x.Date == DateTime.Today)
-                .Where(x => x.Date > DateTime.Today)
-                .Where(x => x.Date >= DateTime.Today)
-                .Where(x => x.Date <= DateTime.Today)
-                .Where(x => x.Date < DateTime.Today)
-                .Where(x => x.Date != DateTime.Today)
-                .Where(x => x.Name1 == null)
-                .Where(x => x.Name1 != null)
-                .Where(x => x.Name.In(new[] { "", "" }.ToList()))
-                .Where(x => x.Name.NotIn(new[] { "", "" }.ToList()))
-                //.OrderA(x => x.Name1)
-                .First();
+            //ORM.ORM.Query<Model>()
+            //    .Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
+            //    .Select(x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) })
+            //    .Select(x => x.Name1, "name")
+            //    .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
+            //    .Where(x => x.Name.StartsWith("1"))
+            //    .Where(x => x.Name.EndsWith("2"))
+            //    .Where(x => x.Name.Contains("3"))
+            //    .Where(x => x.Date == DateTime.Today)
+            //    .Where(x => x.Date > DateTime.Today)
+            //    .Where(x => x.Date >= DateTime.Today)
+            //    .Where(x => x.Date <= DateTime.Today)
+            //    .Where(x => x.Date < DateTime.Today)
+            //    .Where(x => x.Date != DateTime.Today)
+            //    .Where(x => x.Name1 == null)
+            //    .Where(x => x.Name1 != null)
+            //    .Where(x => x.Name.In(new[] { "", "" }.ToList()))
+            //    .Where(x => x.Name.NotIn(new[] { "", "" }.ToList()))
+            //    //.OrderA(x => x.Name1)
+            //    .First();
+
+            ORM.ORM.Query<Model, Model3>()
+                .Select((x, y) => x.Name, (x, y) => y.Date3)
+                .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
+                .JoinL((x, y) => x.Name1 == y.Name13)
+                .Exist();
 
             var info = new ContentWhere();
             Expression<Func<Model, bool>>

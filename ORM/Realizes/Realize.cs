@@ -45,7 +45,7 @@ namespace ORM.Realizes
 
         public IWhere<T> Where(Expression<Func<T, bool>> exp)
         {
-            _ands.Add(exp);
+            _where.Add(exp);
             return this;
         }
 
@@ -63,10 +63,12 @@ namespace ORM.Realizes
 
         public ISelect<T> Select(params (Expression<Func<T, object>> exp, string alias)[] exps)
         {
-            _selectAlias.AddRange(exps);
+            foreach (var item in exps)
+            {
+                _selectAlias.Add((item.exp, item.alias));
+            }
             return this;
         }
-
 
         public ISelect<T> Select(Expression<Func<T, object[]>> exp)
         {
@@ -79,77 +81,89 @@ namespace ORM.Realizes
     {
         public IOrder<T, TJoin> Group(Expression<Func<T, TJoin, object[]>> exp)
         {
-            throw new NotImplementedException();
+            _groups.Add(exp);
+            return this;
         }
 
         public IOrder<T, TJoin> Group(params Expression<Func<T, TJoin, object>>[] exps)
         {
-            throw new NotImplementedException();
+            _groups.AddRange(exps);
+            return this;
         }
 
         public IOrder<T, TJoin> OrderA(Expression<Func<T, TJoin, object[]>> exp)
         {
-            throw new NotImplementedException();
+            _orderAs.Add(exp);
+            return this;
         }
 
         public IOrder<T, TJoin> OrderD(Expression<Func<T, TJoin, object[]>> exp)
         {
-            throw new NotImplementedException();
+            _orderDs.Add(exp);
+            return this;
         }
 
         public IOrder<T, TJoin> OrderA(params Expression<Func<T, TJoin, object>>[] exps)
         {
-            throw new NotImplementedException();
+            _orderAs.AddRange(exps);
+            return this;
+        }
+
+        public IOrder<T, TJoin> OrderD(params Expression<Func<T, TJoin, object>>[] exps)
+        {
+            _orderDs.AddRange(exps);
+            return this;
         }
 
         public IWhere<T, TJoin> Where(Expression<Func<T, TJoin, bool>> exp)
         {
-            throw new NotImplementedException();
-        }
-
-        public int Update(int top = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<UpdateRecord> Update(int top = 0, bool record = false)
-        {
-            throw new NotImplementedException();
+            _where.Add(exp);
+            return this;
         }
 
         public IJoin<T, TJoin> Join(Expression<Func<T, TJoin, bool>> exp)
         {
-            throw new NotImplementedException();
+            _join.Add((exp, JoinEnum.Join));
+            return this;
         }
 
         public IJoin<T, TJoin> JoinL(Expression<Func<T, TJoin, bool>> exp)
         {
-            throw new NotImplementedException();
+            _join.Add((exp, JoinEnum.LeftJoin));
+            return this;
         }
 
         public IJoin<T, TJoin> JoinR(Expression<Func<T, TJoin, bool>> exp)
         {
-            throw new NotImplementedException();
+            _join.Add((exp, JoinEnum.RightJoin));
+            return this;
         }
 
         public IJoin<T, TJoin> JoinF(Expression<Func<T, TJoin, bool>> exp)
         {
-            throw new NotImplementedException();
+            _join.Add((exp, JoinEnum.FullJoin));
+            return this;
         }
 
         public ISelect<T, TJoin> Select(params Expression<Func<T, TJoin, object>>[] exps)
         {
-            throw new NotImplementedException();
+            _selects.AddRange(exps);
+            return this;
         }
 
         public ISelect<T, TJoin> Select(Expression<Func<T, TJoin, object>> exp, string alias)
         {
-            throw new NotImplementedException();
+            _selectAlias.Add((exp, alias));
+            return this;
         }
 
         public ISelect<T, TJoin> Select(params (Expression<Func<T, TJoin, object>> exp, string alias)[] exps)
         {
-            throw new NotImplementedException();
+            foreach (var item in exps)
+            {
+                _selectAlias.Add((item.exp, item.alias));
+            }
+            return this;
         }
 
         public ISelect<T, TJoin> Select(Expression<Func<T, TJoin, object[]>> exp)
