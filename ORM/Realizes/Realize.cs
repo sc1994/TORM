@@ -21,25 +21,31 @@ namespace ORM.Realizes
 
         public IOrder<T> OrderA(Expression<Func<T, object[]>> exp)
         {
-            _orderAs.Add(exp);
+            _orders.Add((exp, OrderEnum.Asc));
             return this;
         }
 
         public IOrder<T> OrderD(Expression<Func<T, object[]>> exp)
         {
-            _orderDs.Add(exp);
+            _orders.Add((exp, OrderEnum.Desc));
             return this;
         }
 
         public IOrder<T> OrderA(params Expression<Func<T, object>>[] exps)
         {
-            _orderAs.AddRange(exps);
+            foreach (var item in exps)
+            {
+                _orders.Add((item, OrderEnum.Asc));
+            }
             return this;
         }
 
         public IOrder<T> OrderD(params Expression<Func<T, object>>[] exps)
         {
-            _orderDs.AddRange(exps);
+            foreach (var item in exps)
+            {
+                _orders.Add((item, OrderEnum.Desc));
+            }
             return this;
         }
 
@@ -93,25 +99,31 @@ namespace ORM.Realizes
 
         public IOrder<T, TJoin> OrderA(Expression<Func<T, TJoin, object[]>> exp)
         {
-            _orderAs.Add(exp);
+            _orders.Add((exp, OrderEnum.Asc));
             return this;
         }
 
         public IOrder<T, TJoin> OrderD(Expression<Func<T, TJoin, object[]>> exp)
         {
-            _orderDs.Add(exp);
+            _orders.Add((exp, OrderEnum.Desc));
             return this;
         }
 
         public IOrder<T, TJoin> OrderA(params Expression<Func<T, TJoin, object>>[] exps)
         {
-            _orderAs.AddRange(exps);
+            foreach (var item in exps)
+            {
+                _orders.Add((item, OrderEnum.Asc));
+            }
             return this;
         }
 
         public IOrder<T, TJoin> OrderD(params Expression<Func<T, TJoin, object>>[] exps)
         {
-            _orderDs.AddRange(exps);
+            foreach (var item in exps)
+            {
+                _orders.Add((item, OrderEnum.Desc));
+            }
             return this;
         }
 

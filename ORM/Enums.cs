@@ -11,8 +11,24 @@ namespace ORM
         FullJoin
     }
 
+    public enum OrderEnum
+    {
+        Asc,
+        Desc
+    }
+
     static class EnumHelper
     {
+        public static string ToExplain(this OrderEnum that)
+        {
+            switch (that)
+            {
+                case OrderEnum.Asc: return "ASC";
+                case OrderEnum.Desc: return "DESC";
+            }
+            return "";
+        }
+
         public static string ToExplain(this JoinEnum that)
         {
             switch (that)

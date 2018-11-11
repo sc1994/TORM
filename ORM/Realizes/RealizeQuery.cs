@@ -14,51 +14,55 @@ namespace ORM.Realizes
         protected List<(Expression, JoinEnum)> _join = new List<(Expression, JoinEnum)>();
         protected List<Expression> _selects = new List<Expression>();
         protected List<(Expression, string)> _selectAlias = new List<(Expression, string)>();
-        protected List<Expression> _orderDs = new List<Expression>();
-        protected List<Expression> _orderAs = new List<Expression>();
+        protected List<(Expression, OrderEnum)> _orders = new List<(Expression, OrderEnum)>();
         protected List<Expression> _groups = new List<Expression>();
         protected Dictionary<string, object> _params = new Dictionary<string, object>();
+        protected List<Type> useTables = new List<Type>
+        {
+            typeof(T)
+        };
+        protected List<Type> allTables = new List<Type>();
 
         public bool Exist()
         {
-            var sql = $"SELECT COUNT(1) FROM TEST.Model {GetJoin()} {GetWhere()};";
+            var sql = $"SELECT COUNT(1) FROM {GetTable()} {GetJoin()} {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public T First()
         {
-            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
             throw new NotImplementedException();
         }
 
         public (IEnumerable<T> data, int total) Page(int index, int size)
         {
-            var sql = new StringBuilder($"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};");
+            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};");
             ToPage(index, size, sql);
             throw new NotImplementedException();
         }
 
         public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
-            var sql = new StringBuilder($"{GetSelect()} \r\nFROM TEST.Model {GetWhere()};");
+            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};");
             ToPage(index, size, sql);
             throw new NotImplementedException();
         }
@@ -158,22 +162,29 @@ namespace ORM.Realizes
                     result.Append($"\r\n  {x.Method.ToUpper()}({x.Table.Name}.{x.Field}){a},");
                 }
             });
-
         }
 
         private StringBuilder GetJoin()
         {
             var result = new StringBuilder();
+
             _join.ForEach(x =>
             {
                 var c = new ContentJoin();
                 ExplainTool.Explain(x.Item1, c);
                 c.Rinse();
+                // 收集全部表
+                allTables.AddRange(c.Info.Select(s => s.Table));
+                allTables.AddRange(c.Info.Select(s => s.Table2));
+
                 foreach (var info in c.Info)
                 {
                     string param;
                     var type = info.Type.ToExplain();
-                    if (info.Value == null && (type == "=" || type == "<>") && info.Table2 == null && string.IsNullOrWhiteSpace(info.Field2))
+                    if (info.Value == null
+                        && (type == "=" || type == "<>")
+                        && info.Table2 == null
+                        && string.IsNullOrWhiteSpace(info.Field2)) // 当不是和表字段的比较，且 == null 或者 != null时，采取SQL 语法
                     {
                         param = "null";
                         type = type == "=" ? "IS" : "IS NOT";
@@ -186,21 +197,78 @@ namespace ORM.Realizes
 
                     if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
                     {
-                        result.Append($"\r\n  {x.Item2.ToExplain()} {info.Table.Name}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                        result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {info.Table.Name}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                        // 收集已用表
+                        useTables.Add(info.Table);
+                        useTables.Add(info.Table2);
                     }
                     else
                     {
                         result.Append($"\r\n  {info.Prior.ToExplain()} {info.Table.Name}.{info.Field} {type} {param}");
                     }
-
                 }
             });
             return result;
         }
 
+        private StringBuilder GetGroup()
+        {
+            var result = new StringBuilder("\r\nGROUP BY");
+
+            _groups.ForEach(item =>
+            {
+                var c = new ContentEasy();
+                ExplainTool.Explain(item, c);
+                c.Rinse();
+                foreach (var info in c.Info)
+                {
+                    result.Append($"\r\n  {info.Table.Name}.{info.Field},");
+                }
+            });
+            return result.Remove(result.Length - 1, 1);
+        }
+
+        private StringBuilder GetOrder()
+        {
+            var result = new StringBuilder("\r\nORDER BY");
+
+            _orders.ForEach(item =>
+            {
+                var c = new ContentEasy();
+                ExplainTool.Explain(item.Item1, c);
+                c.Rinse();
+                foreach (var info in c.Info)
+                {
+                    result.Append($"\r\n  {info.Table.Name}.{info.Field} {item.Item2.ToExplain()}");
+                }
+            });
+            return result.Remove(result.Length - 1, 1);
+        }
+
+        /// <summary>
+        /// 获取需要join 的表（取全部表，取已用表，未用过的就是需要join 的表）
+        /// todo 这样的计算方式应该不能满足多外键的情况，需要考虑别的办法
+        /// </summary>
+        /// <returns></returns>
         private string GetJoinTable()
         {
+            var all = allTables.Where(x => x != null).Select(x => x.Name).Distinct();
+            var use = useTables.Where(x => x != null).Select(x => x.Name).Distinct();
+            var flag = all.Except(use);
+            if (flag.Count() == 1)
+            {
+                return flag.FirstOrDefault();
+            }
+            throw new Exception("获取join表失败！");
+        }
 
+        /// <summary>
+        /// 取主表
+        /// </summary>
+        /// <returns></returns>
+        private string GetTable()
+        {
+            return typeof(T).Name;
         }
 
         private void ToPage(int index, int size, StringBuilder sql)
