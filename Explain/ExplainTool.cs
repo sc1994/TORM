@@ -24,6 +24,25 @@ namespace Explain
             "NewExpression"
         };
 
+        public static string[] Methods =
+        {
+            "In",
+            "NotIn",
+            "Contains",
+            "StartsWith",
+            "EndsWith",
+            "Count",
+            "Max",
+            "Min"
+        };
+
+        public static string[] MethodLikes =
+        {
+            "Contains",
+            "StartsWith",
+            "EndsWith",
+        };
+
         /// <summary>
         /// 表达式的扩展实例
         /// </summary>

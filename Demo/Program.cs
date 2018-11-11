@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Explain;
+using ORM;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Explain;
-using ORM;
 
 namespace Demo
 {
@@ -14,16 +14,30 @@ namespace Demo
             Console.WriteLine("Hello World!");
 
             ORM.ORM.Query<Model>()
-                .Select(x => x.Name, x => x.Date)
-                .Where(x => x.Date == DateTime.Today && x.Name1 == "123123")
-                .Where(x => x.Name == "123345345" || x.Name2 == "88304")
-                .Where(x => x.Name.In(new List<string> { "123", "345", "456" }))
-                .OrderA(x => x.Name1).Exist();
+                .Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
+                .Select(x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) })
+                .Select(x => x.Name1, "name")
+                .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
+                .Where(x => x.Name.StartsWith("1"))
+                .Where(x => x.Name.EndsWith("2"))
+                .Where(x => x.Name.Contains("3"))
+                .Where(x => x.Date == DateTime.Today)
+                .Where(x => x.Date > DateTime.Today)
+                .Where(x => x.Date >= DateTime.Today)
+                .Where(x => x.Date <= DateTime.Today)
+                .Where(x => x.Date < DateTime.Today)
+                .Where(x => x.Date != DateTime.Today)
+                .Where(x => x.Name1 == null)
+                .Where(x => x.Name1 != null)
+                .Where(x => x.Name.In(new[] { "", "" }.ToList()))
+                .Where(x => x.Name.NotIn(new[] { "", "" }.ToList()))
+                //.OrderA(x => x.Name1)
+                .First();
 
             var info = new ContentWhere();
             Expression<Func<Model, bool>>
                 a = x => x.Name == "234" && x.Date == DateTime.Today && x.Name1 == "123";
-            Explain.ExplainTool.Explain(a, info);
+            ExplainTool.Explain(a, info);
 
             Console.ReadLine();
         }

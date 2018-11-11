@@ -6,9 +6,7 @@ using ORM.Realizes;
 // todo "join a on a.id = id and xxx" and后面的语法
 // todo 子查询 where，select 
 // todo 事务
-// todo db.Where<User>(u => u.Name.StartsWith("bl"));
-// todo db.Where<User>(u => u.Name.Contains("bl"));
-// todo db.Where<User>(u => u.Name.EndsWith("bl"));
+// todo 运行时抛出不支持的写法的异常
 
 namespace ORM
 {

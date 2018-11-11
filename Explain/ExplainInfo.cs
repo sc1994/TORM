@@ -7,6 +7,9 @@ namespace Explain
 {
     public class ExplainInfo
     {
+        /// <summary>
+        /// 表名
+        /// </summary>
         public Type Table { get; set; }
         /// <summary>
         /// 字段名
@@ -43,7 +46,8 @@ namespace Explain
         public override void Append(object info)
         {
             Last.Value = info;
-            Info.Add(new ExplainInfo());
+            if (!string.IsNullOrWhiteSpace(Last.Field) && !string.IsNullOrWhiteSpace(Last.Method))
+                Info.Add(new ExplainInfo());
         }
 
         public override void Append(MethodInfo method)
@@ -70,6 +74,11 @@ namespace Explain
         {
             Last.Field = info;
             Info.Add(new ExplainInfo());
+        }
+
+        public override void Append(Type type)
+        {
+            Last.Table = type;
         }
 
         public override void Append(MethodInfo method)

@@ -1,5 +1,6 @@
 ﻿using ORM.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace ORM.Realizes
@@ -8,7 +9,7 @@ namespace ORM.Realizes
     {
         public IOrder<T> Group(Expression<Func<T, object[]>> exp)
         {
-            _groupss.Add(exp);
+            _groups.Add(exp);
             return this;
         }
 
@@ -20,13 +21,13 @@ namespace ORM.Realizes
 
         public IOrder<T> OrderA(Expression<Func<T, object[]>> exp)
         {
-            _orderAss.Add(exp);
+            _orderAs.Add(exp);
             return this;
         }
 
         public IOrder<T> OrderD(Expression<Func<T, object[]>> exp)
         {
-            _orderDss.Add(exp);
+            _orderDs.Add(exp);
             return this;
         }
 
@@ -69,10 +70,91 @@ namespace ORM.Realizes
 
         public ISelect<T> Select(Expression<Func<T, object[]>> exp)
         {
-            _selectss.Add(exp);
+            _selects.Add(exp);
             return this;
         }
     }
 
+    public class Realize<T, TJoin> : RealizeQuery<T>, ISelect<T, TJoin>
+    {
+        public IOrder<T, TJoin> Group(Expression<Func<T, TJoin, object[]>> exp)
+        {
+            throw new NotImplementedException();
+        }
 
+        public IOrder<T, TJoin> Group(params Expression<Func<T, TJoin, object>>[] exps)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IOrder<T, TJoin> OrderA(Expression<Func<T, TJoin, object[]>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IOrder<T, TJoin> OrderD(Expression<Func<T, TJoin, object[]>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IOrder<T, TJoin> OrderA(params Expression<Func<T, TJoin, object>>[] exps)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IWhere<T, TJoin> Where(Expression<Func<T, TJoin, bool>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Update(int top = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<UpdateRecord> Update(int top = 0, bool record = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IJoin<T, TJoin> Join(Expression<Func<T, TJoin, bool>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IJoin<T, TJoin> JoinL(Expression<Func<T, TJoin, bool>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IJoin<T, TJoin> JoinR(Expression<Func<T, TJoin, bool>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IJoin<T, TJoin> JoinF(Expression<Func<T, TJoin, bool>> exp)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISelect<T, TJoin> Select(params Expression<Func<T, TJoin, object>>[] exps)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISelect<T, TJoin> Select(Expression<Func<T, TJoin, object>> exp, string alias)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISelect<T, TJoin> Select(params (Expression<Func<T, TJoin, object>> exp, string alias)[] exps)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISelect<T, TJoin> Select(Expression<Func<T, TJoin, object[]>> exp)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

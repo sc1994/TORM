@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Linq;
+using System.Linq.Expressions;
 
 namespace Explain
 {
@@ -10,8 +11,12 @@ namespace Explain
     {
         public override void Explain(MethodCallExpression exp, Content info)
         {
-            if (exp.Method.DeclaringType != null && exp.Method.DeclaringType.FullName == "ORM.ORMTool")
+            if (ExplainTool.Methods.Contains(exp.Method.Name))
             {
+                if (ExplainTool.MethodLikes.Contains(exp.Method.Name))
+                {
+                    ExplainTool.Explain(exp.Object, info);
+                }
                 ExplainTool.Explain(exp.Arguments[0], info);
                 info.Append(exp.Method);
                 if (exp.Arguments.Count > 1)

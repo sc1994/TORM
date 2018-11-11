@@ -10,21 +10,6 @@ namespace ORM
         Full
     }
 
-    public class Const
-    {
-        public static string[] Methods = new[]
-        {
-            "In",
-            "NotIn",
-            "LikeF",
-            "LikeR",
-            "LikeL",
-            "Count",
-            "Max",
-            "Min"
-        };
-    }
-
     static class EnumHelper
     {
         public static string ToString(this LikeEnum that)
