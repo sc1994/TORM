@@ -35,6 +35,11 @@ namespace ORM
         {
             throw new NotImplementedException();
         }
+
+        public static bool Delete<TKey>(TKey id)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Test

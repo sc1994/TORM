@@ -1,10 +1,10 @@
-﻿using ORM.Interface;
+﻿using Explain;
+using ORM.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Explain;
 
 namespace ORM.Realizes
 {
@@ -25,44 +25,44 @@ namespace ORM.Realizes
 
         public bool Exist()
         {
-            var sql = $"SELECT COUNT(1) FROM {GetTable()} {GetJoin()} {GetWhere()};";
+            var sql = $"SELECT COUNT(1) FROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
         public T First()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
         public (IEnumerable<T> data, int total) Page(int index, int size)
         {
-            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};");
+            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
             ToPage(index, size, sql);
             throw new NotImplementedException();
         }
 
         public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
-            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()};");
+            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
             ToPage(index, size, sql);
             throw new NotImplementedException();
         }
@@ -213,7 +213,7 @@ namespace ORM.Realizes
 
         private StringBuilder GetGroup()
         {
-            var result = new StringBuilder("\r\nGROUP BY");
+            var result = new StringBuilder();
 
             _groups.ForEach(item =>
             {
@@ -225,12 +225,16 @@ namespace ORM.Realizes
                     result.Append($"\r\n  {info.Table.Name}.{info.Field},");
                 }
             });
+            if (result.Length > 0)
+            {
+                result.Insert(0, "\r\nGROUP BY");
+            }
             return result.Remove(result.Length - 1, 1);
         }
 
         private StringBuilder GetOrder()
         {
-            var result = new StringBuilder("\r\nORDER BY");
+            var result = new StringBuilder();
 
             _orders.ForEach(item =>
             {
@@ -242,12 +246,17 @@ namespace ORM.Realizes
                     result.Append($"\r\n  {info.Table.Name}.{info.Field} {item.Item2.ToExplain()}");
                 }
             });
+            if (result.Length > 0)
+            {
+                result.Insert(0, "\r\nORDER BY");
+            }
+
             return result.Remove(result.Length - 1, 1);
         }
 
         /// <summary>
         /// 获取需要join 的表（取全部表，取已用表，未用过的就是需要join 的表）
-        /// todo 这样的计算方式应该不能满足多外键的情况，需要考虑别的办法
+        /// todo 这样的计算方式不靠谱可能还会有性能浪费
         /// </summary>
         /// <returns></returns>
         private string GetJoinTable()
@@ -273,7 +282,7 @@ namespace ORM.Realizes
 
         private void ToPage(int index, int size, StringBuilder sql)
         {
-            // todo 不同数据库的分页有细微差距
+            // todo 不同数据库的分页有差距
         }
     }
 }
