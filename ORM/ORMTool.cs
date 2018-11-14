@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ORM
 {
@@ -9,14 +8,33 @@ namespace ORM
     /// </summary>
     public static class ORMTool
     {
-        public static bool NotIn<TValue>(this TValue field, IEnumerable<TValue> values)
+        public static bool NotIn<T>(this T field, IEnumerable<T> values) where T : struct
         {
             return true;
         }
-        public static bool In<TValue>(this TValue field, IEnumerable<TValue> values)
+
+        public static bool NotIn(this string field, IEnumerable<string> values)
         {
             return true;
         }
+        public static bool NotIn(this DateTime field, IEnumerable<DateTime> values)
+        {
+            return true;
+        }
+
+        public static bool In<T>(this T field, IEnumerable<T> values) where T : struct
+        {
+            return true;
+        }
+        public static bool In(this string field, IEnumerable<string> values)
+        {
+            return true;
+        }
+        public static bool In(this DateTime field, IEnumerable<DateTime> values)
+        {
+            return true;
+        }
+
         public static int Count(object value)
         {
             return 0;

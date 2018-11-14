@@ -38,6 +38,8 @@ namespace Demo
                 .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
                 .Exist();
 
+            ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();S
+
             var info = new ContentWhere();
             Expression<Func<Model, bool>>
                 a = x => x.Name == "234" && x.Date == DateTime.Today && x.Name1 == "123";
