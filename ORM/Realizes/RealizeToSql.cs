@@ -163,8 +163,8 @@ namespace ORM.Realizes
             {
                 var a = string.IsNullOrWhiteSpace(alias) ? "" : $" AS {alias}";
                 result.Append(string.IsNullOrWhiteSpace(x.Method)
-                    ? $"\r\n  {x.Table.Name}.{x.Field}{a},"
-                    : $"\r\n  {x.Method.ToUpper()}({x.Table.Name}.{x.Field}){a},");
+                    ? $"\r\n  {GetTable(x.Table)}.{x.Field}{a},"
+                    : $"\r\n  {x.Method.ToUpper()}({GetTable(x.Table)}.{x.Field}){a},");
             });
         }
 
