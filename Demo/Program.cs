@@ -20,11 +20,6 @@ namespace Demo
                 .Where(x => x.Name.StartsWith("1"))
                 .Where(x => x.Name.EndsWith("2"))
                 .Where(x => x.Name.Contains("3"))
-                .Where(x => x.Date == DateTime.Today)
-                .Where(x => x.Date > DateTime.Today)
-                .Where(x => x.Date >= DateTime.Today)
-                .Where(x => x.Date <= DateTime.Today)
-                .Where(x => x.Date < DateTime.Today)
                 .Where(x => x.Date != DateTime.Today)
                 .Where(x => x.Name1 == null)
                 .Where(x => x.Name1 != null)
@@ -33,12 +28,12 @@ namespace Demo
                 .OrderA(x => x.Name1)
                 .Find();
 
-            ORM.ORM.Query<Model, Model3>()
-                .Select((x, y) => x.Name, (x, y) => y.Date3)
-                .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
-                .Exist();
+            //ORM.ORM.Query<Model, Model3>()
+            //    .Select((x, y) => x.Name, (x, y) => y.Date3)
+            //    .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
+            //    .Exist();
 
-            ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();S
+            ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
 
             var info = new ContentWhere();
             Expression<Func<Model, bool>>
@@ -49,6 +44,7 @@ namespace Demo
         }
     }
 
+    [Table("test", DBTypeEnum.MySQL, "ModelTable")]
     class Model
     {
         public string Name { get; set; }

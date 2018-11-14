@@ -77,7 +77,8 @@ namespace ORM.Realizes
 
         public IQueryWhere<T> Where(Expression<Func<T, bool>> exp)
         {
-            throw new NotImplementedException();
+            _where.Add(exp);
+            return this;
         }
     }
 

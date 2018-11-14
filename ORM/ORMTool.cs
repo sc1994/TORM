@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ORM
 {
@@ -46,6 +47,13 @@ namespace ORM
         public static int Min(object value)
         {
             return 0;
+        }
+
+        public static StringBuilder TryRemove(this StringBuilder that, int startIndex, int length)
+        {
+            if (that.Length > startIndex + length)
+                return that.Remove(startIndex, length);
+            return that;
         }
     }
 }
