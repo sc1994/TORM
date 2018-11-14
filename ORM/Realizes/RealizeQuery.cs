@@ -8,51 +8,134 @@ using System.Text;
 
 namespace ORM.Realizes
 {
+    /// <summary>
+    /// 解析 查询 相关
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RealizeQuery<T> : IQuery<T>
     {
+        /// <summary>
+        /// 存放 where 表达式
+        /// </summary>
         protected List<Expression> _where = new List<Expression>();
+        /// <summary>
+        /// 存放 join 表达式
+        /// </summary>
         protected List<(Expression, JoinEnum)> _join = new List<(Expression, JoinEnum)>();
+        /// <summary>
+        /// 存放 select 表达式
+        /// </summary>
         protected List<Expression> _selects = new List<Expression>();
+        /// <summary>
+        /// 存放 待别名的 select 表达式
+        /// </summary>
         protected List<(Expression, string)> _selectAlias = new List<(Expression, string)>();
+        /// <summary>
+        /// 存放 order 表达式
+        /// </summary>
         protected List<(Expression, OrderEnum)> _orders = new List<(Expression, OrderEnum)>();
+        /// <summary>
+        /// 存放 group 表达式
+        /// </summary>
         protected List<Expression> _groups = new List<Expression>();
+        /// <summary>
+        /// 存放参数
+        /// </summary>
         protected Dictionary<string, object> _params = new Dictionary<string, object>();
+        /// <summary>
+        /// 已经用到的表（为了筛选当前 join 的那个表）
+        /// </summary>
         protected List<Type> useTables = new List<Type>
         {
             typeof(T)
         };
+        /// <summary>
+        /// 全部的表
+        /// </summary>
         protected List<Type> allTables = new List<Type>();
 
+
+        /// <summary>
+        /// 是否存在数据
+        /// </summary>
+        /// <returns></returns>
         public bool Exist()
         {
             var sql = $"SELECT COUNT(1) FROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 查找第一条数据
+        /// </summary>
+        /// <returns></returns>
         public T First()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 查找第一条数据
+        /// </summary>
+        /// <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+        /// <returns></returns>
         public TOther First<TOther>()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
-        public IEnumerable<TOther> Find<TOther>()
-        {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<T> Find()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
+        /// <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+        /// <returns></returns>
+        public IEnumerable<TOther> Find<TOther>()
+        {
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
+        /// <param name="top">限制获取数量</param>
+        /// <returns></returns>
+        public IEnumerable<T> Find(int top)
+        {
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
+        /// <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+        /// <param name="top">限制获取数量</param>
+        /// <returns></returns>
+        public IEnumerable<TOther> Find<TOther>(int top)
+        {
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="index">当前页</param>
+        /// <param name="size">页大小</param>
+        /// <returns></returns>
         public (IEnumerable<T> data, int total) Page(int index, int size)
         {
             var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
@@ -60,6 +143,13 @@ namespace ORM.Realizes
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+        /// <param name="index">当前页</param>
+        /// <param name="size">页大小</param>
+        /// <returns></returns>
         public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
             var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
@@ -67,6 +157,10 @@ namespace ORM.Realizes
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 获取where sql 代码
+        /// </summary>
+        /// <returns></returns>
         private StringBuilder GetWhere()
         {
             var result = new StringBuilder("\r\nWHERE 1=1");
@@ -82,6 +176,11 @@ namespace ORM.Realizes
             return result;
         }
 
+        /// <summary>
+        /// 转到where
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="result"></param>
         private void ToWhere(ExplainInfo info, StringBuilder result)
         {
             string param;
@@ -129,6 +228,10 @@ namespace ORM.Realizes
             result.Append(sql);
         }
 
+        /// <summary>
+        /// 获取 select sql 代码
+        /// </summary>
+        /// <returns></returns>
         private StringBuilder GetSelect()
         {
             var result = new StringBuilder("SELECT");
@@ -145,6 +248,12 @@ namespace ORM.Realizes
             return result;
         }
 
+        /// <summary>
+        /// 转到 select
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="alias"></param>
+        /// <param name="result"></param>
         private void ToSelect(Expression item, string alias, StringBuilder result)
         {
             var c = new ContentEasy();
@@ -153,17 +262,16 @@ namespace ORM.Realizes
             c.Info.ForEach(x =>
             {
                 var a = string.IsNullOrWhiteSpace(alias) ? "" : $" AS {alias}";
-                if (string.IsNullOrWhiteSpace(x.Method))
-                {
-                    result.Append($"\r\n  {x.Table.Name}.{x.Field}{a},");
-                }
-                else
-                {
-                    result.Append($"\r\n  {x.Method.ToUpper()}({x.Table.Name}.{x.Field}){a},");
-                }
+                result.Append(string.IsNullOrWhiteSpace(x.Method)
+                    ? $"\r\n  {x.Table.Name}.{x.Field}{a},"
+                    : $"\r\n  {x.Method.ToUpper()}({x.Table.Name}.{x.Field}){a},");
             });
         }
 
+        /// <summary>
+        /// 获取 join sql 代码
+        /// </summary>
+        /// <returns></returns>
         private StringBuilder GetJoin()
         {
             var result = new StringBuilder();
@@ -211,6 +319,10 @@ namespace ORM.Realizes
             return result;
         }
 
+        /// <summary>
+        /// 获取 group sql 代码
+        /// </summary>
+        /// <returns></returns>
         private StringBuilder GetGroup()
         {
             var result = new StringBuilder();
@@ -232,6 +344,10 @@ namespace ORM.Realizes
             return result.Remove(result.Length - 1, 1);
         }
 
+        /// <summary>
+        /// 获取 order sql 代码
+        /// </summary>
+        /// <returns></returns>
         private StringBuilder GetOrder()
         {
             var result = new StringBuilder();
@@ -280,9 +396,25 @@ namespace ORM.Realizes
             return typeof(T).Name;
         }
 
+        /// <summary>
+        /// 转成分页的
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="size"></param>
+        /// <param name="sql"></param>
         private void ToPage(int index, int size, StringBuilder sql)
         {
             // todo 不同数据库的分页有差距
+        }
+
+        /// <summary>
+        /// 转成top的
+        /// </summary>
+        /// <param name="top"></param>
+        /// <param name="sql"></param>
+        private void ToTop(int top, StringBuilder sql)
+        {
+            // todo 不同数据库的top有差距
         }
     }
 }

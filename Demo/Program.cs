@@ -1,8 +1,8 @@
 ﻿using Explain;
+using ORM;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using ORM;
 
 namespace Demo
 {
@@ -30,8 +30,8 @@ namespace Demo
                 .Where(x => x.Name1 != null)
                 .Where(x => x.Name.In(new[] { "", "" }.ToList()))
                 .Where(x => x.Name.NotIn(new[] { "", "" }.ToList()))
-                //.OrderA(x => x.Name1)
-                .First();
+                .OrderA(x => x.Name1)
+                .Find();
 
             ORM.ORM.Query<Model, Model3>()
                 .Select((x, y) => x.Name, (x, y) => y.Date3)

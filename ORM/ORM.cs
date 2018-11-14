@@ -1,6 +1,6 @@
 ﻿using ORM.Interface;
-using System;
 using ORM.Realizes;
+using System;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -9,7 +9,10 @@ using ORM.Realizes;
 
 namespace ORM
 {
-    public class ORM
+    /// <summary>
+    /// query 相关
+    /// </summary>
+    public partial class ORM
     {
         public static Realize<T> Query<T>()
         {
@@ -20,12 +23,30 @@ namespace ORM
         {
             return new Realize<T, TJoin>();
         }
+        // todo 多join的实现
+    }
 
+    /// <summary>
+    /// update 相关
+    /// </summary>
+    public partial class ORM
+    {
         public static IUpdateSet<T> Update<T>()
         {
             throw new NotImplementedException();
         }
 
+        public static bool Update<T>(T model)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// insert相关
+    /// </summary>
+    public partial class ORM
+    {
         public static int Insert<T>(params T[] models)
         {
             throw new NotImplementedException();
@@ -35,27 +56,16 @@ namespace ORM
         {
             throw new NotImplementedException();
         }
+    }
 
+    /// <summary>
+    /// delete 相关
+    /// </summary>
+    public partial class ORM
+    {
         public static bool Delete<TKey>(TKey id)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class Test
-    {
-        public string Name { get; set; }
-
-        public int Id { get; set; }
-
-        public void Query()
-        {
-            //ORM.Query<Test>()
-            //    .Select(x => x.Id)
-            //    .And(x => x.Name == "1")
-            //    .OrderA(x => x.Id)
-            //    .Group(x => x.Name)
-            //    .Find();
         }
     }
 }
