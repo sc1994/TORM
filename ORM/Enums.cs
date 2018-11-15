@@ -17,6 +17,16 @@ namespace ORM
         Desc
     }
 
+    public enum SqlTypeEnum
+    {
+        Select,
+        Where,
+        Order,
+        Group,
+        Join,
+        Having
+    }
+
     static class EnumHelper
     {
         public static string ToExplain(this OrderEnum that)

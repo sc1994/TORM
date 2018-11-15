@@ -56,6 +56,11 @@ namespace ORM.Realizes
         /// 表信息
         /// </summary>
         private readonly Dictionary<string, TableInfo> _tableInfoDic = new Dictionary<string, TableInfo>();
+        /// <summary>
+        /// sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
+        /// </summary>
+        private readonly Dictionary<SqlTypeEnum, StringBuilder> _sqlDic = new Dictionary<SqlTypeEnum, StringBuilder>();
+
 
         /// <summary>
         /// 获取where sql 代码
@@ -63,17 +68,20 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected StringBuilder GetWhere()
         {
-            var result = new StringBuilder("\r\nWHERE 1=1");
-            foreach (var item in _where)
+            return GetSliceSql(SqlTypeEnum.Where, () =>
             {
-                var c = new ContentWhere();
-                ExplainTool.Explain(item, c);
-                c.Rinse();
-                result.Append("\r\nAND(");
-                c.Info.ForEach(x => ToWhere(x, result));
-                result.Append("\r\n)");
-            }
-            return result;
+                var result = new StringBuilder("\r\nWHERE 1=1");
+                foreach (var item in _where)
+                {
+                    var c = new ContentWhere();
+                    ExplainTool.Explain(item, c);
+                    c.Rinse();
+                    result.Append("\r\nAND(");
+                    c.Info.ForEach(x => ToWhere(x, result));
+                    result.Append("\r\n)");
+                }
+                return result;
+            });
         }
 
         /// <summary>
@@ -134,18 +142,21 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected StringBuilder GetSelect()
         {
-            var result = new StringBuilder("SELECT");
-            _selects.ForEach(x => ToSelect(x, null, result));
-            _selectAlias.ForEach(x => ToSelect(x.Item1, x.Item2, result));
-            if (result.ToString() != "SELECT")
+            return GetSliceSql(SqlTypeEnum.Select, () =>
             {
-                result.TryRemove(result.Length - 1, 1);
-            }
-            else
-            {
-                result.Append(" *");
-            }
-            return result;
+                var result = new StringBuilder("SELECT");
+                _selects.ForEach(x => ToSelect(x, null, result));
+                _selectAlias.ForEach(x => ToSelect(x.Item1, x.Item2, result));
+                if (result.ToString() != "SELECT")
+                {
+                    result.TryRemove(result.Length - 1, 1);
+                }
+                else
+                {
+                    result.Append(" *");
+                }
+                return result;
+            });
         }
 
         /// <summary>
@@ -174,49 +185,51 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected StringBuilder GetJoin()
         {
-            var result = new StringBuilder();
+            return GetSliceSql(SqlTypeEnum.Join, () =>
+             {
+                 var result = new StringBuilder();
+                 _join.ForEach(x =>
+                 {
+                     var c = new ContentJoin();
+                     ExplainTool.Explain(x.Item1, c);
+                     c.Rinse();
+                     // 收集全部表
+                     allTables.AddRange(c.Info.Select(s => s.Table));
+                     allTables.AddRange(c.Info.Select(s => s.Table2));
 
-            _join.ForEach(x =>
-            {
-                var c = new ContentJoin();
-                ExplainTool.Explain(x.Item1, c);
-                c.Rinse();
-                // 收集全部表
-                allTables.AddRange(c.Info.Select(s => s.Table));
-                allTables.AddRange(c.Info.Select(s => s.Table2));
+                     foreach (var info in c.Info)
+                     {
+                         string param;
+                         var type = info.Type.ToExplain();
+                         if (info.Value == null
+                             && (type == "=" || type == "<>")
+                             && info.Table2 == null
+                             && string.IsNullOrWhiteSpace(info.Field2)) // 当不是和表字段的比较，且 == null 或者 != null时，采取SQL 语法
+                         {
+                             param = "null";
+                             type = type == "=" ? "IS" : "IS NOT";
+                         }
+                         else
+                         {
+                             param = $"@{GetTable(info.Table)}_{info.Field}_{_params.Count}";
+                             _params.Add(param, info.Value);
+                         }
 
-                foreach (var info in c.Info)
-                {
-                    string param;
-                    var type = info.Type.ToExplain();
-                    if (info.Value == null
-                        && (type == "=" || type == "<>")
-                        && info.Table2 == null
-                        && string.IsNullOrWhiteSpace(info.Field2)) // 当不是和表字段的比较，且 == null 或者 != null时，采取SQL 语法
-                    {
-                        param = "null";
-                        type = type == "=" ? "IS" : "IS NOT";
-                    }
-                    else
-                    {
-                        param = $"@{GetTable(info.Table)}_{info.Field}_{_params.Count}";
-                        _params.Add(param, info.Value);
-                    }
-
-                    if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
-                    {
-                        result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTable(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
-                        // 收集已用表
-                        useTables.Add(info.Table);
-                        useTables.Add(info.Table2);
-                    }
-                    else
-                    {
-                        result.Append($"\r\n  {info.Prior.ToExplain()} {GetTable(info.Table)}.{info.Field} {type} {param}");
-                    }
-                }
-            });
-            return result;
+                         if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
+                         {
+                             result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTable(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                             // 收集已用表
+                             useTables.Add(info.Table);
+                             useTables.Add(info.Table2);
+                         }
+                         else
+                         {
+                             result.Append($"\r\n  {info.Prior.ToExplain()} {GetTable(info.Table)}.{info.Field} {type} {param}");
+                         }
+                     }
+                 });
+                 return result;
+             });
         }
 
         /// <summary>
@@ -225,23 +238,25 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected StringBuilder GetGroup()
         {
-            var result = new StringBuilder();
-
-            _groups.ForEach(item =>
-            {
-                var c = new ContentEasy();
-                ExplainTool.Explain(item, c);
-                c.Rinse();
-                foreach (var info in c.Info)
-                {
-                    result.Append($"\r\n  {GetTable(info.Table)}.{info.Field},");
-                }
-            });
-            if (result.Length > 0)
-            {
-                result.Insert(0, "\r\nGROUP BY");
-            }
-            return result.TryRemove(result.Length - 1, 1);
+            return GetSliceSql(SqlTypeEnum.Group, () =>
+             {
+                 var result = new StringBuilder();
+                 _groups.ForEach(item =>
+                                 {
+                                     var c = new ContentEasy();
+                                     ExplainTool.Explain(item, c);
+                                     c.Rinse();
+                                     foreach (var info in c.Info)
+                                     {
+                                         result.Append($"\r\n  {GetTable(info.Table)}.{info.Field},");
+                                     }
+                                 });
+                 if (result.Length > 0)
+                 {
+                     result.Insert(0, "\r\nGROUP BY");
+                 }
+                 return result.TryRemove(result.Length - 1, 1);
+             });
         }
 
         /// <summary>
@@ -250,24 +265,45 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected StringBuilder GetOrder()
         {
-            var result = new StringBuilder();
-
-            _orders.ForEach(item =>
+            return GetSliceSql(SqlTypeEnum.Order, () =>
             {
-                var c = new ContentEasy();
-                ExplainTool.Explain(item.Item1, c);
-                c.Rinse();
-                foreach (var info in c.Info)
+                var result = new StringBuilder();
+                _orders.ForEach(item =>
                 {
-                    result.Append($"\r\n  {GetTable(info.Table)}.{info.Field} {item.Item2.ToExplain()}");
+                    var c = new ContentEasy();
+                    ExplainTool.Explain(item.Item1, c);
+                    c.Rinse();
+                    foreach (var info in c.Info)
+                    {
+                        result.Append($"\r\n  {GetTable(info.Table)}.{info.Field} {item.Item2.ToExplain()}");
+                    }
+                });
+                if (result.Length > 0)
+                {
+                    result.Insert(0, "\r\nORDER BY");
                 }
+                return result.TryRemove(result.Length - 1, 1);
             });
-            if (result.Length > 0)
-            {
-                result.Insert(0, "\r\nORDER BY");
-            }
+        }
 
-            return result.TryRemove(result.Length - 1, 1);
+        /// <summary>
+        /// 将sql分块，前后加上字典优化性能
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        protected StringBuilder GetSliceSql(SqlTypeEnum type, Func<StringBuilder> func)
+        {
+            // 字段取值
+            if (_sqlDic.ContainsKey(type))
+            {
+                return _sqlDic[type];
+            }
+            // 字典中没有相应的值，执行委托
+            var result = func();
+            // 存入字典，以备下一次调用
+            _sqlDic.Add(type, result);
+            return result;
         }
 
         /// <summary>
@@ -310,7 +346,6 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="index"></param>
         /// <param name="size"></param>
-        /// <param name="sql"></param>
         protected string ToPage(int index, int size)
         {
             var t = GetTableInfo().DBType;
@@ -332,16 +367,12 @@ namespace ORM.Realizes
 
             if (t == DBTypeEnum.MySQL)
             {
-                return $"{@select}{{0}}\r\nLIMIT{(index - 1) * size + 1},{index * size}";
+                return $"{select}{{0}}\r\nLIMIT{(index - 1) * size + 1},{index * size}";
             }
             else
             {
-                // todo SQLServer2012
+                throw new NotImplementedException("未实现的数据库类型");
             }
-
-            throw new NotImplementedException();
-
-            // todo 不同数据库的分页有差距
         }
 
         /// <summary>
@@ -357,10 +388,7 @@ namespace ORM.Realizes
             }
 
             return $"{s.Replace("SELECT", $"SELECT TOP {top}")} {{0}};";
-
-            // todo 不同数据库的top有差距
         }
-
 
         /// <summary>
         /// 依据特性获取表信息

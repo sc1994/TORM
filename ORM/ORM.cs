@@ -7,6 +7,8 @@ using System;
 // todo 事务
 // todo 运行时抛出不支持的写法的异常
 // todo 收集sql存起来以备二次调用，无需每次调用方法都去解析一次表达式
+// todo sql 缓存，data 缓存
+// todo having 语句
 
 namespace ORM
 {
