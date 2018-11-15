@@ -1,7 +1,6 @@
 ﻿using ORM.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ORM.Realizes
 {
@@ -17,7 +16,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public bool Exist()
         {
-            var sql = $"SELECT COUNT(1) FROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"SELECT COUNT(1) FROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -27,7 +26,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public T First()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -48,7 +47,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -70,7 +69,8 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find(int top)
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var t = ToTop(top);
+            var sql = string.Format(t, $" \r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
             throw new NotImplementedException();
         }
 
@@ -94,8 +94,8 @@ namespace ORM.Realizes
         /// <returns></returns>
         public (IEnumerable<T> data, int total) Page(int index, int size)
         {
-            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
-            ToPage(index, size, sql);
+            var t = ToPage(index, size);
+            var sql = string.Format(t, $"\r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
             throw new NotImplementedException();
         }
 
@@ -108,8 +108,9 @@ namespace ORM.Realizes
         /// <returns></returns>
         public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
-            var sql = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
-            ToPage(index, size, sql);
+            //var = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
+            var t = ToPage(index, size);
+            var sql = string.Format(t, $"\r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
             throw new NotImplementedException();
         }
     }

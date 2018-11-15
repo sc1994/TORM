@@ -311,8 +311,36 @@ namespace ORM.Realizes
         /// <param name="index"></param>
         /// <param name="size"></param>
         /// <param name="sql"></param>
-        protected void ToPage(int index, int size, StringBuilder sql)
+        protected string ToPage(int index, int size)
         {
+            var t = GetTableInfo().DBType;
+            var order = GetOrder();
+            var select = GetSelect();
+            if (string.IsNullOrWhiteSpace(order.ToString()))
+            {
+                throw new Exception("分页需传入排序依据");
+            }
+
+            if (t == DBTypeEnum.SQLServer2008)
+            {
+                return "SELECT * FROM\r\n" +
+                       "(SELECT ROW_NUMBER() OVER(ORDER BY" +
+                       $"{order.Replace("ORDER BY\r\n", "")}\r\n) AS ROWNUMBER," +
+                       $"{select.Replace("SELECT\r\n", "\r\n")}{{0}}" +
+                       $"\r\n) A WHERE ROWNUMBER BETWEEN {(index - 1) * size + 1} AND {index * size};";
+            }
+
+            if (t == DBTypeEnum.MySQL)
+            {
+                return $"{@select}{{0}}\r\nLIMIT{(index - 1) * size + 1},{index * size}";
+            }
+            else
+            {
+                // todo SQLServer2012
+            }
+
+            throw new NotImplementedException();
+
             // todo 不同数据库的分页有差距
         }
 
@@ -320,10 +348,27 @@ namespace ORM.Realizes
         /// 转成top的
         /// </summary>
         /// <param name="top"></param>
-        /// <param name="sql"></param>
-        protected void ToTop(int top, StringBuilder sql)
+        protected string ToTop(int top)
         {
+            var s = GetSelect();
+            if (GetTableInfo().DBType == DBTypeEnum.MySQL)
+            {
+                return $"{s} {{0}} \r\nLIMIT {top};";
+            }
+
+            return $"{s.Replace("SELECT", $"SELECT TOP {top}")} {{0}};";
+
             // todo 不同数据库的top有差距
+        }
+
+
+        /// <summary>
+        /// 依据特性获取表信息
+        /// </summary>
+        /// <returns></returns>
+        private TableInfo GetTableInfo()
+        {
+            return GetTableInfo(_t);
         }
 
         /// <summary>

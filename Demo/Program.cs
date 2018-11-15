@@ -26,7 +26,7 @@ namespace Demo
                 .Where(x => x.Name.In(new[] { "", "" }.ToList()))
                 .Where(x => x.Name.NotIn(new[] { "", "" }.ToList()))
                 .OrderA(x => x.Name1)
-                .Find();
+                .Page(2, 10);
 
             //ORM.ORM.Query<Model, Model3>()
             //    .Select((x, y) => x.Name, (x, y) => y.Date3)
