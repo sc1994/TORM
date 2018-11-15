@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Explain\Explain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interface\IDelete\" />
-  </ItemGroup>
-
 </Project>

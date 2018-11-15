@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using ORM.Interface;
+﻿using ORM.Interface;
 
 namespace ORM.Realizes
 {
@@ -9,8 +6,17 @@ namespace ORM.Realizes
     /// 解析 更新 相关
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    //public class RealizeUpdate<T> : IUpdateSet<T>
-    //{
-        
-    //}
+    public class RealizeUpdate<T> : RealizeToSql<T>, IUpdate
+    {
+        public int Update()
+        {
+            var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()}";
+            throw new System.NotImplementedException();
+        }
+
+        public int Update(int top)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

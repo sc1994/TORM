@@ -24,7 +24,8 @@ namespace ORM
         Order,
         Group,
         Join,
-        Having
+        Having,
+        Set
     }
 
     static class EnumHelper

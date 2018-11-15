@@ -41,6 +41,10 @@ namespace ORM.Realizes
         /// </summary>
         protected List<Expression> _having = new List<Expression>();
         /// <summary>
+        /// 存放 set 表达式
+        /// </summary>
+        protected List<(Expression, object)> _set = new List<(Expression, object)>();
+        /// <summary>
         /// 存放参数
         /// </summary>
         protected Dictionary<string, object> _params = new Dictionary<string, object>();
@@ -66,7 +70,7 @@ namespace ORM.Realizes
         private readonly Dictionary<SqlTypeEnum, StringBuilder> _sqlDic = new Dictionary<SqlTypeEnum, StringBuilder>();
 
         /// <summary>
-        /// 获取 where sql 代码
+        /// 获取 having sql 代码
         /// </summary>
         /// <returns></returns>
         protected StringBuilder GetHaving()
@@ -118,12 +122,12 @@ namespace ORM.Realizes
                     }
                     else
                     {
-                        param = $"@{GetTable(x.Table)}_{x.Field}_{_params.Count}";
+                        param = $"@{GetTableName(x.Table)}_{x.Field}_{_params.Count}";
                         _params.Add(param, x.Value);
                     }
 
                     var ex = x.Prior.ToExplain();
-                    var sql = $"\r\n  {(ex == null ? "" : ex + " ")}{GetTable(x.Table)}.{x.Field} ";
+                    var sql = $"\r\n  {(ex == null ? "" : ex + " ")}{GetTableName(x.Table)}.{x.Field} ";
                     if (ExplainTool.Methods.Contains(x.Method))
                     {
                         if (x.Method == "Contains")
@@ -195,8 +199,8 @@ namespace ORM.Realizes
             {
                 var a = string.IsNullOrWhiteSpace(alias) ? "" : $" AS {alias}";
                 result.Append(string.IsNullOrWhiteSpace(x.Method)
-                    ? $"\r\n  {GetTable(x.Table)}.{x.Field}{a},"
-                    : $"\r\n  {x.Method.ToUpper()}({GetTable(x.Table)}.{x.Field}){a},");
+                    ? $"\r\n  {GetTableName(x.Table)}.{x.Field}{a},"
+                    : $"\r\n  {x.Method.ToUpper()}({GetTableName(x.Table)}.{x.Field}){a},");
             });
         }
 
@@ -232,20 +236,20 @@ namespace ORM.Realizes
                          }
                          else
                          {
-                             param = $"@{GetTable(info.Table)}_{info.Field}_{_params.Count}";
+                             param = $"@{GetTableName(info.Table)}_{info.Field}_{_params.Count}";
                              _params.Add(param, info.Value);
                          }
 
                          if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
                          {
-                             result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTable(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                             result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTableName(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
                              // 收集已用表
                              useTables.Add(info.Table);
                              useTables.Add(info.Table2);
                          }
                          else
                          {
-                             result.Append($"\r\n  {info.Prior.ToExplain()} {GetTable(info.Table)}.{info.Field} {type} {param}");
+                             result.Append($"\r\n  {info.Prior.ToExplain()} {GetTableName(info.Table)}.{info.Field} {type} {param}");
                          }
                      }
                  });
@@ -269,7 +273,7 @@ namespace ORM.Realizes
                      c.Rinse();
                      foreach (var info in c.Info)
                      {
-                         result.Append($"\r\n  {GetTable(info.Table)}.{info.Field},");
+                         result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field},");
                      }
                  });
                  if (result.Length > 0)
@@ -296,7 +300,7 @@ namespace ORM.Realizes
                     c.Rinse();
                     foreach (var info in c.Info)
                     {
-                        result.Append($"\r\n  {GetTable(info.Table)}.{info.Field} {item.Item2.ToExplain()}");
+                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field} {item.Item2.ToExplain()}");
                     }
                 });
                 if (result.Length > 0)
@@ -304,6 +308,21 @@ namespace ORM.Realizes
                     result.Insert(0, "\r\nORDER BY");
                 }
                 return result.TryRemove(result.Length - 1, 1);
+            });
+        }
+
+        /// <summary>
+        /// 获取 set sql 代码
+        /// </summary>
+        /// <returns></returns>
+        protected StringBuilder GetSet()
+        {
+            return GetSliceSql(SqlTypeEnum.Order,
+            () =>
+            {
+                var result = new StringBuilder("\r\nSET");
+                
+                throw new NotImplementedException("待实现");
             });
         }
 
@@ -349,16 +368,16 @@ namespace ORM.Realizes
         /// 取主表
         /// </summary>
         /// <returns></returns>
-        protected string GetTable()
+        protected string GetTableName()
         {
-            return GetTable(_t);
+            return GetTableName(_t);
         }
 
         /// <summary>
         /// 取指定表名
         /// </summary>
         /// <returns></returns>
-        protected string GetTable(Type table)
+        protected string GetTableName(Type table)
         {
             return GetTableInfo(table).Table;
         }

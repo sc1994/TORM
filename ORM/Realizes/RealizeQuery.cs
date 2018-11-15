@@ -16,7 +16,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public bool Exist()
         {
-            var sql = $"SELECT COUNT(1) FROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -26,7 +26,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public T First()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -37,7 +37,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -47,7 +47,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -58,7 +58,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -70,7 +70,7 @@ namespace ORM.Realizes
         public IEnumerable<T> Find(int top)
         {
             var t = ToTop(top);
-            var sql = string.Format(t, $" \r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
+            var sql = string.Format(t, $" \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
             throw new NotImplementedException();
         }
 
@@ -82,7 +82,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>(int top)
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -95,7 +95,7 @@ namespace ORM.Realizes
         public (IEnumerable<T> data, int total) Page(int index, int size)
         {
             var t = ToPage(index, size);
-            var sql = string.Format(t, $"\r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
+            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
             throw new NotImplementedException();
         }
 
@@ -108,9 +108,9 @@ namespace ORM.Realizes
         /// <returns></returns>
         public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
         {
-            //var = new StringBuilder($"{GetSelect()} \r\nFROM {GetTable()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
+            //var = new StringBuilder($"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
             var t = ToPage(index, size);
-            var sql = string.Format(t, $"\r\nFROM {GetTable()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
+            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
             throw new NotImplementedException();
         }
     }

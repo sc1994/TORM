@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace ORM.Interface
+﻿namespace ORM.Interface
 {
-    public interface IUpdate<T>
+    public interface IUpdate
     {
         int Update();
         int Update(int top);

@@ -1,4 +1,5 @@
 ﻿using ORM.Interface;
+using ORM.Interface.IQuery;
 using System;
 using System.Linq.Expressions;
 
@@ -78,6 +79,12 @@ namespace ORM.Realizes
         public IQueryWhere<T> Where(Expression<Func<T, bool>> exp)
         {
             _where.Add(exp);
+            return this;
+        }
+
+        public IHaving<T> Having(Expression<Func<T, bool>> exp)
+        {
+            _having.Add(exp);
             return this;
         }
     }
@@ -173,12 +180,20 @@ namespace ORM.Realizes
 
         public IQuerySelect<T, TJoin> Select(Expression<Func<T, TJoin, object[]>> exp)
         {
-            throw new NotImplementedException();
+            _selects.Add(exp);
+            return this;
         }
 
-        IQueryWhere<T, TJoin> IWhere<T, TJoin, IQueryWhere<T, TJoin>>.Where(Expression<Func<T, TJoin, bool>> exp)
+        public IQueryWhere<T, TJoin> Where(Expression<Func<T, TJoin, bool>> exp)
         {
-            throw new NotImplementedException();
+            _where.Add(exp);
+            return this;
+        }
+
+        public IHaving<T, TJoin> Having(Expression<Func<T, TJoin, bool>> exp)
+        {
+            _having.Add(exp);
+            return this;
         }
     }
 }
