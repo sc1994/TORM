@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace ORM
@@ -9,29 +8,29 @@ namespace ORM
     /// </summary>
     public static class ORMTool
     {
-        public static bool NotIn<T>(this T field, IEnumerable<T> values) where T : struct
+        public static bool NotIn<T>(this T field, T[] values) where T : struct
         {
             return true;
         }
 
-        public static bool NotIn(this string field, IEnumerable<string> values)
+        public static bool NotIn(this string field, string[] values)
         {
             return true;
         }
-        public static bool NotIn(this DateTime field, IEnumerable<DateTime> values)
+        public static bool NotIn(this DateTime field, DateTime[] values)
         {
             return true;
         }
 
-        public static bool In<T>(this T field, IEnumerable<T> values) where T : struct
+        public static bool In<T>(this T field, T[] values) where T : struct
         {
             return true;
         }
-        public static bool In(this string field, IEnumerable<string> values)
+        public static bool In(this string field, string[] values)
         {
             return true;
         }
-        public static bool In(this DateTime field, IEnumerable<DateTime> values)
+        public static bool In(this DateTime field, DateTime[] values)
         {
             return true;
         }

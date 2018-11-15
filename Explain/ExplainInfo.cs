@@ -39,6 +39,10 @@ namespace Explain
         /// 两个树节点之间的关系
         /// </summary>
         public ExpressionType? Prior { get; set; }
+        /// <summary>
+        /// 是否是new array （解决在表达式中直接实例数组）
+        /// </summary>
+        public bool IsNewArray { get; set; }
     }
 
     /// <summary>
@@ -51,11 +55,25 @@ namespace Explain
             Last.Field = info;
         }
 
+
+
         public override void Append(object info)
         {
-            Last.Value = info;
-            if (!string.IsNullOrWhiteSpace(Last.Field) && !string.IsNullOrWhiteSpace(Last.Method))
+            if (Last.IsNewArray)
+            {
+                _newArray.Add(info);
+            }
+            else
+            {
+                Last.Value = info;
+            }
+
+            if (!string.IsNullOrWhiteSpace(Last.Field) &&
+                !string.IsNullOrWhiteSpace(Last.Method) &&
+                !Last.IsNewArray)
+            {
                 Info.Add(new ExplainInfo());
+            }
         }
 
         public override void Append(MethodInfo method)
@@ -161,6 +179,28 @@ namespace Explain
         public virtual void Append(Type info)
         {
             Last.Table = info;
+        }
+
+        /// <summary>
+        /// 解决在表达式中直接实例数组
+        /// </summary>
+        protected readonly List<object> _newArray = new List<object>();
+
+        /// <summary>
+        /// 是否直接在表达式中实例数组
+        /// </summary>
+        public virtual void IsNewArray()
+        {
+            Last.IsNewArray = true;
+        }
+
+        /// <summary>
+        /// 结束实例数组的时机
+        /// </summary>
+        public virtual void OverNewArray()
+        {
+            Last.Value = _newArray;
+            Info.Add(new ExplainInfo());
         }
 
         public void Rinse()

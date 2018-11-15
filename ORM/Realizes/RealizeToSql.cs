@@ -287,7 +287,7 @@ namespace ORM.Realizes
         }
 
         /// <summary>
-        /// 将sql分块，前后加上字典优化性能
+        /// 将sql分块，前后加上字典，以优化性能。
         /// </summary>
         /// <param name="type"></param>
         /// <param name="func"></param>
@@ -299,6 +299,7 @@ namespace ORM.Realizes
             {
                 return _sqlDic[type];
             }
+            ExplainTool.Log("GetSliceSql", $"记录GetSliceSql({type})计算频率。");
             // 字典中没有相应的值，执行委托
             var result = func();
             // 存入字典，以备下一次调用
@@ -308,7 +309,7 @@ namespace ORM.Realizes
 
         /// <summary>
         /// 获取需要join 的表（取全部表，取已用表，未用过的就是需要join 的表）
-        /// todo 这样的计算方式不靠谱可能还会有性能浪费
+        /// todo 这样的计算方式不靠谱
         /// </summary>
         /// <returns></returns>
         protected string GetJoinTable()

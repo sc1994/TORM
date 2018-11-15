@@ -1,87 +1,40 @@
 # SqlHelper
-(ORM) sql 帮助类 方便sql 的增删改查 操作 
+（未完成）目的是实现`=>`表达式进行数据库的增删改查。
 
-## 依赖项
-- Dapper (如果nuget没能还原此包需要手动安装下)
-- Configuration (.net 程序集中引用此依赖)
+>### TODO
+- 子查询
+- 同一个`Where`中的优先级
+- 解析表达式性能优化
+- 事务
+- 异常消息完善
+- （可行性不高）sql 缓存，data 缓存
+- `HAVING`
+- 更多表的 `JOIN`
 
-## 示例
-##### 查询
-```
-var sh = new SqlHelper<User>(); // 需要指定查询返回的对象
- /*
-    关于<User> 
-        1. 这边的User会被指认为表名称(如果含有Model之类的后缀会被去除)
-        2. 如果你需要返回的值类型不等同于表名
-            比如你想返回类型为 UserView 但是实际的表名称为 User 可以使用一参的构造函数
-            var sh = new SqlHelper<UserView>("User");
-        
- */ 
-sh.AddShow("Name"); //需要显示的字段, 对应了User中的属性
-sh.AddShow("Pwd,Sex"); // 可以分开Add也可以一次写进以 , 分割
-sh.AddWhere(""); // 添加查询条件 具体参数见代码
-sh.AddJoin("","",....); // 添加多表链接 具体参数见代码
-(复杂关系可以直接传入链接字符串)
-/*
-    关于 AddJoin 
-        1.使用此配置之后/前,需要配置 属性 Alia . 此属性配置了主表的别名
-        2.AddJoin 提供了重载 , 需要你仔细的看下参数, 才能知道你当前需要的sql适用与何种重载
-*/
-var data = sh.Select(); // 查询返回 IEnumerable<User>
-```
-##### 分页
-```
-var sh = new SqlHelper<User>
-{
-  PageConfig = new PageConfig
-  {
-    // 分页配置信息
-  }
-};
-sh.AddShow("");
-.
-.
-.
-var data = sh.Select();
-var total = sh.Total;
-var sql = sh.SqlString.ToString();
-```
-##### 新增
-```
-var sh = new SqlHelper<User>(new User
-{
-  Name = "123",
-  Pwd = "456"
-});
-sh.Insert(); // 插入
-```
-##### 更新
-```
-var sh = new SqlHelper<User>();
-sh.AddUpdate("Name","sc"); 
-sh.AddUpdate("Sex","先生"); // 添加更新内容
-sh.AddWhere("Id",666); // 更新条件
-sh.Update(); // 仔细更新
-```
-##### 删除
-```
-var sh = new SqlHelper<User>();
-sh.AddWhere("Id",666); // 删除条件,可为多
-sh.Delete(); // 执行删除
-```
-```
-var sh = new SqlHelper<User>();
-sh.DeleteByPrimaryKey(666); // 依据主键删除
-```
-```
-var sh = new SqlHelper<User>();
-sh.Delete(" AND Id = 666 "); // 删除满足当前条件的数据
-```
-### 开坑
-- [x] 代码拆分
-- [ ] 支持多个地址链接
-- [ ] 支持多个库的操作
-- [ ] 精简 Method 命名
-- [ ] 方法支持链式调用
-- [ ] 配置显示字段的方法重载 Expression 参数
+>### 事项
+- 不能支持一个`Where`中使用括号表明优先级如：`Where(x=>x.a == "1" && (x.b == 2 || x.b == 3))`。建议使用`Where(x=>x.a == "1").Where(x.b == 2 || x.b == 3))`，同一个`Where`表示同一个优先级。目前即使错误的写法解释器会选择忽略优先级，需要特别注意踩坑！
+- `IN`、`NOT IN` 本应是 `a.Any(x=>x=="1")` 来表示`x IN (a)`，但个人觉的不直观（相对于sql语法）。因写成 `x.In(a)` 
+- 不能支持 `Where(x => x.Name.In(new List<string> { "3", "4" }))`，`In`中直接`new List<T>{ x,x,x }`。除此之外`Where(x => x.Name.In(new List<string> { "3", "4" }.ToArray()))`或者`Where(x => x.Name.In(new []{ "3", "4" }))` 都是可以的，不过`.In`方法限制了数据类型不能为`new List`，无需担心踩坑。
+- `DateTime.x`情况比较特殊，如：`Where(x => x.Date != DateTime.Today)`，解析器不能直接获取他的值。目前是穷举了`DateTime.`可能出现的状态，
+- 子查询，目前依然没有实现子查询。也没有关于子查询的方法较好的封装方式。
+- 目前最多支持到5表的`JOIN`
 
+>### 好处
+- 链式：`ORM.Query().Where(x => x.a == "1").OrderA(x => x.b).Find();`
+- 使用 `StartsWith`，`Contains`，`EndsWith`。表示`LIKE`的不同状态。`Where(x => x.Name.EndsWith("2"))`
+- 强类型限制 ：表达式的左右类型需一致，编译时验证
+- 多级表达式：`Where(x => x.a == "1" && x.b == "2" && x.c == 3)`
+- 漏斗形的方法筛选 如：`ORM.Query().Select(x => x.a).Where(x => x.b == 1).OrderA(x => x.c).Find()`类似这样的强制调用顺序，规范代码。
+- `todo`性能方面
+
+>### 查询
+- `todo`
+
+>### 更新
+- `todo`
+
+>### 插入数据
+- `todo`
+
+>### 删除
+- `todo`

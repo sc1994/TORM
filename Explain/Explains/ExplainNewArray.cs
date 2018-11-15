@@ -10,10 +10,13 @@ namespace Explain
     {
         public override void Explain(NewArrayExpression exp, Content info)
         {
+            ExplainTool.Log("NewArray", "监测ExplainNewArray的调用");
+            info.IsNewArray();
             foreach (var item in exp.Expressions) // 循环解析表达式
             {
                 ExplainTool.Explain(item, info);
             }
+            info.OverNewArray(); // 数组结束
         }
     }
 }

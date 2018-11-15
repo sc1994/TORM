@@ -1,6 +1,7 @@
 ﻿using Explain;
 using ORM;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -17,16 +18,9 @@ namespace Demo
                 .Select(x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) })
                 .Select(x => x.Name1, "name")
                 .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
-                .Where(x => x.Name.StartsWith("1"))
-                .Where(x => x.Name.EndsWith("2"))
-                .Where(x => x.Name.Contains("3"))
-                .Where(x => x.Date != DateTime.Today)
-                .Where(x => x.Name1 == null)
-                .Where(x => x.Name1 != null)
-                .Where(x => x.Name.In(new[] { "", "" }.ToList()))
-                .Where(x => x.Name.NotIn(new[] { "", "" }.ToList()))
+                .Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
                 .OrderA(x => x.Name1)
-                .Page(2, 10);
+                .Find();
 
             //ORM.ORM.Query<Model, Model3>()
             //    .Select((x, y) => x.Name, (x, y) => y.Date3)
