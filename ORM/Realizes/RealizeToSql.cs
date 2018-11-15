@@ -21,7 +21,7 @@ namespace ORM.Realizes
         /// </summary>
         protected List<Expression> _selects = new List<Expression>();
         /// <summary>
-        /// 存放 待别名的 select 表达式
+        /// 存放 有别名的 select 表达式
         /// </summary>
         protected List<(Expression, string)> _selectAlias = new List<(Expression, string)>();
         /// <summary>
@@ -36,6 +36,10 @@ namespace ORM.Realizes
         /// 存放 where 表达式
         /// </summary>
         protected List<Expression> _where = new List<Expression>();
+        /// <summary>
+        /// 存放 having 表达式
+        /// </summary>
+        protected List<Expression> _having = new List<Expression>();
         /// <summary>
         /// 存放参数
         /// </summary>
@@ -61,6 +65,20 @@ namespace ORM.Realizes
         /// </summary>
         private readonly Dictionary<SqlTypeEnum, StringBuilder> _sqlDic = new Dictionary<SqlTypeEnum, StringBuilder>();
 
+        /// <summary>
+        /// 获取 where sql 代码
+        /// </summary>
+        /// <returns></returns>
+        protected StringBuilder GetHaving()
+        {
+            return GetSliceSql(SqlTypeEnum.Having,
+            () =>
+            {
+                var result = new StringBuilder("\r\nHAVING 1=1");
+                ToWhere(_having, result);
+                return result;
+            });
+        }
 
         /// <summary>
         /// 获取where sql 代码
@@ -71,69 +89,72 @@ namespace ORM.Realizes
             return GetSliceSql(SqlTypeEnum.Where, () =>
             {
                 var result = new StringBuilder("\r\nWHERE 1=1");
-                foreach (var item in _where)
-                {
-                    var c = new ContentWhere();
-                    ExplainTool.Explain(item, c);
-                    c.Rinse();
-                    result.Append("\r\nAND(");
-                    c.Info.ForEach(x => ToWhere(x, result));
-                    result.Append("\r\n)");
-                }
+                ToWhere(_where, result);
                 return result;
             });
         }
 
         /// <summary>
-        /// 转到where
+        /// 转到 条件筛选
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="exps"></param>
         /// <param name="result"></param>
-        protected void ToWhere(ExplainInfo info, StringBuilder result)
+        protected void ToWhere(List<Expression> exps, StringBuilder result)
         {
-            string param;
-            var type = info.Type.ToExplain();
-            if (info.Value == null && (type == "=" || type == "<>"))
+            foreach (var item in exps)
             {
-                param = "null";
-                type = type == "=" ? "IS" : "IS NOT";
-            }
-            else
-            {
-                param = $"@{GetTable(info.Table)}_{info.Field}_{_params.Count}";
-                _params.Add(param, info.Value);
-            }
+                var c = new ContentWhere();
+                ExplainTool.Explain(item, c);
+                c.Rinse();
+                result.Append("\r\nAND(");
+                c.Info.ForEach(x =>
+                {
+                    string param;
+                    var type = x.Type.ToExplain();
+                    if (x.Value == null && (type == "=" || type == "<>"))
+                    {
+                        param = "null";
+                        type = type == "=" ? "IS" : "IS NOT";
+                    }
+                    else
+                    {
+                        param = $"@{GetTable(x.Table)}_{x.Field}_{_params.Count}";
+                        _params.Add(param, x.Value);
+                    }
 
-            var ex = info.Prior.ToExplain();
-            var sql = $"\r\n  {(ex == null ? "" : ex + " ")}{GetTable(info.Table)}.{info.Field} ";
-            if (ExplainTool.Methods.Contains(info.Method))
-            {
-                if (info.Method == "Contains")
-                {
-                    sql += $"LIKE '%'+{param}+'%'";
-                }
-                else if (info.Method == "StartsWith")
-                {
-                    sql += $"LIKE {param}+'%'";
-                }
-                else if (info.Method == "EndsWith")
-                {
-                    sql += $"LIKE '%'+{param}";
-                }
-                else if (info.Method == "In")
-                {
-                    sql += $"IN ({param})";
-                }
-                else if (info.Method == "NotIn")
-                {
-                    sql += $"NOT IN ({param})";
-                }
+                    var ex = x.Prior.ToExplain();
+                    var sql = $"\r\n  {(ex == null ? "" : ex + " ")}{GetTable(x.Table)}.{x.Field} ";
+                    if (ExplainTool.Methods.Contains(x.Method))
+                    {
+                        if (x.Method == "Contains")
+                        {
+                            sql += $"LIKE '%'+{param}+'%'";
+                        }
+                        else if (x.Method == "StartsWith")
+                        {
+                            sql += $"LIKE {param}+'%'";
+                        }
+                        else if (x.Method == "EndsWith")
+                        {
+                            sql += $"LIKE '%'+{param}";
+                        }
+                        else if (x.Method == "In")
+                        {
+                            sql += $"IN ({param})";
+                        }
+                        else if (x.Method == "NotIn")
+                        {
+                            sql += $"NOT IN ({param})";
+                        }
+                    }
+                    else
+                    {
+                        sql += $"{type} {param}";
+                    }
+                    result.Append(sql);
+                });
+                result.Append("\r\n)");
             }
-            else
-            {
-                sql += $"{type} {param}";
-            }
-            result.Append(sql);
         }
 
         /// <summary>
@@ -242,15 +263,15 @@ namespace ORM.Realizes
              {
                  var result = new StringBuilder();
                  _groups.ForEach(item =>
-                                 {
-                                     var c = new ContentEasy();
-                                     ExplainTool.Explain(item, c);
-                                     c.Rinse();
-                                     foreach (var info in c.Info)
-                                     {
-                                         result.Append($"\r\n  {GetTable(info.Table)}.{info.Field},");
-                                     }
-                                 });
+                 {
+                     var c = new ContentEasy();
+                     ExplainTool.Explain(item, c);
+                     c.Rinse();
+                     foreach (var info in c.Info)
+                     {
+                         result.Append($"\r\n  {GetTable(info.Table)}.{info.Field},");
+                     }
+                 });
                  if (result.Length > 0)
                  {
                      result.Insert(0, "\r\nGROUP BY");
