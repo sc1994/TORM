@@ -4,6 +4,4 @@
     {
 
     }
-
-    //: IWhere<T, IQueryWhere<T>>, IQueryOrder<T>
 }

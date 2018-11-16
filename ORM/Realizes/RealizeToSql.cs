@@ -321,7 +321,7 @@ namespace ORM.Realizes
             () =>
             {
                 var result = new StringBuilder("\r\nSET");
-                
+
                 throw new NotImplementedException("待实现");
             });
         }
@@ -428,7 +428,7 @@ namespace ORM.Realizes
                 return $"{s} {{0}} \r\nLIMIT {top};";
             }
 
-            return $"{s.Replace("SELECT", $"SELECT TOP {top}")} {{0}};";
+            return $"{s.Replace("SELECT", $"SELECT TOP ({top})").Replace("UPDATE", $"UPDATE TOP ({top})")} {{0}};";
         }
 
         /// <summary>

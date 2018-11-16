@@ -16,6 +16,8 @@ namespace ORM.Realizes
 
         public int Update(int top)
         {
+            var sql = ToTop(top);
+            sql = string.Format(sql, $"{GetSet()}{GetWhere()}");
             throw new System.NotImplementedException();
         }
     }

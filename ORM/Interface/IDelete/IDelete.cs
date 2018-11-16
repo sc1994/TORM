@@ -3,5 +3,7 @@
     public interface IDelete
     {
         int Delete();
+
+        int Delete(int top);
     }
 }
