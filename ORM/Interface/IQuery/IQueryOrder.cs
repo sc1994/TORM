@@ -1,10 +1,10 @@
-﻿namespace ORM.Interface
+﻿using System.Linq.Expressions;
+
+namespace ORM.Interface
 {
-    public interface IQueryOrder<T, in TFunc> : IQuery<T>
+    public interface IQueryOrder<T, TFunc> : IQuery<T>
     {
-        IQueryOrder<T, TFunc> OrderA(TFunc exp);
-        IQueryOrder<T, TFunc> OrderD(TFunc exp);
-        IQueryOrder<T, TFunc> OrderA(params TFunc[] exps);
-        IQueryOrder<T, TFunc> OrderD(params TFunc[] exps);
+        IQueryOrder<T, TFunc> OrderA(params Expression<TFunc>[] exps);
+        IQueryOrder<T, TFunc> OrderD(params Expression<TFunc>[] exps);
     }
 }

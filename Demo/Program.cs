@@ -11,21 +11,22 @@ namespace Demo
         {
             Console.WriteLine("Hello World!");
 
-            ORM.ORM.Query<Model>()
-               .Select(x => x.Name)
-               .Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
-               .Select(x => new object[]
-                            {
-                                x.Name,
-                                x.Date,
-                                ORMTool.Max(x.Name1)
-                            })
-               .Select(x => x.Name1, "name")
-               .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
-               .Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
-               .Group(x => x.Name)
-               .Having(x => x.Name == "1")
-               .OrderA(x => x.Name1)
+            ORM.ORM.Query<Model, Model3>()
+               .JoinF((x, y) => x.Name == y.Name3)
+                //.Select(x => x.Name)
+                //.Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
+                //.Select(x => new object[]
+                //             {
+                //                 x.Name,
+                //                 x.Date,
+                //                 ORMTool.Max(x.Name1)
+                //             })
+                //.Select(x => x.Name1, "name")
+                //.Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
+                //.Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
+                //.Group(x => x.Name)
+                //.Having(x => x.Name == "1")
+                //.OrderA(x => x.Name1)
                 .Find()
                 ;
 

@@ -17,14 +17,37 @@ namespace ORM
     /// </summary>
     public partial class ORM
     {
+        /// <summary>
+        /// 单表查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static Realize<T> Query<T>()
         {
             return new Realize<T>();
         }
 
+        /// <summary>
+        /// 两表查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TJoin"></typeparam>
+        /// <returns></returns>
         public static Realize<T, TJoin> Query<T, TJoin>()
         {
             return new Realize<T, TJoin>();
+        }
+
+        /// <summary>
+        /// 三表查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TJoin1"></typeparam>
+        /// <typeparam name="TJoin2"></typeparam>
+        /// <returns></returns>
+        public static Realize<T, TJoin1, TJoin2> Query<T, TJoin1, TJoin2>()
+        {
+            return new Realize<T, TJoin1, TJoin2>();
         }
         // todo 多join的实现
     }

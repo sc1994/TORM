@@ -1,9 +1,11 @@
-﻿namespace ORM.Interface
+﻿using System.Linq.Expressions;
+
+namespace ORM.Interface
 {
     public interface IWhere { }
 
-    public interface IWhere<in TFunc, out TResult> where TResult : IWhere
+    public interface IWhere<TFunc, out TResult> where TResult : IWhere
     {
-        TResult Where(TFunc exp);
+        TResult Where(params Expression<TFunc>[] exps);
     }
 }
