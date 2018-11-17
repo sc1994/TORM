@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace ORM.Interface
+﻿namespace ORM.Interface
 {
     public interface IQueryWhere<T, TFunc, TFuncBool> :
         IWhere,
