@@ -1,199 +1,80 @@
 ﻿using ORM.Interface;
-using ORM.Interface.IQuery;
 using System;
 using System.Linq.Expressions;
+using ORM.Interface.IQuery;
 
 namespace ORM.Realizes
 {
-    public class Realize<T> : RealizeQuery<T>, IQuerySelect<T>
+    public class Relize<T, TFunc, TFuncBool> : RealizeQuery<T>, IQuerySelect<T, TFunc, TFuncBool>
     {
-        public IQueryOrder<T> Group(Expression<Func<T, object[]>> exp)
+        public IQueryWhere<T, TFunc, TFuncBool> Where(TFuncBool exp)
         {
-            _groups.Add(exp);
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQueryOrder<T> Group(params Expression<Func<T, object>>[] exps)
+        public IQueryOrder<T, TFunc> OrderA(TFunc exp)
         {
-            _groups.AddRange(exps);
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQueryOrder<T> OrderA(Expression<Func<T, object[]>> exp)
+        public IQueryOrder<T, TFunc> OrderD(TFunc exp)
         {
-            _orders.Add((exp, OrderEnum.Asc));
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQueryOrder<T> OrderD(Expression<Func<T, object[]>> exp)
+        public IQueryOrder<T, TFunc> OrderA(params TFunc[] exps)
         {
-            _orders.Add((exp, OrderEnum.Desc));
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQueryOrder<T> OrderA(params Expression<Func<T, object>>[] exps)
+        public IQueryOrder<T, TFunc> OrderD(params TFunc[] exps)
         {
-            foreach (var item in exps)
-            {
-                _orders.Add((item, OrderEnum.Asc));
-            }
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQueryOrder<T> OrderD(params Expression<Func<T, object>>[] exps)
+        public IQueryHaving<T, TFunc, TFuncBool> Having(TFuncBool exp)
         {
-            foreach (var item in exps)
-            {
-                _orders.Add((item, OrderEnum.Desc));
-            }
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQuerySelect<T> Select(params Expression<Func<T, object>>[] exps)
+        public IQueryGroup<T, TFunc, TFuncBool> Group(TFunc exp)
         {
-            _selects.AddRange(exps);
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQuerySelect<T> Select(Expression<Func<T, object>> exp, string alias)
+        public IQueryGroup<T, TFunc, TFuncBool> Group(params TFunc[] exps)
         {
-            _selectAlias.Add((exp, alias));
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQuerySelect<T> Select(params (Expression<Func<T, object>> exp, string alias)[] exps)
+        public IQuerySelect<T, TFunc, TFuncBool> Select(Expression<TFunc> exp)
         {
-            foreach (var item in exps)
-            {
-                _selectAlias.Add((item.exp, item.alias));
-            }
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQuerySelect<T> Select(Expression<Func<T, object[]>> exp)
+        public IQuerySelect<T, TFunc, TFuncBool> Select(params Expression<TFunc>[] exps)
         {
-            _selects.Add(exp);
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IQueryWhere<T> Where(Expression<Func<T, bool>> exp)
+        public IQuerySelect<T, TFunc, TFuncBool> Select(Expression<TFunc> exp, string alias)
         {
-            _where.Add(exp);
-            return this;
+            throw new NotImplementedException();
         }
 
-        public IHaving<T> Having(Expression<Func<T, bool>> exp)
+        public IQuerySelect<T, TFunc, TFuncBool> Select(params (Expression<TFunc> exp, string alias)[] exps)
         {
-            _having.Add(exp);
-            return this;
+            throw new NotImplementedException();
         }
     }
 
-    public class Realize<T, TJoin> : RealizeQuery<T>, IQuerySelect<T, TJoin>
+    public class Realize<T> : Relize<T, Func<T, object>, Func<T, bool>>
     {
-        public IQueryOrder<T, TJoin> Group(Expression<Func<T, TJoin, object[]>> exp)
-        {
-            _groups.Add(exp);
-            return this;
-        }
 
-        public IQueryOrder<T, TJoin> Group(params Expression<Func<T, TJoin, object>>[] exps)
-        {
-            _groups.AddRange(exps);
-            return this;
-        }
+    }
 
-        public IQueryOrder<T, TJoin> OrderA(Expression<Func<T, TJoin, object[]>> exp)
-        {
-            _orders.Add((exp, OrderEnum.Asc));
-            return this;
-        }
+    public class Realize<T, TJoin> : Relize<T, Func<T, TJoin, object>, Func<T, TJoin, bool>>
+    {
 
-        public IQueryOrder<T, TJoin> OrderD(Expression<Func<T, TJoin, object[]>> exp)
-        {
-            _orders.Add((exp, OrderEnum.Desc));
-            return this;
-        }
-
-        public IQueryOrder<T, TJoin> OrderA(params Expression<Func<T, TJoin, object>>[] exps)
-        {
-            foreach (var item in exps)
-            {
-                _orders.Add((item, OrderEnum.Asc));
-            }
-            return this;
-        }
-
-        public IQueryOrder<T, TJoin> OrderD(params Expression<Func<T, TJoin, object>>[] exps)
-        {
-            foreach (var item in exps)
-            {
-                _orders.Add((item, OrderEnum.Desc));
-            }
-            return this;
-        }
-
-        public IQueryJoin<T, TJoin> Join(Expression<Func<T, TJoin, bool>> exp)
-        {
-            _join.Add((exp, JoinEnum.Join));
-            return this;
-        }
-
-        public IQueryJoin<T, TJoin> JoinL(Expression<Func<T, TJoin, bool>> exp)
-        {
-            _join.Add((exp, JoinEnum.LeftJoin));
-            return this;
-        }
-
-        public IQueryJoin<T, TJoin> JoinR(Expression<Func<T, TJoin, bool>> exp)
-        {
-            _join.Add((exp, JoinEnum.RightJoin));
-            return this;
-        }
-
-        public IQueryJoin<T, TJoin> JoinF(Expression<Func<T, TJoin, bool>> exp)
-        {
-            _join.Add((exp, JoinEnum.FullJoin));
-            return this;
-        }
-
-        public IQuerySelect<T, TJoin> Select(params Expression<Func<T, TJoin, object>>[] exps)
-        {
-            _selects.AddRange(exps);
-            return this;
-        }
-
-        public IQuerySelect<T, TJoin> Select(Expression<Func<T, TJoin, object>> exp, string alias)
-        {
-            _selectAlias.Add((exp, alias));
-            return this;
-        }
-
-        public IQuerySelect<T, TJoin> Select(params (Expression<Func<T, TJoin, object>> exp, string alias)[] exps)
-        {
-            foreach (var item in exps)
-            {
-                _selectAlias.Add((item.exp, item.alias));
-            }
-            return this;
-        }
-
-        public IQuerySelect<T, TJoin> Select(Expression<Func<T, TJoin, object[]>> exp)
-        {
-            _selects.Add(exp);
-            return this;
-        }
-
-        public IQueryWhere<T, TJoin> Where(Expression<Func<T, TJoin, bool>> exp)
-        {
-            _where.Add(exp);
-            return this;
-        }
-
-        public IHaving<T, TJoin> Having(Expression<Func<T, TJoin, bool>> exp)
-        {
-            _having.Add(exp);
-            return this;
-        }
     }
 }

@@ -12,20 +12,29 @@ namespace Demo
             Console.WriteLine("Hello World!");
 
             ORM.ORM.Query<Model>()
-                .Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
-                .Select(x => new object[] { x.Name, x.Date, ORMTool.Max(x.Name1) })
-                .Select(x => x.Name1, "name")
-                .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
-                .Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
-                .OrderA(x => x.Name1)
-                .Find();
+               .Select(x => x.Name)
+               .Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
+               .Select(x => new object[]
+                            {
+                                x.Name,
+                                x.Date,
+                                ORMTool.Max(x.Name1)
+                            })
+               .Select(x => x.Name1, "name")
+               .Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
+               .Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
+               .Group(x => x.Name)
+               .Having(x => x.Name == "1")
+               .OrderA(x => x.Name1)
+                .Find()
+                ;
 
             //ORM.ORM.Query<Model, Model3>()
             //    .Select((x, y) => x.Name, (x, y) => y.Date3)
             //    .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
             //    .Exist();
 
-            ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
+            //ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
 
             var info = new ContentWhere();
             Expression<Func<Model, bool>>
