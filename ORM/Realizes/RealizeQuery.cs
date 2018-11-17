@@ -37,7 +37,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -58,7 +58,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 
@@ -82,7 +82,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>(int top)
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
             throw new NotImplementedException();
         }
 

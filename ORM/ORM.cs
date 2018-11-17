@@ -1,4 +1,4 @@
-﻿using ORM.Interface;
+﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
 using System;
 
@@ -8,7 +8,7 @@ using System;
 // todo 运行时抛出不支持的写法的异常
 // todo 收集sql存起来以备二次调用，无需每次调用方法都去解析一次表达式
 // todo sql 缓存，data 缓存
-// todo having 语句
+// todo having 语句只能出现在group
 
 namespace ORM
 {
@@ -38,18 +38,57 @@ namespace ORM
             return new Realize<T, TJoin>();
         }
 
-        /// <summary>
-        /// 三表查询
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="TJoin1"></typeparam>
-        /// <typeparam name="TJoin2"></typeparam>
-        /// <returns></returns>
+        #region 更多表查询
         public static Realize<T, TJoin1, TJoin2> Query<T, TJoin1, TJoin2>()
         {
             return new Realize<T, TJoin1, TJoin2>();
         }
-        // todo 多join的实现
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3> Query<T, TJoin1, TJoin2, TJoin3>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4> Query<T, TJoin1, TJoin2, TJoin3, TJoin4>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10, TJoin11> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10, TJoin11>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10, TJoin11>();
+        }
+
+        public static Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10, TJoin11, TJoin12> Query<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10, TJoin11, TJoin12>()
+        {
+            return new Realize<T, TJoin1, TJoin2, TJoin3, TJoin4, TJoin5, TJoin6, TJoin7, TJoin8, TJoin9, TJoin10, TJoin11, TJoin12>();
+        }
+        #endregion
     }
 
     /// <summary>
@@ -57,19 +96,14 @@ namespace ORM
     /// </summary>
     public partial class ORM
     {
-        public static IUpdateSet<T> Update<T>()
+        public static RealizeUpdate<T> Update<T>()
         {
-            throw new NotImplementedException();
-        }
-
-        public static bool Update<T>(T model)
-        {
-            throw new NotImplementedException();
+            return new RealizeUpdate<T>();
         }
     }
 
     /// <summary>
-    /// insert相关
+    /// insert 相关  todo
     /// </summary>
     public partial class ORM
     {
@@ -89,9 +123,9 @@ namespace ORM
     /// </summary>
     public partial class ORM
     {
-        public static bool Delete<TKey>(TKey id)
+        public IDelete<T> Delete<T>()
         {
-            throw new NotImplementedException();
+            return new RealizeDelete<T>();
         }
     }
 }

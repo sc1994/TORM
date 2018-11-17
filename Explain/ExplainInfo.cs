@@ -55,8 +55,6 @@ namespace Explain
             Last.Field = info;
         }
 
-
-
         public override void Append(object info)
         {
             if (Last.IsNewArray)
@@ -205,10 +203,7 @@ namespace Explain
 
         public void Rinse()
         {
-            if (string.IsNullOrEmpty(Last.Field))
-            {
-                Info.RemoveAt(Info.Count - 1);
-            }
+            Info.RemoveAll(x => string.IsNullOrEmpty(x.Field));
         }
     }
 }
