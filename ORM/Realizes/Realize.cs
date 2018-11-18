@@ -93,9 +93,9 @@ namespace ORM.Realizes
 
         public IQuerySelect<T, TFunc, TFuncBool> Select(params (Expression<TFunc> exp, string alias)[] exps)
         {
-            foreach (var item in exps)
+            foreach (var (exp, alias) in exps)
             {
-                _selectAlias.Add((item.exp, item.alias));
+                _selectAlias.Add((exp, alias));
             }
             return this;
         }
@@ -151,9 +151,9 @@ namespace ORM.Realizes
 
         public IQuerySelect<T> Select(params (Expression<Func<T, object>> exp, string alias)[] exps)
         {
-            foreach (var item in exps)
+            foreach (var (exp, alias) in exps)
             {
-                _selectAlias.Add((item.exp, item.alias));
+                _selectAlias.Add((exp, alias));
             }
             return this;
         }

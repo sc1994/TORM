@@ -1,6 +1,7 @@
 ﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
 using System;
+using System.Security.Cryptography;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -9,6 +10,7 @@ using System;
 // todo 收集sql存起来以备二次调用，无需每次调用方法都去解析一次表达式
 // todo sql 缓存，data 缓存
 // todo having 语句只能出现在group
+// todo 结构迁移
 
 namespace ORM
 {
@@ -128,4 +130,24 @@ namespace ORM
             return new RealizeDelete<T>();
         }
     }
+
+    public class Transaction
+    {
+        internal string Sole => MD5.Create().ToString();
+        public static Transaction Start()
+        {
+            return new Transaction();
+        }
+
+        public void Commit()
+        {
+            // todo 
+        }
+
+        public void Rollback()
+        {
+            // todo 
+        }
+    }
 }
+

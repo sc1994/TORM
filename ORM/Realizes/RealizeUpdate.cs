@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using Dapper;
+using MySql.Data.MySqlClient;
 using ORM.Interface;
 
 namespace ORM.Realizes
@@ -10,29 +13,39 @@ namespace ORM.Realizes
     /// <typeparam name="T"></typeparam>
     public class RealizeUpdate<T> : RealizeToSql<T>, IUpdateSet<T>
     {
-        public int Update()
+        public int Update(Transaction transaction = null)
         {
             var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()}";
-            throw new System.NotImplementedException();
+            MySqlConnection connection;
+            if (transaction != null)
+            {
+                connection = _connections[transaction.Sole].connection;
+                return connection.Execute(sql, _params, _connections[transaction.Sole].transaction);
+            }
+            else
+            {
+                connection = new MySqlConnection(); // todo 连接
+                return connection.Execute(sql, _params);
+            }
         }
 
-        public int Update(int top)
+        public int Update(int top, Transaction transaction = null)
         {
             var sql = ToTop(top);
             sql = string.Format(sql, $"{GetSet()}{GetWhere()}");
             throw new System.NotImplementedException();
         }
 
-        public int Update(T model)
+        public int Update(T model, Transaction transaction = null)
         {
             throw new System.NotImplementedException();
         }
 
         public IUpdateSet<T> Set<TValue>(params (Expression<Func<T, TValue>> exp, string value)[] exps)
         {
-            foreach (var item in exps)
+            foreach (var (exp, value) in exps)
             {
-                _set.Add((item.exp, item.value));
+                _set.Add((exp, value));
             }
             return this;
         }

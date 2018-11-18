@@ -13,17 +13,17 @@ namespace Demo
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            for (int i = 0; i < 3000; i++)
+            for (int i = 0; i < 300; i++)
             {
                 Task.Run(() =>
                          {
                              using (var con = new MySqlConnection("server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'"))
                              {
-                                 con.StateChange += Con_StateChange;
-
                                  con.Open();
+                                 var tr = con.BeginTransaction();
+                                 tr.Commit();
 
-                                 Thread.Sleep(300);
+                                 tr.Rollback();
                              }
                          });
 

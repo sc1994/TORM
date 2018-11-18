@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using MySql.Data.MySqlClient;
 
 namespace ORM.Realizes
 {
@@ -48,6 +49,10 @@ namespace ORM.Realizes
         /// 存放参数
         /// </summary>
         protected Dictionary<string, object> _params = new Dictionary<string, object>();
+        /// <summary>
+        /// 存放连接和事务
+        /// </summary>
+        protected Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)> _connections = new Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)>();
         /// <summary>
         /// 获取 T 属性，避免每次都计算
         /// </summary>
