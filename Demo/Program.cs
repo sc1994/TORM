@@ -1,34 +1,24 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Dapper;
+using MySql.Data.MySqlClient;
 using ORM;
 using System;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Demo
 {
     class Program
     {
+        private static int Count { get; set; }
         static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            for (int i = 0; i < 300; i++)
+            using (var con = new MySqlConnection())
             {
-                Task.Run(() =>
-                         {
-                             using (var con = new MySqlConnection("server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'"))
-                             {
-                                 con.Open();
-                                 var tr = con.BeginTransaction();
-                                 tr.Commit();
-
-                                 tr.Rollback();
-                             }
-                         });
-
+                con.ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'";
+                con.Open();
+                Console.WriteLine(con.QueryFirst<int>("SELECT COUNT(1) FROM rules"));
             }
-
 
             Console.WriteLine("Hello World!");
 
@@ -68,7 +58,7 @@ namespace Demo
         private static void Con_StateChange(object sender, System.Data.StateChangeEventArgs e)
         {
             //Console.WriteLine(e.OriginalState);
-            Console.WriteLine(e.CurrentState);
+            Console.WriteLine(e.OriginalState + " ---> " + e.CurrentState + " ---> " + Count++);
         }
     }
 

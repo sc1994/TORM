@@ -1,10 +1,10 @@
 ﻿using Explain;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using MySql.Data.MySqlClient;
 
 namespace ORM.Realizes
 {
@@ -49,10 +49,6 @@ namespace ORM.Realizes
         /// 存放参数
         /// </summary>
         protected Dictionary<string, object> _params = new Dictionary<string, object>();
-        /// <summary>
-        /// 存放连接和事务
-        /// </summary>
-        protected Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)> _connections = new Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)>();
         /// <summary>
         /// 获取 T 属性，避免每次都计算
         /// </summary>
@@ -440,7 +436,7 @@ namespace ORM.Realizes
         /// 依据特性获取表信息
         /// </summary>
         /// <returns></returns>
-        private TableInfo GetTableInfo()
+        internal TableInfo GetTableInfo()
         {
             return GetTableInfo(_t);
         }
@@ -450,7 +446,7 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="table"></param>
         /// <returns></returns>
-        private TableInfo GetTableInfo(Type table)
+        internal TableInfo GetTableInfo(Type table)
         {
             if (_tableInfoDic.ContainsKey(table.Name))
             {
@@ -478,7 +474,7 @@ namespace ORM.Realizes
         }
     }
 
-    class TableInfo
+    internal class TableInfo
     {
         /// <summary>
         /// 数据库
@@ -492,5 +488,9 @@ namespace ORM.Realizes
         /// 表名
         /// </summary>
         public string Table { get; set; }
+        /// <summary>
+        /// 数据库连接字符串
+        /// </summary>
+        public string ConnectionString { get; set; }
     }
 }

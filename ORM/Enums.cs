@@ -28,6 +28,13 @@ namespace ORM
         Set
     }
 
+    public enum DBTypeEnum
+    {
+        MySQL,
+        SQLServer2008,
+        SQLServer2012
+    }
+
     static class EnumHelper
     {
         public static string ToExplain(this OrderEnum that)

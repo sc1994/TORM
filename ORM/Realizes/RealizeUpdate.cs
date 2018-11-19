@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Dapper;
+﻿using Dapper;
 using MySql.Data.MySqlClient;
 using ORM.Interface;
+using System;
+using System.Linq.Expressions;
 
 namespace ORM.Realizes
 {
@@ -15,16 +14,17 @@ namespace ORM.Realizes
     {
         public int Update(Transaction transaction = null)
         {
-            var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()}";
+            var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()};";
             MySqlConnection connection;
             if (transaction != null)
             {
-                connection = _connections[transaction.Sole].connection;
-                return connection.Execute(sql, _params, _connections[transaction.Sole].transaction);
+                connection = Transaction.Connections[transaction.Sole].connection;
+                connection.ConnectionString = GetTableInfo().ConnectionString;
+                return connection.Execute(sql, _params, Transaction.Connections[transaction.Sole].transaction);
             }
-            else
+
+            using (connection = new MySqlConnection(GetTableInfo().ConnectionString)) // todo 连接
             {
-                connection = new MySqlConnection(); // todo 连接
                 return connection.Execute(sql, _params);
             }
         }

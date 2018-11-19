@@ -1,7 +1,6 @@
 ﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
 using System;
-using System.Security.Cryptography;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -131,23 +130,6 @@ namespace ORM
         }
     }
 
-    public class Transaction
-    {
-        internal string Sole => MD5.Create().ToString();
-        public static Transaction Start()
-        {
-            return new Transaction();
-        }
-
-        public void Commit()
-        {
-            // todo 
-        }
-
-        public void Rollback()
-        {
-            // todo 
-        }
-    }
+    
 }
 
