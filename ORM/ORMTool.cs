@@ -53,7 +53,7 @@ namespace ORM
 
         public static StringBuilder TryRemove(this StringBuilder that, int startIndex, int length)
         {
-            if (that.Length > startIndex + length)
+            if (startIndex >= 0 && that.Length >= startIndex + length)
                 return that.Remove(startIndex, length);
             return that;
         }

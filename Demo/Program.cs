@@ -11,14 +11,19 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //using (var con = new MySqlConnection())
+            //{
+            //    con.ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'";
+            //    con.Open();
+            //    Console.WriteLine(con.QueryFirst<int>("SELECT COUNT(1) FROM rules"));
+            //}
 
-            using (var con = new MySqlConnection())
-            {
-                con.ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'";
-                con.Open();
-                Console.WriteLine(con.QueryFirst<int>("SELECT COUNT(1) FROM rules"));
-            }
+            var c = ORM.ORM.Update<rules>()
+                       .Set(x => x.created_at, DateTime.Now)
+                       .Update();
+
+
+            //ORM.ORM.Query<rules>().Select(x => x.created_at).Find();
 
             Console.WriteLine("Hello World!");
 
@@ -60,6 +65,18 @@ namespace Demo
             //Console.WriteLine(e.OriginalState);
             Console.WriteLine(e.OriginalState + " ---> " + e.CurrentState + " ---> " + Count++);
         }
+    }
+
+    [Table("tally", DBTypeEnum.MySQL, "rules")]
+    class rules
+    {
+        public long id { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        public DateTime deleted_at { get; set; }
+        public long schedule_id { get; set; }
+        public int type { get; set; }
+        public DateTime rule_date { get; set; }
     }
 
     [Table("test", DBTypeEnum.MySQL, "ModelTable")]

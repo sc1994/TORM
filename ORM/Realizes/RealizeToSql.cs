@@ -1,4 +1,5 @@
-﻿using Explain;
+﻿using Dapper;
+using Explain;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -209,7 +210,7 @@ namespace ORM.Realizes
         /// 获取 join sql 代码
         /// </summary>
         /// <returns></returns>
-        protected StringBuilder GetJoin()
+        protected StringBuilder  GetJoin()
         {
             return GetSliceSql(SqlTypeEnum.Join, () =>
              {
@@ -322,8 +323,20 @@ namespace ORM.Realizes
             () =>
             {
                 var result = new StringBuilder("\r\nSET");
+                foreach (var item in _set)
+                {
+                    var c = new ContentEasy();
+                    ExplainTool.Explain(item.Item1, c);
+                    c.Rinse();
+                    c.Info.ForEach(x =>
+                    {
+                        var param = $"@{GetTableName(x.Table)}_{x.Field}_{_params.Count}";
+                        _params.Add(param, x.Value);
+                        result.Append($"\r\n  {GetTableName(x.Table)}.{x.Field} = {param},");
+                    });
+                }
 
-                throw new NotImplementedException("待实现");
+                return result.TryRemove(result.Length - 1, 1);
             });
         }
 
@@ -467,10 +480,27 @@ namespace ORM.Realizes
             {
                 DB = info.DB,
                 DBType = info.DBType,
-                Table = info.Table
+                Table = info.Table,
+                ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'"
             };
             _tableInfoDic.Add(table.Name, r);
             return r;
+        }
+
+        protected int Execute(string sql, Transaction transaction)
+        {
+            MySqlConnection connection;
+            if (transaction != null)
+            {
+                connection = Transaction.Connections[transaction.Sole].connection;
+                connection.ConnectionString = GetTableInfo().ConnectionString;
+                return connection.Execute(sql, _params, Transaction.Connections[transaction.Sole].transaction);
+            }
+
+            using (connection = new MySqlConnection(GetTableInfo().ConnectionString)) // todo 连接
+            {
+                return connection.Execute(sql, _params);
+            }
         }
     }
 
