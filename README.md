@@ -9,6 +9,37 @@
 - 异常消息完善
 - （可行性不高）sql 缓存，data 缓存
 - `Having` 理应遵循 `sql` 书写顺序
+- 慢 `sql` 记录
+- 迁移（支持 `model` 到 `table` ，或者 `table` 到 `model` ）
+
+>### 数据模型
+- 需要指定库名，库类型。表名可不指定，默认类名。
+```csharp
+[Table("testDB", DBTypeEnum.MySQL, "testTable")]
+class testTable
+{
+    public long ID { get; set; }
+}
+```
+
+>### 配置
+- ORM 需要知道数据库对应的连接
+- 在应用层配置文件 `appsettings.json`
+```json
+{
+  "testDB": "server=localhost;database=testDB;uid=root;pwd=1233333;"
+}
+```
+- 修改应用层的 `.csproj` 文件，添加节点。目的是为了在项目生成的时候，将配置文件生成到对应的文件位置。
+```xml
+<ItemGroup>
+  <None Update="appsettings.json">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+```
+
+
 
 >### 事项
 - 不能支持一个`Where`中使用括号表明优先级如：`Where(x=>x.a == "1" && (x.b == 2 || x.b == 3))`。建议使用`Where(x=>x.a == "1").Where(x.b == 2 || x.b == 3))`，同一个`Where`表示同一个优先级。目前即使错误的写法解释器会选择忽略优先级，需要特别注意踩坑！

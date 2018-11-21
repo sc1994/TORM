@@ -10,6 +10,7 @@ using System;
 // todo sql 缓存，data 缓存
 // todo having 语句只能出现在group
 // todo 结构迁移
+// todo 慢 sql 监测
 
 namespace ORM
 {

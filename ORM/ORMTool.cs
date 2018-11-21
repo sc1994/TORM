@@ -1,6 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -57,25 +60,47 @@ namespace ORM
                 return that.Remove(startIndex, length);
             return that;
         }
+
+        internal static T GetConfigJson<T>(string key, string fileName = "appsettings.json") where T : class, new()
+        {
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile(fileName);
+            var config = builder.Build();
+
+            var entity = new T();
+            config.GetSection(key).Bind(entity);
+            return entity;
+        }
+
+        internal static string GetAppSetting(string key, string fileName = "appsettings.json")
+        {
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(Directory.GetCurrentDirectory())
+                          .AddJsonFile(fileName);
+            var config = builder.Build();
+
+            return config.GetSection(key).Value;
+        }
     }
 
     /// <summary>
     /// 事务
     /// </summary>
-    public class Transaction
+    public sealed class Transaction
     {
-        internal string Sole;
+        internal int Sole;
 
         /// <summary>
         /// 存放连接和事务
         /// </summary>
-        internal static Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)> Connections = new Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)>();
+        internal static Dictionary<int, (MySqlConnection connection, MySqlTransaction transaction)> Connections = new Dictionary<int, (MySqlConnection connection, MySqlTransaction transaction)>();
 
         public Transaction()
         {
             var con = new MySqlConnection();
-            Sole = MD5.Create().ToString();
-            Connections.Add(Sole, (con, con.BeginTransaction()));
+            Sole = GetHashCode();
+            Connections.Add(Sole, (con, null));
         }
 
         public static Transaction Start()
@@ -85,12 +110,26 @@ namespace ORM
 
         public void Commit()
         {
-            // todo 
+            try
+            {
+                Connections[Sole].transaction.Commit();
+            }
+            finally
+            {
+                Connections[Sole].connection.Close();
+            }
         }
 
         public void Rollback()
         {
-            // todo 
+            try
+            {
+                Connections[Sole].transaction.Rollback();
+            }
+            finally
+            {
+                Connections[Sole].connection.Close();
+            }
         }
     }
 

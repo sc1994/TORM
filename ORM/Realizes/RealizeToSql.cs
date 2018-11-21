@@ -210,7 +210,7 @@ namespace ORM.Realizes
         /// 获取 join sql 代码
         /// </summary>
         /// <returns></returns>
-        protected StringBuilder  GetJoin()
+        protected StringBuilder GetJoin()
         {
             return GetSliceSql(SqlTypeEnum.Join, () =>
              {
@@ -327,13 +327,14 @@ namespace ORM.Realizes
                 {
                     var c = new ContentEasy();
                     ExplainTool.Explain(item.Item1, c);
-                    c.Rinse();
-                    c.Info.ForEach(x =>
+                    if (c.Info.Count < 1)
                     {
-                        var param = $"@{GetTableName(x.Table)}_{x.Field}_{_params.Count}";
-                        _params.Add(param, x.Value);
-                        result.Append($"\r\n  {GetTableName(x.Table)}.{x.Field} = {param},");
-                    });
+                        throw new Exception("Set表达式内容为空");
+                    }
+                    var x = c.Info[0];
+                    var param = $"@{GetTableName(x.Table)}_{x.Field}_{_params.Count}";
+                    _params.Add(param, item.Item2);
+                    result.Append($"\r\n  {GetTableName(x.Table)}.{x.Field} = {param},");
                 }
 
                 return result.TryRemove(result.Length - 1, 1);
@@ -481,7 +482,7 @@ namespace ORM.Realizes
                 DB = info.DB,
                 DBType = info.DBType,
                 Table = info.Table,
-                ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'"
+                ConnectionString = ORMTool.GetAppSetting(info.DB) // todo 读取配置
             };
             _tableInfoDic.Add(table.Name, r);
             return r;
@@ -492,8 +493,16 @@ namespace ORM.Realizes
             MySqlConnection connection;
             if (transaction != null)
             {
-                connection = Transaction.Connections[transaction.Sole].connection;
-                connection.ConnectionString = GetTableInfo().ConnectionString;
+                var valueTuple = Transaction.Connections[transaction.Sole];
+                connection = valueTuple.connection;
+                if (valueTuple.transaction == null) // 希望在 事务开始的时候尽量少的操作，所以连接的开启放在了这边
+                {
+                    connection.ConnectionString = GetTableInfo().ConnectionString;
+                    connection.Open();
+                    valueTuple.transaction = connection.BeginTransaction();
+                    Transaction.Connections[transaction.Sole] = valueTuple; // 重新赋值到字典中
+                }
+
                 return connection.Execute(sql, _params, Transaction.Connections[transaction.Sole].transaction);
             }
 

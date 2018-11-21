@@ -1,8 +1,7 @@
-﻿using Dapper;
-using MySql.Data.MySqlClient;
+﻿using Microsoft.Extensions.Configuration;
 using ORM;
 using System;
-using System.Text;
+using System.IO;
 
 namespace Demo
 {
@@ -17,10 +16,20 @@ namespace Demo
             //    con.Open();
             //    Console.WriteLine(con.QueryFirst<int>("SELECT COUNT(1) FROM rules"));
             //}
+            //Console.WriteLine(GetAppSetting("tally"));
+
+
+            //var tr = Transaction.Start();
 
             var c = ORM.ORM.Update<rules>()
                        .Set(x => x.created_at, DateTime.Now)
                        .Update();
+
+            //var c2 = ORM.ORM.Update<rules>()
+            //            .Set(x => x.deleted_at, DateTime.Now)
+            //            .Update(tr);
+
+            //tr.Commit();
 
 
             //ORM.ORM.Query<rules>().Select(x => x.created_at).Find();
@@ -65,7 +74,11 @@ namespace Demo
             //Console.WriteLine(e.OriginalState);
             Console.WriteLine(e.OriginalState + " ---> " + e.CurrentState + " ---> " + Count++);
         }
+
+        
     }
+
+
 
     [Table("tally", DBTypeEnum.MySQL, "rules")]
     class rules
