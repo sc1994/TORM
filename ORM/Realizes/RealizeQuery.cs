@@ -1,5 +1,4 @@
 ﻿using ORM.Interface;
-using System;
 using System.Collections.Generic;
 
 namespace ORM.Realizes
@@ -16,8 +15,13 @@ namespace ORM.Realizes
         /// <returns></returns>
         public bool Exist()
         {
+            return Count() > 0; // todo 也许有不需要COUNT的高效办法
+        }
+
+        public long Count()
+        {
             var sql = $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
-            throw new NotImplementedException();
+            return QueryFirst<long>(sql);
         }
 
         /// <summary>
@@ -27,7 +31,7 @@ namespace ORM.Realizes
         public T First()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
-            throw new NotImplementedException();
+            return QueryFirst<T>(sql);
         }
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace ORM.Realizes
         public TOther First<TOther>()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
-            throw new NotImplementedException();
+            return QueryFirst<TOther>(sql);
         }
 
         /// <summary>
@@ -48,7 +52,7 @@ namespace ORM.Realizes
         public IEnumerable<T> Find()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
-            throw new NotImplementedException();
+            return Query<T>(sql);
         }
 
         /// <summary>
@@ -59,7 +63,7 @@ namespace ORM.Realizes
         public IEnumerable<TOther> Find<TOther>()
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
-            throw new NotImplementedException();
+            return Query<TOther>(sql);
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace ORM.Realizes
         {
             var t = ToTop(top);
             var sql = string.Format(t, $" \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
-            throw new NotImplementedException();
+            return Query<T>(sql);
         }
 
         /// <summary>
@@ -83,7 +87,7 @@ namespace ORM.Realizes
         public IEnumerable<TOther> Find<TOther>(int top)
         {
             var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
-            throw new NotImplementedException();
+            return Query<TOther>(sql);
         }
 
         /// <summary>
@@ -92,11 +96,11 @@ namespace ORM.Realizes
         /// <param name="index">当前页</param>
         /// <param name="size">页大小</param>
         /// <returns></returns>
-        public (IEnumerable<T> data, int total) Page(int index, int size)
+        public (IEnumerable<T> data, long total) Page(int index, int size)
         {
             var t = ToPage(index, size);
             var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
-            throw new NotImplementedException();
+            return (Query<T>(sql), Count());
         }
 
         /// <summary>
@@ -106,12 +110,11 @@ namespace ORM.Realizes
         /// <param name="index">当前页</param>
         /// <param name="size">页大小</param>
         /// <returns></returns>
-        public (IEnumerable<TOther> data, int total) Page<TOther>(int index, int size)
+        public (IEnumerable<TOther> data, long total) Page<TOther>(int index, int size)
         {
-            //var = new StringBuilder($"{GetSelect()} \r\nFROM {GetTableName()} {GetJoin()} {GetWhere()} {GetGroup()} {GetOrder()};");
             var t = ToPage(index, size);
             var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
-            throw new NotImplementedException();
+            return (Query<TOther>(sql), Count());
         }
     }
 }

@@ -302,7 +302,7 @@ namespace ORM.Realizes
                     c.Rinse();
                     foreach (var info in c.Info)
                     {
-                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field} {item.Item2.ToExplain()}");
+                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field} {item.Item2.ToExplain()},");
                     }
                 });
                 if (result.Length > 0)
@@ -481,34 +481,63 @@ namespace ORM.Realizes
             {
                 DB = info.DB,
                 DBType = info.DBType,
-                Table = info.Table,
+                Table = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
                 ConnectionString = ORMTool.GetAppSetting(info.DB) // todo 读取配置
             };
             _tableInfoDic.Add(table.Name, r);
             return r;
         }
 
+        /// <summary>
+        /// 执行sql，返回受影响行数
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         protected int Execute(string sql, Transaction transaction)
         {
             MySqlConnection connection;
             if (transaction != null)
             {
-                var valueTuple = Transaction.Connections[transaction.Sole];
-                connection = valueTuple.connection;
-                if (valueTuple.transaction == null) // 希望在 事务开始的时候尽量少的操作，所以连接的开启放在了这边
+                var value = Transaction.Connections[transaction.Sole];
+                if (value.Transaction == null) // 希望在 事务开始的时候尽量少的操作，所以连接的开启放在了这边
                 {
-                    connection.ConnectionString = GetTableInfo().ConnectionString;
-                    connection.Open();
-                    valueTuple.transaction = connection.BeginTransaction();
-                    Transaction.Connections[transaction.Sole] = valueTuple; // 重新赋值到字典中
+                    value.Connection.ConnectionString = GetTableInfo().ConnectionString;
+                    value.Connection.Open();
+                    value.Transaction = value.Connection.BeginTransaction(); // 涉及到对字典中的值进行变动，不能预知当高并发的情况下，是否会产生问题。
                 }
-
-                return connection.Execute(sql, _params, Transaction.Connections[transaction.Sole].transaction);
+                return value.Connection.Execute(sql, _params, Transaction.Connections[transaction.Sole].Transaction);
             }
 
-            using (connection = new MySqlConnection(GetTableInfo().ConnectionString)) // todo 连接
+            using (connection = new MySqlConnection(GetTableInfo().ConnectionString))
             {
                 return connection.Execute(sql, _params);
+            }
+        }
+
+        /// <summary>
+        /// 获取单条数据
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        protected TOther QueryFirst<TOther>(string sql)
+        {
+            using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+            {
+                return connection.QueryFirst<TOther>(sql, _params);
+            }
+        }
+
+        /// <summary>
+        /// 获取数据集合
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        protected IEnumerable<TOther> Query<TOther>(string sql)
+        {
+            using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+            {
+                return connection.Query<TOther>(sql, _params);
             }
         }
     }

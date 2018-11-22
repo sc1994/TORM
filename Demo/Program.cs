@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using ORM;
+﻿using ORM;
 using System;
-using System.IO;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Demo
 {
@@ -10,31 +11,67 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
-            //using (var con = new MySqlConnection())
+            var find = ORM.ORM.Query<rules, schedules>()
+                 .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
+                 .JoinL((x, y) => x.schedule_id == y.id)
+                 .Where((x, y) => x.id > 0 && y.id > 0)
+                 .OrderD((x, y) => x.id)
+                 .Find<rulesView>();
+            foreach (var item in find)
+            {
+                Console.WriteLine($"id:{item.id}--created_at:{item.created_at}--schedule_id:{item.schedule_id}--content:{item.content}");
+            }
+
+
+
+            //var list = new List<int>();
+            //for (int i = 0; i < 1000; i++)
             //{
-            //    con.ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'";
-            //    con.Open();
-            //    Console.WriteLine(con.QueryFirst<int>("SELECT COUNT(1) FROM rules"));
+            //    list.Add(i);
             //}
-            //Console.WriteLine(GetAppSetting("tally"));
+            //var spans = new ConcurrentQueue<TimeSpan>();
+            //Parallel.ForEach(list,
+            //                 i =>
+            //                 {
+            //                     var s = DateTime.Now;
+            //                     var tr = Transaction.Start();
 
+            //                     var c = ORM.ORM.Update<rules>()
+            //                                .Set(x => x.created_at, DateTime.Now)
+            //                                .Update(tr);
 
-            //var tr = Transaction.Start();
+            //                     var c2 = ORM.ORM.Update<rules>()
+            //                                 .Set(x => x.deleted_at, DateTime.Now)
+            //                                 .Update(tr);
 
-            var c = ORM.ORM.Update<rules>()
-                       .Set(x => x.created_at, DateTime.Now)
-                       .Update();
+            //                     Console.WriteLine(i);
 
-            //var c2 = ORM.ORM.Update<rules>()
-            //            .Set(x => x.deleted_at, DateTime.Now)
-            //            .Update(tr);
+            //                     if (i % 2 == 0)
+            //                     {
+            //                         tr.Commit();
+            //                     }
+            //                     else
+            //                     {
+            //                         tr.Rollback();
+            //                     }
+            //                     spans.Enqueue(DateTime.Now - s);
+            //                 });
 
-            //tr.Commit();
-
+            //double millisecond = 0;
+            //while (!spans.IsEmpty)
+            //{
+            //    if (spans.TryDequeue(out TimeSpan span))
+            //    {
+            //        millisecond += span.TotalMilliseconds;
+            //    }
+            //}
 
             //ORM.ORM.Query<rules>().Select(x => x.created_at).Find();
 
-            Console.WriteLine("Hello World!");
+            //Console.WriteLine("Hello World!---->" + millisecond + "<--毫秒");
+
+
+
 
             //ORM.ORM.Query<Model>()
             //    //.Select(x => x.Name)
@@ -75,7 +112,7 @@ namespace Demo
             Console.WriteLine(e.OriginalState + " ---> " + e.CurrentState + " ---> " + Count++);
         }
 
-        
+
     }
 
 
@@ -90,6 +127,28 @@ namespace Demo
         public long schedule_id { get; set; }
         public int type { get; set; }
         public DateTime rule_date { get; set; }
+    }
+
+    class rulesView
+    {
+        public long id { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        public DateTime deleted_at { get; set; }
+        public long schedule_id { get; set; }
+        public int type { get; set; }
+        public DateTime rule_date { get; set; }
+        public string content { get; set; }
+    }
+
+    [Table("tally", DBTypeEnum.MySQL)]
+    class schedules
+    {
+        public long id { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        public DateTime deleted_at { get; set; }
+        public string content { get; set; }
     }
 
     [Table("test", DBTypeEnum.MySQL, "ModelTable")]

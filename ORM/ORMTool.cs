@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace ORM
@@ -90,17 +88,19 @@ namespace ORM
     public sealed class Transaction
     {
         internal int Sole;
-
+        // ConcurrentDictionary
         /// <summary>
         /// 存放连接和事务
         /// </summary>
-        internal static Dictionary<int, (MySqlConnection connection, MySqlTransaction transaction)> Connections = new Dictionary<int, (MySqlConnection connection, MySqlTransaction transaction)>();
+        internal static ConcurrentDictionary<int, ConnectionInfo> Connections = new ConcurrentDictionary<int, ConnectionInfo>();
 
         public Transaction()
         {
-            var con = new MySqlConnection();
             Sole = GetHashCode();
-            Connections.Add(Sole, (con, null));
+            Connections.TryAdd(Sole, new ConnectionInfo
+            {
+                Connection = new MySqlConnection()
+            });
         }
 
         public static Transaction Start()
@@ -112,11 +112,11 @@ namespace ORM
         {
             try
             {
-                Connections[Sole].transaction.Commit();
+                Connections[Sole].Transaction.Commit();
             }
             finally
             {
-                Connections[Sole].connection.Close();
+                Connections[Sole].Connection.Close();
             }
         }
 
@@ -124,13 +124,19 @@ namespace ORM
         {
             try
             {
-                Connections[Sole].transaction.Rollback();
+                Connections[Sole].Transaction.Rollback();
             }
             finally
             {
-                Connections[Sole].connection.Close();
+                Connections[Sole].Connection.Close();
             }
         }
+    }
+
+    internal class ConnectionInfo
+    {
+        public MySqlConnection Connection { get; set; }
+        public MySqlTransaction Transaction { get; set; }
     }
 
     /// <summary>
