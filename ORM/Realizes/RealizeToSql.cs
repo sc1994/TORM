@@ -63,10 +63,6 @@ namespace ORM.Realizes
         /// </summary>
         protected List<Type> allTables = new List<Type>();
         /// <summary>
-        /// 表信息
-        /// </summary>
-        private readonly Dictionary<string, TableInfo> _tableInfoDic = new Dictionary<string, TableInfo>();
-        /// <summary>
         /// sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
         /// </summary>
         private readonly Dictionary<SqlTypeEnum, StringBuilder> _sqlDic = new Dictionary<SqlTypeEnum, StringBuilder>();
@@ -207,59 +203,6 @@ namespace ORM.Realizes
         }
 
         /// <summary>
-        /// 获取 join sql 代码
-        /// </summary>
-        /// <returns></returns>
-        protected StringBuilder GetJoin()
-        {
-            return GetSliceSql(SqlTypeEnum.Join, () =>
-             {
-                 var result = new StringBuilder();
-                 _join.ForEach(x =>
-                 {
-                     var c = new ContentJoin();
-                     ExplainTool.Explain(x.Item1, c);
-                     c.Rinse();
-                     // 收集全部表
-                     allTables.AddRange(c.Info.Select(s => s.Table));
-                     allTables.AddRange(c.Info.Select(s => s.Table2));
-
-                     foreach (var info in c.Info)
-                     {
-                         string param;
-                         var type = info.Type.ToExplain();
-                         if (info.Value == null
-                             && (type == "=" || type == "<>")
-                             && info.Table2 == null
-                             && string.IsNullOrWhiteSpace(info.Field2)) // 当不是和表字段的比较，且 == null 或者 != null时，采取SQL 语法
-                         {
-                             param = "null";
-                             type = type == "=" ? "IS" : "IS NOT";
-                         }
-                         else
-                         {
-                             param = $"@{GetTableName(info.Table)}_{info.Field}_{_params.Count}";
-                             _params.Add(param, info.Value);
-                         }
-
-                         if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
-                         {
-                             result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTableName(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
-                             // 收集已用表
-                             useTables.Add(info.Table);
-                             useTables.Add(info.Table2);
-                         }
-                         else
-                         {
-                             result.Append($"\r\n  {info.Prior.ToExplain()} {GetTableName(info.Table)}.{info.Field} {type} {param}");
-                         }
-                     }
-                 });
-                 return result;
-             });
-        }
-
-        /// <summary>
         /// 获取 group sql 代码
         /// </summary>
         /// <returns></returns>
@@ -342,24 +285,56 @@ namespace ORM.Realizes
         }
 
         /// <summary>
-        /// 将sql分块，前后加上字典，以优化性能。
+        /// 获取 join sql 代码
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="func"></param>
         /// <returns></returns>
-        protected StringBuilder GetSliceSql(SqlTypeEnum type, Func<StringBuilder> func)
+        protected StringBuilder GetJoin()
         {
-            // 字段取值
-            if (_sqlDic.ContainsKey(type))
+            return GetSliceSql(SqlTypeEnum.Join, () =>
             {
-                return _sqlDic[type];
-            }
-            ExplainTool.Log("GetSliceSql", $"记录GetSliceSql({type})计算频率。");
-            // 字典中没有相应的值，执行委托
-            var result = func();
-            // 存入字典，以备下一次调用
-            _sqlDic.Add(type, result);
-            return result;
+                var result = new StringBuilder();
+                _join.ForEach(x =>
+                {
+                    var c = new ContentJoin();
+                    ExplainTool.Explain(x.Item1, c);
+                    c.Rinse();
+                    // 收集全部表
+                    allTables.AddRange(c.Info.Select(s => s.Table));
+                    allTables.AddRange(c.Info.Select(s => s.Table2));
+
+                    foreach (var info in c.Info)
+                    {
+                        string param;
+                        var type = info.Type.ToExplain();
+                        if (info.Value == null
+                            && (type == "=" || type == "<>")
+                            && info.Table2 == null
+                            && string.IsNullOrWhiteSpace(info.Field2)) // 当不是和表字段的比较，且 == null 或者 != null时，采取SQL 语法
+                        {
+                            param = "null";
+                            type = type == "=" ? "IS" : "IS NOT";
+                        }
+                        else
+                        {
+                            param = $"@{GetTableName(info.Table)}_{info.Field}_{_params.Count}";
+                            _params.Add(param, info.Value);
+                        }
+
+                        if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
+                        {
+                            result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTableName(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                            // 收集已用表
+                            useTables.Add(info.Table);
+                            useTables.Add(info.Table2);
+                        }
+                        else
+                        {
+                            result.Append($"\r\n  {info.Prior.ToExplain()} {GetTableName(info.Table)}.{info.Field} {type} {param}");
+                        }
+                    }
+                });
+                return result;
+            });
         }
 
         /// <summary>
@@ -377,24 +352,6 @@ namespace ORM.Realizes
                 return flag.FirstOrDefault();
             }
             throw new Exception("获取join表失败！");
-        }
-
-        /// <summary>
-        /// 取主表
-        /// </summary>
-        /// <returns></returns>
-        protected string GetTableName()
-        {
-            return GetTableName(_t);
-        }
-
-        /// <summary>
-        /// 取指定表名
-        /// </summary>
-        /// <returns></returns>
-        protected string GetTableName(Type table)
-        {
-            return GetTableInfo(table).Table;
         }
 
         /// <summary>
@@ -432,6 +389,45 @@ namespace ORM.Realizes
         }
 
         /// <summary>
+        /// 将sql分块，前后加上字典，以优化性能。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        protected StringBuilder GetSliceSql(SqlTypeEnum type, Func<StringBuilder> func)
+        {
+            // 字段取值
+            if (_sqlDic.ContainsKey(type))
+            {
+                return _sqlDic[type];
+            }
+            ExplainTool.Log("GetSliceSql", $"记录GetSliceSql({type})计算频率。");
+            // 字典中没有相应的值，执行委托
+            var result = func();
+            // 存入字典，以备下一次调用
+            _sqlDic.Add(type, result);
+            return result;
+        }
+
+        /// <summary>
+        /// 取主表
+        /// </summary>
+        /// <returns></returns>
+        protected string GetTableName()
+        {
+            return GetTableName(_t);
+        }
+
+        /// <summary>
+        /// 取指定表名
+        /// </summary>
+        /// <returns></returns>
+        protected string GetTableName(Type table)
+        {
+            return GetTableInfo(table).Table;
+        }
+
+        /// <summary>
         /// 转成top的
         /// </summary>
         /// <param name="top"></param>
@@ -462,9 +458,9 @@ namespace ORM.Realizes
         /// <returns></returns>
         internal TableInfo GetTableInfo(Type table)
         {
-            if (_tableInfoDic.ContainsKey(table.Name))
+            if (Stores.TableInfoDic.TryGetValue(table.Name, out var value))
             {
-                return _tableInfoDic[table.Name];
+                return value;
             }
 
             ExplainTool.Log("GetTableInfo", $"记录GetTableInfo({table.Name})计算频率");
@@ -484,7 +480,7 @@ namespace ORM.Realizes
                 Table = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
                 ConnectionString = ORMTool.GetAppSetting(info.DB) // todo 读取配置
             };
-            _tableInfoDic.Add(table.Name, r);
+            Stores.TableInfoDic.TryAdd(table.Name, r);
             return r;
         }
 
@@ -499,14 +495,14 @@ namespace ORM.Realizes
             MySqlConnection connection;
             if (transaction != null)
             {
-                var value = Transaction.Connections[transaction.Sole];
+                var value = Stores.Connections[transaction.Sole];
                 if (value.Transaction == null) // 希望在 事务开始的时候尽量少的操作，所以连接的开启放在了这边
                 {
                     value.Connection.ConnectionString = GetTableInfo().ConnectionString;
                     value.Connection.Open();
                     value.Transaction = value.Connection.BeginTransaction(); // 涉及到对字典中的值进行变动，不能预知当高并发的情况下，是否会产生问题。
                 }
-                return value.Connection.Execute(sql, _params, Transaction.Connections[transaction.Sole].Transaction);
+                return value.Connection.Execute(sql, _params, Stores.Connections[transaction.Sole].Transaction);
             }
 
             using (connection = new MySqlConnection(GetTableInfo().ConnectionString))
@@ -540,25 +536,5 @@ namespace ORM.Realizes
                 return connection.Query<TOther>(sql, _params);
             }
         }
-    }
-
-    internal class TableInfo
-    {
-        /// <summary>
-        /// 数据库
-        /// </summary>
-        public string DB { get; set; }
-        /// <summary>
-        /// 数据库类型
-        /// </summary>
-        public DBTypeEnum DBType { get; set; }
-        /// <summary>
-        /// 表名
-        /// </summary>
-        public string Table { get; set; }
-        /// <summary>
-        /// 数据库连接字符串
-        /// </summary>
-        public string ConnectionString { get; set; }
     }
 }

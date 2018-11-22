@@ -88,16 +88,11 @@ namespace ORM
     public sealed class Transaction
     {
         internal int Sole;
-        // ConcurrentDictionary
-        /// <summary>
-        /// 存放连接和事务
-        /// </summary>
-        internal static ConcurrentDictionary<int, ConnectionInfo> Connections = new ConcurrentDictionary<int, ConnectionInfo>();
 
         public Transaction()
         {
             Sole = GetHashCode();
-            Connections.TryAdd(Sole, new ConnectionInfo
+            Stores.Connections.TryAdd(Sole, new ConnectionInfo
             {
                 Connection = new MySqlConnection()
             });
@@ -112,11 +107,11 @@ namespace ORM
         {
             try
             {
-                Connections[Sole].Transaction.Commit();
+                Stores.Connections[Sole].Transaction.Commit();
             }
             finally
             {
-                Connections[Sole].Connection.Close();
+                Stores.Connections[Sole].Connection.Close();
             }
         }
 
@@ -124,51 +119,21 @@ namespace ORM
         {
             try
             {
-                Connections[Sole].Transaction.Rollback();
+                Stores.Connections[Sole].Transaction.Rollback();
             }
             finally
             {
-                Connections[Sole].Connection.Close();
+                Stores.Connections[Sole].Connection.Close();
             }
         }
     }
 
+    /// <summary>
+    /// 数据连接
+    /// </summary>
     internal class ConnectionInfo
     {
         public MySqlConnection Connection { get; set; }
         public MySqlTransaction Transaction { get; set; }
-    }
-
-    /// <summary>
-    /// 表属性标记
-    /// </summary>
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
-    public class TableAttribute : Attribute
-    {
-        /// <summary>
-        /// 数据库
-        /// </summary>
-        public string DB { get; }
-        /// <summary>
-        /// 数据库类型
-        /// </summary>
-        public DBTypeEnum DBType { get; }
-        /// <summary>
-        /// 表名
-        /// </summary>
-        public string Table { get; }
-
-        public TableAttribute(string db, DBTypeEnum dbType)
-        {
-            DB = db;
-            DBType = dbType;
-        }
-
-        public TableAttribute(string db, DBTypeEnum dbType, string table)
-        {
-            DB = db;
-            DBType = dbType;
-            Table = table;
-        }
     }
 }

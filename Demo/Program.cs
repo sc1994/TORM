@@ -1,8 +1,6 @@
 ﻿using ORM;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Demo
 {
@@ -13,10 +11,15 @@ namespace Demo
         {
             var find = ORM.ORM.Query<rules, schedules>()
                  .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
+                          .Select(((x, y) => x.created_at, ""))
                  .JoinL((x, y) => x.schedule_id == y.id)
                  .Where((x, y) => x.id > 0 && y.id > 0)
                  .OrderD((x, y) => x.id)
                  .Find<rulesView>();
+
+
+            ORM.ORM.InsertBatch(new List<rules>(), new List<rules>());
+
             foreach (var item in find)
             {
                 Console.WriteLine($"id:{item.id}--created_at:{item.created_at}--schedule_id:{item.schedule_id}--content:{item.content}");

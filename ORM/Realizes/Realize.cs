@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace ORM.Realizes
 {
     /// <summary>
-    /// 多表查询的实现基类
+    /// 多表实现基类
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TFunc"></typeparam>
@@ -102,7 +102,7 @@ namespace ORM.Realizes
     }
 
     /// <summary>
-    /// 单表查询实现
+    /// 单表实现
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Realize<T> : RealizeQuery<T>, IQuerySelect<T>
@@ -159,7 +159,7 @@ namespace ORM.Realizes
         }
     }
 
-    #region 多表查询定义
+    #region 多表定义
     public class Realize<T, TJoin> : BaseRealize<T, Func<T, TJoin, object>, Func<T, TJoin, bool>>
     { }
     public class Realize<T, TJoin1, TJoin2> : BaseRealize<T, Func<T, TJoin1, TJoin2, object>, Func<T, TJoin1, TJoin2, bool>>

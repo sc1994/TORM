@@ -1,6 +1,8 @@
 ﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -102,6 +104,11 @@ namespace ORM
         {
             return new RealizeUpdate<T>();
         }
+
+        public static int Update<T>(T model, Transaction transaction = null)
+        {
+            return new RealizeUpdate<T>().Update(model, transaction);
+        }
     }
 
     /// <summary>
@@ -109,14 +116,19 @@ namespace ORM
     /// </summary>
     public partial class ORM
     {
-        public static int Insert<T>(params T[] models)
+        public static int Insert<T>(T model)
         {
-            throw new NotImplementedException();
+            return new RealizeInsert<T>().Insert(model);
         }
 
-        public static long Insert<T>(T model)
+        public static int InsertBatch<T>(IEnumerator<T> models)
         {
-            throw new NotImplementedException();
+            return new RealizeInsert<T>().InsertBatch(models);
+        }
+
+        public static int InsertBatch<T>(params T[] models)
+        {
+            return new RealizeInsert<T>().InsertBatch(models);
         }
     }
 
@@ -129,8 +141,11 @@ namespace ORM
         {
             return new RealizeDelete<T>();
         }
-    }
 
-    
+        public int Delete<T>(long id)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
 
