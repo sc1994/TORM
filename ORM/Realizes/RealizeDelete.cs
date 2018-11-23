@@ -4,7 +4,7 @@ using ORM.Interface.IDelete;
 
 namespace ORM.Realizes
 {
-    public class RealizeDelete<T> : RealizeToSql<T>, IDeleteWhere<T>
+    public class RealizeDelete<T> : RealizeCommon<T>, IDeleteWhere<T>
     {
         public int Delete()
         {

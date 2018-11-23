@@ -4,8 +4,7 @@ namespace ORM.Interface
 {
     public interface IInsert<in T>
     {
-        int Insert(T models);
-        int InsertBatch(IEnumerator<T> models);
-        int InsertBatch(params T[] models);
+        int Insert(T model, Transaction transaction = null);
+        int InsertBatch(IEnumerator<T> models, Transaction transaction = null);
     }
 }

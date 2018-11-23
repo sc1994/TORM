@@ -12,12 +12,22 @@ namespace ORM
         /// <summary>
         /// 表信息
         /// </summary>
-        internal static ConcurrentDictionary<string, TableInfo> TableInfoDic => new ConcurrentDictionary<string, TableInfo>();
+        internal static ConcurrentDictionary<int, TableInfo> TableInfoDic => new ConcurrentDictionary<int, TableInfo>();
+
+        /// <summary>
+        /// 存放字段信息
+        /// </summary>
+        internal static ConcurrentDictionary<int, FieldInfo> FieldInfoDic => new ConcurrentDictionary<int, FieldInfo>();
 
         /// <summary>
         /// 存放连接和事务
         /// </summary>
-        internal static ConcurrentDictionary<int, ConnectionInfo> Connections => new ConcurrentDictionary<int, ConnectionInfo>();
+        internal static ConcurrentDictionary<int, ConnectionInfo> ConnectionDic => new ConcurrentDictionary<int, ConnectionInfo>();
+
+        /// <summary>
+        /// 存放不会变化的sql，比如数据插入sql
+        /// </summary>
+        internal static ConcurrentDictionary<string, string> SqlDic => new ConcurrentDictionary<string, string>();
     }
 
     internal class TableInfo
@@ -38,5 +48,41 @@ namespace ORM
         /// 数据库连接字符串
         /// </summary>
         public string ConnectionString { get; set; }
+    }
+
+    internal class FieldInfo
+    {
+        /// <summary>
+        /// 别名
+        /// </summary>
+        public string Alias { get; set; }
+        /// <summary>
+        /// 默认值
+        /// </summary>
+        public string DefaultValue { get; set; }
+        /// <summary>
+        /// 不可为空
+        /// </summary>
+        public bool NotNull { get; set; }
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Comment { get; set; }
+        /// <summary>
+        /// 是否是主键
+        /// </summary>
+        public bool Key { get; set; }
+        /// <summary>
+        /// 是否自增
+        /// </summary>
+        public bool Identity { get; set; }
+        /// <summary>
+        /// 长度
+        /// </summary>
+        internal int Length { get; set; }
+        /// <summary>
+        /// 精度
+        /// </summary>
+        internal int Precision { get; set; }
     }
 }

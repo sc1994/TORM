@@ -1,6 +1,8 @@
-﻿using ORM.Interface;
+﻿using Explain;
+using ORM.Interface;
 using System;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace ORM.Realizes
 {
@@ -8,7 +10,7 @@ namespace ORM.Realizes
     /// 解析 更新 相关
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RealizeUpdate<T> : RealizeToSql<T>, IUpdateSet<T>
+    public class RealizeUpdate<T> : RealizeCommon<T>, IUpdateSet<T>
     {
         public int Update(Transaction transaction = null)
         {
@@ -18,9 +20,10 @@ namespace ORM.Realizes
 
         public int Update(int top, Transaction transaction = null)
         {
-            var sql = ToTop(top);
-            sql = string.Format(sql, $"{GetSet()}{GetWhere()}");
-            return Execute(sql, transaction);
+            //var sql = ToTop(top);
+            //sql = string.Format(sql, $"{GetSet()}{GetWhere()}");
+            //return Execute(sql, transaction);
+            throw new NotImplementedException();
         }
 
         public int Update(T model, Transaction transaction = null)
@@ -47,6 +50,34 @@ namespace ORM.Realizes
         {
             _where.AddRange(exps);
             return this;
+        }
+
+        /// <summary>
+        /// 获取 set sql 代码
+        /// </summary>
+        /// <returns></returns>
+        private StringBuilder GetSet()
+        {
+            return GetSliceSql(SqlTypeEnum.Order,
+                               () =>
+                               {
+                                   var result = new StringBuilder("\r\nSET");
+                                   foreach (var item in _set)
+                                   {
+                                       var c = new ContentEasy();
+                                       ExplainTool.Explain(item.Item1, c);
+                                       if (c.Info.Count < 1)
+                                       {
+                                           throw new Exception("Set表达式内容为空");
+                                       }
+                                       var x = c.Info[0];
+                                       var param = $"@{GetTableName(x.Table)}_{x.Field}_{_params.Count}";
+                                       _params.Add(param, item.Item2);
+                                       result.Append($"\r\n  {GetTableName(x.Table)}.{x.Field} = {param},");
+                                   }
+
+                                   return result.TryRemove(result.Length - 1, 1);
+                               });
         }
     }
 }

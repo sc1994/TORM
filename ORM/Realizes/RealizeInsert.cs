@@ -5,57 +5,78 @@ using System.Text;
 
 namespace ORM.Realizes
 {
-    public class RealizeInsert<T> : RealizeToSql<T>, IInsert<T>
+    public class RealizeInsert<T> : RealizeCommon<T>, IInsert<T>
     {
-        public int Insert(T models)
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public int Insert(T model, Transaction transaction = null)
         {
-            throw new System.NotImplementedException();
+            var sql = GetInsert();
+            return Execute(sql, transaction, model);
         }
 
-        public int InsertBatch(IEnumerator<T> models)
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="models"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public int InsertBatch(IEnumerator<T> models, Transaction transaction = null)
         {
-            throw new System.NotImplementedException();
+            var sql = GetInsert();
+            return Execute(sql, transaction, models);
         }
 
-        public int InsertBatch(params T[] models)
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="models"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public int InsertBatch(T[] models, Transaction transaction = null)
         {
-            throw new System.NotImplementedException();
+            var sql = GetInsert();
+            return Execute(sql, transaction, models);
         }
 
-        private void ToInsert()
+        /// <summary>
+        /// 获取 insert sql
+        /// </summary>
+        /// <returns></returns>
+        private string GetInsert()
         {
             var typeT = typeof(T);
             if (typeT.IsArray)
             {
-                throw new NotImplementedException();
+                throw new Exception("勿使用嵌套数组");
+            }
+
+            var key = $"GetInsert_{typeT.Name}";
+            if (Stores.SqlDic.TryGetValue(key, out var sql))
+            {
+                return sql;
             }
             var properties = typeT.GetProperties();
-            //typeT.
 
-            var sql = new StringBuilder($"INSERT INTO {1}");
-            sql.Append($"\r\n  ");
+            var sqlField = new StringBuilder();
+            var sqlValue = new StringBuilder();
+            foreach (var item in properties)
+            {
+                var fieldInfo = GetFieldInfo(item);
+                if (!fieldInfo.Identity)
+                {
+                    sqlField.Append($"\r\n  {item.Name},");
+                    sqlValue.Append($"\r\n  @{item.Name},");
+                }
+            }
 
-
-            //            var sql = @"INSERT INTO rules
-            //(
-            //  id
-            // ,created_at
-            // ,updated_at
-            // ,deleted_at 
-            // ,schedule_id
-            // ,type
-            // ,rule_date
-            //)
-            //VALUES
-            //(
-            //  0 
-            // ,NOW() 
-            // ,NOW() 
-            // ,NOW() 
-            // ,0 
-            // ,0 
-            // ,NOW() 
-            //);";
+            sql = $"INSERT INTO rules\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}\r\n)\r\nVALUES\r\n({sqlValue.TryRemove(sqlValue.Length - 1, 1)}\r\n);";
+            Stores.SqlDic.TryAdd(key, sql);
+            return sql;
         }
     }
 }

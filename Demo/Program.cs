@@ -1,6 +1,5 @@
 ﻿using ORM;
 using System;
-using System.Collections.Generic;
 
 namespace Demo
 {
@@ -9,16 +8,24 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
+            var e = ORM.ORM.Insert(new rules
+            {
+                created_at = DateTime.Now,
+                id = 13,
+                schedule_id = 2,
+                type = 1,
+                deleted_at = DateTime.Now,
+                rule_date = DateTime.Now,
+                updated_at = DateTime.Now
+            });
+
             var find = ORM.ORM.Query<rules, schedules>()
-                 .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
+                          .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
                           .Select(((x, y) => x.created_at, ""))
-                 .JoinL((x, y) => x.schedule_id == y.id)
-                 .Where((x, y) => x.id > 0 && y.id > 0)
-                 .OrderD((x, y) => x.id)
-                 .Find<rulesView>();
-
-
-            ORM.ORM.InsertBatch(new List<rules>(), new List<rules>());
+                          .JoinL((x, y) => x.schedule_id == y.id)
+                          //.Where((x, y) => x.id > 0 && y.id > 0)
+                          .OrderD((x, y) => x.id)
+                          .Find<rulesView>();
 
             foreach (var item in find)
             {
@@ -108,14 +115,6 @@ namespace Demo
 
             Console.ReadLine();
         }
-
-        private static void Con_StateChange(object sender, System.Data.StateChangeEventArgs e)
-        {
-            //Console.WriteLine(e.OriginalState);
-            Console.WriteLine(e.OriginalState + " ---> " + e.CurrentState + " ---> " + Count++);
-        }
-
-
     }
 
 
@@ -123,6 +122,7 @@ namespace Demo
     [Table("tally", DBTypeEnum.MySQL, "rules")]
     class rules
     {
+        [Key, Identity, Field(NotNull: false)]
         public long id { get; set; }
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }

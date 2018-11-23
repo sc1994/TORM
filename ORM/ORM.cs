@@ -125,11 +125,6 @@ namespace ORM
         {
             return new RealizeInsert<T>().InsertBatch(models);
         }
-
-        public static int InsertBatch<T>(params T[] models)
-        {
-            return new RealizeInsert<T>().InsertBatch(models);
-        }
     }
 
     /// <summary>

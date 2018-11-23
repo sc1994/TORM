@@ -92,7 +92,7 @@ namespace ORM
         public Transaction()
         {
             Sole = GetHashCode();
-            Stores.Connections.TryAdd(Sole, new ConnectionInfo
+            Stores.ConnectionDic.TryAdd(Sole, new ConnectionInfo
             {
                 Connection = new MySqlConnection()
             });
@@ -107,11 +107,11 @@ namespace ORM
         {
             try
             {
-                Stores.Connections[Sole].Transaction.Commit();
+                Stores.ConnectionDic[Sole].Transaction.Commit();
             }
             finally
             {
-                Stores.Connections[Sole].Connection.Close();
+                Stores.ConnectionDic[Sole].Connection.Close();
             }
         }
 
@@ -119,11 +119,11 @@ namespace ORM
         {
             try
             {
-                Stores.Connections[Sole].Transaction.Rollback();
+                Stores.ConnectionDic[Sole].Transaction.Rollback();
             }
             finally
             {
-                Stores.Connections[Sole].Connection.Close();
+                Stores.ConnectionDic[Sole].Connection.Close();
             }
         }
     }

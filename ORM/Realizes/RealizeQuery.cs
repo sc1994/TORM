@@ -1,9 +1,10 @@
-﻿using ORM.Interface;
+﻿using Explain;
+using ORM.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
-using Explain;
 
 namespace ORM.Realizes
 {
@@ -11,7 +12,7 @@ namespace ORM.Realizes
     /// 解析 查询 相关
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RealizeQuery<T> : RealizeToSql<T>, IQuery<T>
+    public class RealizeQuery<T> : RealizeCommon<T>, IQuery<T>
     {
         /// <summary>
         /// 是否存在数据
@@ -24,7 +25,7 @@ namespace ORM.Realizes
 
         public long Count()
         {
-            var sql = $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return QueryFirst<long>(sql);
         }
 
@@ -34,7 +35,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public T First()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return QueryFirst<T>(sql);
         }
 
@@ -45,7 +46,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return QueryFirst<TOther>(sql);
         }
 
@@ -55,7 +56,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return Query<T>(sql);
         }
 
@@ -66,7 +67,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return Query<TOther>(sql);
         }
 
@@ -78,7 +79,7 @@ namespace ORM.Realizes
         public IEnumerable<T> Find(int top)
         {
             var t = ToTop(top);
-            var sql = string.Format(t, $" \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
+            var sql = string.Format(t, $" \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return Query<T>(sql);
         }
 
@@ -90,7 +91,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>(int top)
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()};";
+            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return Query<TOther>(sql);
         }
 
@@ -103,7 +104,7 @@ namespace ORM.Realizes
         public (IEnumerable<T> data, long total) Page(int index, int size)
         {
             var t = ToPage(index, size);
-            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
+            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return (Query<T>(sql), Count());
         }
 
@@ -117,8 +118,239 @@ namespace ORM.Realizes
         public (IEnumerable<TOther> data, long total) Page<TOther>(int index, int size)
         {
             var t = ToPage(index, size);
-            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetOrder()}");
+            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return (Query<TOther>(sql), Count());
+        }
+
+        /// <summary>
+        /// 获取 select sql 代码
+        /// </summary>
+        /// <returns></returns>
+        private StringBuilder GetSelect()
+        {
+            return GetSliceSql(SqlTypeEnum.Select, () =>
+            {
+                var result = new StringBuilder("SELECT");
+                _selects.ForEach(x => ToSelect(x, null, result));
+                _selectAlias.ForEach(x => ToSelect(x.Item1, x.Item2, result));
+                if (result.ToString() != "SELECT")
+                {
+                    result.TryRemove(result.Length - 1, 1);
+                }
+                else
+                {
+                    result.Append(" *");
+                }
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 转到 select
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="alias"></param>
+        /// <param name="result"></param>
+        private void ToSelect(Expression item, string alias, StringBuilder result)
+        {
+            var c = new ContentEasy();
+            ExplainTool.Explain(item, c);
+            c.Rinse();
+            c.Info.ForEach(x =>
+            {
+                var a = string.IsNullOrWhiteSpace(alias) ? "" : $" AS {alias}";
+                result.Append(string.IsNullOrWhiteSpace(x.Method)
+                    ? $"\r\n  {GetTableName(x.Table)}.{x.Field}{a},"
+                    : $"\r\n  {x.Method.ToUpper()}({GetTableName(x.Table)}.{x.Field}){a},");
+            });
+        }
+
+        /// <summary>
+        /// 获取 group sql 代码
+        /// </summary>
+        /// <returns></returns>
+        private StringBuilder GetGroup()
+        {
+            return GetSliceSql(SqlTypeEnum.Group, () =>
+            {
+                var result = new StringBuilder();
+                _groups.ForEach(item =>
+                {
+                    var c = new ContentEasy();
+                    ExplainTool.Explain(item, c);
+                    c.Rinse();
+                    foreach (var info in c.Info)
+                    {
+                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field},");
+                    }
+                });
+                if (result.Length > 0)
+                {
+                    result.Insert(0, "\r\nGROUP BY");
+                }
+                return result.TryRemove(result.Length - 1, 1);
+            });
+        }
+
+        /// <summary>
+        /// 获取 order sql 代码
+        /// </summary>
+        /// <returns></returns>
+        private StringBuilder GetOrder()
+        {
+            return GetSliceSql(SqlTypeEnum.Order, () =>
+            {
+                var result = new StringBuilder();
+                _orders.ForEach(item =>
+                {
+                    var c = new ContentEasy();
+                    ExplainTool.Explain(item.Item1, c);
+                    c.Rinse();
+                    foreach (var info in c.Info)
+                    {
+                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field} {item.Item2.ToExplain()},");
+                    }
+                });
+                if (result.Length > 0)
+                {
+                    result.Insert(0, "\r\nORDER BY");
+                }
+                return result.TryRemove(result.Length - 1, 1);
+            });
+        }
+
+        /// <summary>
+        /// 转成分页的
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="size"></param>
+        private string ToPage(int index, int size)
+        {
+            var t = GetTableInfo().DBType;
+            var order = GetOrder();
+            var select = GetSelect();
+            if (string.IsNullOrWhiteSpace(order.ToString()))
+            {
+                throw new Exception("分页需传入排序依据");
+            }
+
+            if (t == DBTypeEnum.SQLServer2008)
+            {
+                return "SELECT * FROM\r\n" +
+                       "(SELECT ROW_NUMBER() OVER(ORDER BY" +
+                       $"{order.Replace("ORDER BY\r\n", "")}\r\n) AS ROWNUMBER," +
+                       $"{select.Replace("SELECT\r\n", "\r\n")}{{0}}" +
+                       $"\r\n) A WHERE ROWNUMBER BETWEEN {(index - 1) * size + 1} AND {index * size};";
+            }
+
+            if (t == DBTypeEnum.MySQL)
+            {
+                return $"{select}{{0}}\r\nLIMIT{(index - 1) * size + 1},{index * size}";
+            }
+            else
+            {
+                throw new NotImplementedException("未实现的数据库类型");
+            }
+        }
+
+        /// <summary>
+        /// 获取 join sql 代码
+        /// </summary>
+        /// <returns></returns>
+        private StringBuilder GetJoin() // todo 对于 mysql 来说 full join 有点麻烦
+        {
+            return GetSliceSql(SqlTypeEnum.Join, () =>
+            {
+                var result = new StringBuilder();
+                _join.ForEach(x =>
+                {
+                    var c = new ContentJoin();
+                    ExplainTool.Explain(x.Item1, c);
+                    c.Rinse();
+                    // 收集全部表
+                    allTables.AddRange(c.Info.Select(s => s.Table));
+                    allTables.AddRange(c.Info.Select(s => s.Table2));
+
+                    foreach (var info in c.Info)
+                    {
+                        string param;
+                        var type = info.Type.ToExplain();
+                        if (info.Value == null
+                            && (type == "=" || type == "<>")
+                            && info.Table2 == null
+                            && string.IsNullOrWhiteSpace(info.Field2)) // 当不是和表字段的比较，且 == null 或者 != null时，采取SQL 语法
+                        {
+                            param = "null";
+                            type = type == "=" ? "IS" : "IS NOT";
+                        }
+                        else
+                        {
+                            param = $"@{GetTableName(info.Table)}_{info.Field}_{_params.Count}";
+                            _params.Add(param, info.Value);
+                        }
+
+                        if (info.Table2 != null && !string.IsNullOrWhiteSpace(info.Field2))
+                        {
+                            result.Append($"\r\n  {x.Item2.ToExplain()} {GetJoinTable()} ON {GetTableName(info.Table)}.{info.Field} {type} {info.Table2.Name}.{info.Field2}");
+                            // 收集已用表
+                            useTables.Add(info.Table);
+                            useTables.Add(info.Table2);
+                        }
+                        else
+                        {
+                            result.Append($"\r\n  {info.Prior.ToExplain()} {GetTableName(info.Table)}.{info.Field} {type} {param}");
+                        }
+                    }
+                });
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 获取需要join 的表（取全部表，取已用表，未用过的就是需要join 的表）
+        /// todo 这样的计算方式不靠谱
+        /// </summary>
+        /// <returns></returns>
+        private string GetJoinTable()
+        {
+            var all = allTables.Where(x => x != null).Select(x => x.Name).Distinct();
+            var use = useTables.Where(x => x != null).Select(x => x.Name).Distinct();
+            var flag = all.Except(use);
+            if (flag.Count() == 1)
+            {
+                return flag.FirstOrDefault();
+            }
+            throw new Exception("获取join表失败！");
+        }
+
+        /// <summary>
+        /// 转成top的
+        /// </summary>
+        /// <param name="top"></param>
+        private string ToTop(int top)
+        {
+            var s = GetSelect();
+            if (GetTableInfo().DBType == DBTypeEnum.MySQL)
+            {
+                return $"{s} {{0}} \r\nLIMIT {top};";
+            }
+
+            return $"{s.Replace("SELECT", $"SELECT TOP ({top})")} {{0}};";
+        }
+
+        /// <summary>
+        /// 获取 having sql 代码
+        /// </summary>
+        /// <returns></returns>
+        private StringBuilder GetHaving()
+        {
+            return GetSliceSql(SqlTypeEnum.Having,
+                               () =>
+                               {
+                                   var result = new StringBuilder("\r\nHAVING 1=1");
+                                   ToWhere(_having, result);
+                                   return result;
+                               }); //todo 未接入
         }
     }
 }
