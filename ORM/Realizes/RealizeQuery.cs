@@ -247,7 +247,7 @@ namespace ORM.Realizes
 
             if (t == DBTypeEnum.MySQL)
             {
-                return $"{select}{{0}}\r\nLIMIT{(index - 1) * size + 1},{index * size}";
+                return $"{select}{{0}}\r\nLIMIT {(index - 1) * size + 1}, {index * size};";
             }
             else
             {
@@ -351,6 +351,8 @@ namespace ORM.Realizes
             {
                 var result = new StringBuilder("\r\nHAVING 1=1");
                 ToWhere(_having, result);
+                if (result.ToString() == "\r\nHAVING 1=1")
+                    result.Clear();
                 return result;
             });
         }

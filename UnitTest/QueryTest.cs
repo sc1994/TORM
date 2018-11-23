@@ -10,6 +10,12 @@ namespace UnitTest
     public class QueryTest
     {
         [TestMethod]
+        public void CountTest()
+        {
+
+        }
+
+        [TestMethod]
         public void FindTest()
         {
             var result = TORM.Query<rules>()
@@ -18,13 +24,26 @@ namespace UnitTest
             Debug.Assert(result.Any());
         }
 
-        public void FindTop()
+        [TestMethod]
+        public void FindTopTest()
         {
             var result = TORM.Query<rules>()
                              .Where(x => x.id > 0)
                              .Find(2);
             Debug.Assert(result.Count() == 2);
         }
+
+        [TestMethod]
+        public void PageTest()
+        {
+            var result = TORM.Query<rules>()
+                             .Where(x => x.id > 0)
+                             .OrderA(x => x.id)
+                             .Page(1, 3);
+            Debug.Assert(result.data.Count() == 3 && result.total >= 3);
+        }
+
+        
     }
 
     [Table("tally", DBTypeEnum.MySQL, "rules")]
