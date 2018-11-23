@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace ORM
 {
@@ -33,6 +32,11 @@ namespace ORM
         /// 调试模式
         /// </summary>
         internal static bool Debug = false;
+
+        /// <summary>
+        /// 存放一些项目配置
+        /// </summary>
+        internal static ConcurrentDictionary<string, string> ConfigDic => new ConcurrentDictionary<string, string>();
     }
 
     internal class TableInfo

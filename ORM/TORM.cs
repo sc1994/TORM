@@ -2,7 +2,6 @@
 using ORM.Realizes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -19,7 +18,7 @@ namespace ORM
     /// <summary>
     /// query 相关
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         /// <summary>
         /// 单表查询
@@ -98,7 +97,7 @@ namespace ORM
     /// <summary>
     /// update 相关
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         public static RealizeUpdate<T> Update<T>()
         {
@@ -114,7 +113,7 @@ namespace ORM
     /// <summary>
     /// insert 相关  todo
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         public static int Insert<T>(T model)
         {
@@ -130,7 +129,7 @@ namespace ORM
     /// <summary>
     /// delete 相关
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         public IDelete<T> Delete<T>()
         {
@@ -146,7 +145,7 @@ namespace ORM
     /// <summary>
     /// 其他
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         public static bool Debug
         {

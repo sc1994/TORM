@@ -222,7 +222,7 @@ namespace ORM.Realizes
                 DB = info.DB,
                 DBType = info.DBType,
                 Table = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
-                ConnectionString = ORMTool.GetAppSetting(info.DB) // todo 读取配置
+                ConnectionString = Tools.GetAppSetting(info.DB)
             };
             Stores.TableInfoDic.TryAdd(table.MetadataToken, r);
             return r;

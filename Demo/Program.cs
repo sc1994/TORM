@@ -8,7 +8,7 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
-            //var e = ORM.ORM.Insert(new rules
+            //var e = TORM.TORM.Insert(new rules
             //{
             //    created_at = DateTime.Now,
             //    id = 13,
@@ -19,9 +19,9 @@ namespace Demo
             //    updated_at = DateTime.Now
             //});
 
-            ORM.ORM.Debug = true;
+            ORM.TORM.Debug = true;
 
-            var find = ORM.ORM.Query<rules, schedules>()
+            var find = ORM.TORM.Query<rules, schedules>()
                           .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
                           .JoinL((x, y) => x.schedule_id == y.id)
                           .Where((x, y) => x.id > 0 && y.id > 0)
@@ -47,11 +47,11 @@ namespace Demo
             //                     var s = DateTime.Now;
             //                     var tr = Transaction.Start();
 
-            //                     var c = ORM.ORM.Update<rules>()
+            //                     var c = TORM.TORM.Update<rules>()
             //                                .Set(x => x.created_at, DateTime.Now)
             //                                .Update(tr);
 
-            //                     var c2 = ORM.ORM.Update<rules>()
+            //                     var c2 = TORM.TORM.Update<rules>()
             //                                 .Set(x => x.deleted_at, DateTime.Now)
             //                                 .Update(tr);
 
@@ -77,14 +77,14 @@ namespace Demo
             //    }
             //}
 
-            //ORM.ORM.Query<rules>().Select(x => x.created_at).Find();
+            //TORM.TORM.Query<rules>().Select(x => x.created_at).Find();
 
             //Console.WriteLine("Hello World!---->" + millisecond + "<--毫秒");
 
 
 
 
-            //ORM.ORM.Query<Model>()
+            //TORM.TORM.Query<Model>()
             //    //.Select(x => x.Name)
             //    //.Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
             //    .Select(x => new object[]
@@ -102,12 +102,12 @@ namespace Demo
             //    .Find()
             //    ;
 
-            //ORM.ORM.Query<Model, Model3>()
+            //TORM.TORM.Query<Model, Model3>()
             //    .Select((x, y) => x.Name, (x, y) => y.Date3)
             //    .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
             //    .Exist();
 
-            //ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
+            //TORM.TORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
 
             //var info = new ContentWhere();
             //Expression<Func<Model, bool>>

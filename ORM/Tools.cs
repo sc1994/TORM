@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Text;
 
@@ -10,7 +9,7 @@ namespace ORM
     /// <summary>
     /// 自定义方法
     /// </summary>
-    public static class ORMTool
+    public static class Tools
     {
         public static bool NotIn<T>(this T field, T[] values) where T : struct
         {
@@ -59,26 +58,23 @@ namespace ORM
             return that;
         }
 
-        internal static T GetConfigJson<T>(string key, string fileName = "appsettings.json") where T : class, new()
+        internal static string GetAppSetting(string key)
         {
-            var builder = new ConfigurationBuilder()
-                          .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile(fileName);
-            var config = builder.Build();
+            if (Stores.ConfigDic.TryGetValue(key, out var value))
+            {
+                return value;
+            }
 
-            var entity = new T();
-            config.GetSection(key).Bind(entity);
-            return entity;
-        }
+            var config = File.ReadAllText("appsettings.json");
+            var node = JObject.Parse(config)[key];
+            value = node.Value<string>();
+            return value;
+            //var builder = new ConfigurationBuilder()
+            //              .SetBasePath(Directory.GetCurrentDirectory())
+            //              .AddJsonFile(fileName);
+            //var config = builder.Build();
 
-        internal static string GetAppSetting(string key, string fileName = "appsettings.json")
-        {
-            var builder = new ConfigurationBuilder()
-                          .SetBasePath(Directory.GetCurrentDirectory())
-                          .AddJsonFile(fileName);
-            var config = builder.Build();
-
-            return config.GetSection(key).Value;
+            //return config.GetSection(key).Value;
         }
     }
 
