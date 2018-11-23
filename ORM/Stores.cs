@@ -7,7 +7,7 @@ namespace ORM
     /// <summary>
     /// 存储实例运行中不会变化的值
     /// </summary>
-    public static class Stores
+    internal static class Stores
     {
         /// <summary>
         /// 表信息
@@ -28,6 +28,11 @@ namespace ORM
         /// 存放不会变化的sql，比如数据插入sql
         /// </summary>
         internal static ConcurrentDictionary<string, string> SqlDic => new ConcurrentDictionary<string, string>();
+
+        /// <summary>
+        /// 调试模式
+        /// </summary>
+        internal static bool Debug = false;
     }
 
     internal class TableInfo

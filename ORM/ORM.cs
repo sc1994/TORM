@@ -142,5 +142,22 @@ namespace ORM
             throw new NotImplementedException();
         }
     }
+
+    /// <summary>
+    /// 其他
+    /// </summary>
+    public partial class ORM
+    {
+        public static bool Debug
+        {
+            get => Stores.Debug;
+            set => Stores.Debug = value;
+        }
+
+        public static void AutoTable<T>()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
 

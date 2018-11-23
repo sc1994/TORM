@@ -1,8 +1,10 @@
 ﻿using Dapper;
 using Explain;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -270,10 +272,11 @@ namespace ORM.Realizes
             MySqlConnection connection;
             // 决定是使用默认参数还是传入参数
             var thatParam = param ?? _params;
+            LogSql(sql, thatParam);
             if (transaction != null)
             {
                 var value = Stores.ConnectionDic[transaction.Sole];
-                if (value.Transaction == null) // 希望在 事务开始的时候尽量少的操作，所以连接的开启放在了这边
+                if (value.Transaction == null) // 希望在 事务开始的时候尽量少的参数，所以连接的开启放在了这边
                 {
                     value.Connection.ConnectionString = GetTableInfo().ConnectionString;
                     value.Connection.Open();
@@ -295,6 +298,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected TOther QueryFirst<TOther>(string sql)
         {
+            LogSql(sql, _params);
             using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
             {
                 return connection.QueryFirst<TOther>(sql, _params);
@@ -308,10 +312,26 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected IEnumerable<TOther> Query<TOther>(string sql)
         {
+            LogSql(sql, _params);
             using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
             {
                 return connection.Query<TOther>(sql, _params);
             }
+        }
+
+        protected void LogSql(string sql, object param)
+        {
+            if (!Stores.Debug) return;
+            Trace.WriteLine(
+$@"
+
+================SQL>{DateTime.Now:u}<SQL================
+{sql}
+==============Param>{DateTime.Now:u}<Param==============
+{JsonConvert.SerializeObject(param, Formatting.Indented)}
+================End>{DateTime.Now:u}<End================
+
+");
         }
     }
 }

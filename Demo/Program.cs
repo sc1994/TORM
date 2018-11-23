@@ -8,24 +8,25 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
-            var e = ORM.ORM.Insert(new rules
-            {
-                created_at = DateTime.Now,
-                id = 13,
-                schedule_id = 2,
-                type = 1,
-                deleted_at = DateTime.Now,
-                rule_date = DateTime.Now,
-                updated_at = DateTime.Now
-            });
+            //var e = ORM.ORM.Insert(new rules
+            //{
+            //    created_at = DateTime.Now,
+            //    id = 13,
+            //    schedule_id = 2,
+            //    type = 1,
+            //    deleted_at = DateTime.Now,
+            //    rule_date = DateTime.Now,
+            //    updated_at = DateTime.Now
+            //});
+
+            ORM.ORM.Debug = true;
 
             var find = ORM.ORM.Query<rules, schedules>()
                           .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
-                          .Select(((x, y) => x.created_at, ""))
                           .JoinL((x, y) => x.schedule_id == y.id)
-                          //.Where((x, y) => x.id > 0 && y.id > 0)
+                          .Where((x, y) => x.id > 0 && y.id > 0)
                           .OrderD((x, y) => x.id)
-                          .Find<rulesView>();
+                          .Find<rulesView>(3);
 
             foreach (var item in find)
             {

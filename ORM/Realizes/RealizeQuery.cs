@@ -2,6 +2,7 @@
 using ORM.Interface;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -35,7 +36,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public T First()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return QueryFirst<T>(sql);
         }
 
@@ -46,7 +47,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return QueryFirst<TOther>(sql);
         }
 
@@ -56,7 +57,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return Query<T>(sql);
         }
 
@@ -67,7 +68,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
             return Query<TOther>(sql);
         }
 
@@ -79,7 +80,7 @@ namespace ORM.Realizes
         public IEnumerable<T> Find(int top)
         {
             var t = ToTop(top);
-            var sql = string.Format(t, $" \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
+            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return Query<T>(sql);
         }
 
@@ -91,7 +92,8 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>(int top)
         {
-            var sql = $"{GetSelect()} \r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            var t = ToTop(top);
+            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return Query<TOther>(sql);
         }
 
@@ -345,12 +347,12 @@ namespace ORM.Realizes
         private StringBuilder GetHaving()
         {
             return GetSliceSql(SqlTypeEnum.Having,
-                               () =>
-                               {
-                                   var result = new StringBuilder("\r\nHAVING 1=1");
-                                   ToWhere(_having, result);
-                                   return result;
-                               }); //todo 未接入
+            () =>
+            {
+                var result = new StringBuilder("\r\nHAVING 1=1");
+                ToWhere(_having, result);
+                return result;
+            });
         }
     }
 }
