@@ -247,6 +247,7 @@ namespace ORM.Realizes
                 Type = field.PropertyType.Name.ToLower()
             };
             var fieldInfo = field.GetCustomAttributes(typeof(FieldAttribute), true).FirstOrDefault();
+            var foreign = field.GetCustomAttributes(typeof(ForeignAttribute), true).FirstOrDefault();
             if (fieldInfo is FieldAttribute value)
             {
                 result.Name = string.IsNullOrWhiteSpace(value.Alias) ? field.Name : value.Alias;
@@ -255,6 +256,10 @@ namespace ORM.Realizes
                 result.NotNull = value.NotNull;
                 result.Length = value.Length;
                 result.Precision = value.Precision;
+            }
+            else if (foreign is ForeignAttribute fValue)
+            {
+                result.Foreign = fValue.Foreign;
             }
 
             if (string.IsNullOrWhiteSpace(result.Name))

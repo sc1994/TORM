@@ -92,4 +92,17 @@ namespace ORM
             this.Precision = Precision;
         }
     }
+
+    /// <summary>
+    /// 指定外键
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class ForeignAttribute : Attribute
+    {
+        internal string Foreign { get; set; }
+        public ForeignAttribute(string foreign)
+        {
+            Foreign = foreign;
+        }
+    }
 }

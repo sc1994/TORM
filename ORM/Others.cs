@@ -9,9 +9,7 @@ namespace ORM
     {
         public void AutoTable()
         {
-            var tableType = typeof(T);
-            var typeT = ChenkT();
-
+            var tableType = ChenkT();
             var tableInfo = GetTableInfo();
 
             if (ExistTable())
@@ -29,6 +27,8 @@ namespace ORM
             foreach (var item in properties)
             {
                 var fieldInfo = GetFieldInfo(item);
+                if (!string.IsNullOrWhiteSpace(fieldInfo.Foreign))
+                    continue; // 屏蔽掉设置了外键的字段 todo 考虑设置主外键
                 if (fieldInfo.Key)
                 {
                     sql.Append($"\r\n  PRIMARY KEY ({fieldInfo.Name}),");
@@ -51,7 +51,6 @@ namespace ORM
                 {
                     sql.Append($" COMMENT '{fieldInfo.Comment}'");
                 }
-
                 sql.Append(",");
             }
             sql.TryRemove(sql.Length - 1, 1);

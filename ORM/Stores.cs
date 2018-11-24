@@ -92,7 +92,6 @@ namespace ORM
         /// 长度
         /// </summary>
         internal int Length { get; set; }
-
         /// <summary>
         /// 精度
         /// </summary>
@@ -101,6 +100,10 @@ namespace ORM
         /// 数据类型
         /// </summary>
         internal string Type { get; set; }
+        /// <summary>
+        /// 外键
+        /// </summary>
+        internal string Foreign { get; set; }
     }
 
     /// <summary>
