@@ -243,12 +243,13 @@ namespace ORM.Realizes
             result = new FieldInfo
             {
                 Key = field.GetCustomAttributes(typeof(KeyAttribute), true).FirstOrDefault() != null,
-                Identity = field.GetCustomAttributes(typeof(IdentityAttribute), true).FirstOrDefault() != null
+                Identity = field.GetCustomAttributes(typeof(IdentityAttribute), true).FirstOrDefault() != null,
+                Type = field.PropertyType.Name.ToLower()
             };
             var fieldInfo = field.GetCustomAttributes(typeof(FieldAttribute), true).FirstOrDefault();
             if (fieldInfo is FieldAttribute value)
             {
-                result.Alias = string.IsNullOrWhiteSpace(value.Alias) ? field.Name : value.Alias;
+                result.Name = string.IsNullOrWhiteSpace(value.Alias) ? field.Name : value.Alias;
                 result.Comment = value.Comment;
                 result.DefaultValue = value.DefaultValue;
                 result.NotNull = value.NotNull;
@@ -256,6 +257,10 @@ namespace ORM.Realizes
                 result.Precision = value.Precision;
             }
 
+            if (string.IsNullOrWhiteSpace(result.Name))
+            {
+                result.Name = field.Name;
+            }
             Stores.FieldInfoDic.TryAdd(field.MetadataToken, result);
             return result;
         }
@@ -267,7 +272,7 @@ namespace ORM.Realizes
         /// <param name="transaction"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        protected int Execute(string sql, Transaction transaction, object param = null)
+        protected int Execute(string sql, Transaction transaction = null, object param = null)
         {
             MySqlConnection connection;
             // 决定是使用默认参数还是传入参数

@@ -8,117 +8,25 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
-            //var e = TORM.TORM.Insert(new rules
-            //{
-            //    created_at = DateTime.Now,
-            //    id = 13,
-            //    schedule_id = 2,
-            //    type = 1,
-            //    deleted_at = DateTime.Now,
-            //    rule_date = DateTime.Now,
-            //    updated_at = DateTime.Now
-            //});
+            TORM.AutoTable<Test>();
 
-            ORM.TORM.Debug = true;
-
-            var find = ORM.TORM.Query<rules, schedules>()
-                          .Select((x, y) => new object[] { x.created_at, x.deleted_at, x.id, x.schedule_id, y.content })
-                          .JoinL((x, y) => x.schedule_id == y.id)
-                          .Where((x, y) => x.id > 0 && y.id > 0)
-                          .OrderD((x, y) => x.id)
-                          .Find<rulesView>(3);
-
-            foreach (var item in find)
-            {
-                Console.WriteLine($"id:{item.id}--created_at:{item.created_at}--schedule_id:{item.schedule_id}--content:{item.content}");
-            }
-
-
-
-            //var list = new List<int>();
-            //for (int i = 0; i < 1000; i++)
-            //{
-            //    list.Add(i);
-            //}
-            //var spans = new ConcurrentQueue<TimeSpan>();
-            //Parallel.ForEach(list,
-            //                 i =>
-            //                 {
-            //                     var s = DateTime.Now;
-            //                     var tr = Transaction.Start();
-
-            //                     var c = TORM.TORM.Update<rules>()
-            //                                .Set(x => x.created_at, DateTime.Now)
-            //                                .Update(tr);
-
-            //                     var c2 = TORM.TORM.Update<rules>()
-            //                                 .Set(x => x.deleted_at, DateTime.Now)
-            //                                 .Update(tr);
-
-            //                     Console.WriteLine(i);
-
-            //                     if (i % 2 == 0)
-            //                     {
-            //                         tr.Commit();
-            //                     }
-            //                     else
-            //                     {
-            //                         tr.Rollback();
-            //                     }
-            //                     spans.Enqueue(DateTime.Now - s);
-            //                 });
-
-            //double millisecond = 0;
-            //while (!spans.IsEmpty)
-            //{
-            //    if (spans.TryDequeue(out TimeSpan span))
-            //    {
-            //        millisecond += span.TotalMilliseconds;
-            //    }
-            //}
-
-            //TORM.TORM.Query<rules>().Select(x => x.created_at).Find();
-
-            //Console.WriteLine("Hello World!---->" + millisecond + "<--毫秒");
-
-
-
-
-            //TORM.TORM.Query<Model>()
-            //    //.Select(x => x.Name)
-            //    //.Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
-            //    .Select(x => new object[]
-            //                 {
-            //                     x.Name,
-            //                     x.Date,
-            //                     ORMTool.Max(x.Name1)
-            //                 })
-            //    //.Select(x => x.Name1, "name")
-            //    //.Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
-            //    //.Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
-            //    //.Group(x => x.Name)
-            //    //.Having(x => x.Name == "1")
-            //    //.OrderA(x => x.Name1)
-            //    .Find()
-            //    ;
-
-            //TORM.TORM.Query<Model, Model3>()
-            //    .Select((x, y) => x.Name, (x, y) => y.Date3)
-            //    .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
-            //    .Exist();
-
-            //TORM.TORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
-
-            //var info = new ContentWhere();
-            //Expression<Func<Model, bool>>
-            //    a = x => x.Name == "234" && x.Date == DateTime.Today && x.Name1 == "123";
-            //ExplainTool.Explain(a, info);
-
+            Console.WriteLine("OVER");
             Console.ReadLine();
         }
     }
 
-
+    [Table("tally", DBTypeEnum.MySQL)]
+    class Test
+    {
+        [Key, Identity]
+        public long Id { get; set; }
+        [Field(Length: 500, Comment: "这只是个描述")]
+        public string Name { get; set; }
+        public bool Status { get; set; }
+        public int Age { get; set; }
+        [Field(Precision: 4)]
+        public decimal Money { get; set; }
+    }
 
     [Table("tally", DBTypeEnum.MySQL, "rules")]
     class rules

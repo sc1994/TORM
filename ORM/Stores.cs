@@ -59,12 +59,15 @@ namespace ORM
         public string ConnectionString { get; set; }
     }
 
+    /// <summary>
+    /// 字段信息
+    /// </summary>
     internal class FieldInfo
     {
         /// <summary>
-        /// 别名
+        /// 字段名
         /// </summary>
-        public string Alias { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 默认值
         /// </summary>
@@ -89,9 +92,34 @@ namespace ORM
         /// 长度
         /// </summary>
         internal int Length { get; set; }
+
         /// <summary>
         /// 精度
         /// </summary>
         internal int Precision { get; set; }
+        /// <summary>
+        /// 数据类型
+        /// </summary>
+        internal string Type { get; set; }
+    }
+
+    /// <summary>
+    /// 来自数据库的字段信息
+    /// </summary>
+    internal class FieldByDB : FieldInfo
+    {
+        /// <summary>
+        /// 用于数据库读取表信息
+        /// </summary>
+        internal int StringLength { get; set; }
+        /// <summary>
+        /// 精度，解决关键字冲突
+        /// </summary>
+        internal int PrecisionDB { get; set; }
+        /// <summary>
+        /// 自增键
+        /// </summary>
+        internal string IdentityDB { get; set; }
+        internal string NotNullDB { get; set; }
     }
 }

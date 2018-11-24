@@ -155,7 +155,7 @@ namespace ORM
 
         public static void AutoTable<T>()
         {
-            throw new NotImplementedException();
+            new Others<T>().AutoTable();
         }
     }
 }
