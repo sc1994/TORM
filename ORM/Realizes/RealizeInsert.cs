@@ -49,12 +49,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         private string GetInsert()
         {
-            var typeT = typeof(T);
-            if (typeT.IsArray)
-            {
-                throw new Exception("勿使用嵌套数组");
-            }
-
+            var typeT = ChenkT();
             var key = $"GetInsert_{typeT.Name}";
             if (Stores.SqlDic.TryGetValue(key, out var sql))
             {

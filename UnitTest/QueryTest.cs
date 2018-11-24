@@ -12,7 +12,10 @@ namespace UnitTest
         [TestMethod]
         public void CountTest()
         {
-
+            var result = TORM.Query<rules>()
+                             .Where(x => x.id > 0)
+                             .Count();
+            Debug.Assert(result > 3);
         }
 
         [TestMethod]
@@ -42,8 +45,6 @@ namespace UnitTest
                              .Page(1, 3);
             Debug.Assert(result.data.Count() == 3 && result.total >= 3);
         }
-
-        
     }
 
     [Table("tally", DBTypeEnum.MySQL, "rules")]

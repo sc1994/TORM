@@ -1,6 +1,5 @@
 ﻿using ORM.Realizes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -11,20 +10,18 @@ namespace ORM
         public void AutoTable()
         {
             var tableType = typeof(T);
-            if (tableType.IsArray)
-            {
-                throw new Exception("勿使用数组");
-            }
+            var typeT = ChenkT();
 
             var tableInfo = GetTableInfo();
 
             if (ExistTable())
             {
-//                var tableByDB = Query<FieldByDB>(
-//$@"SELECT COLUMN_NAME AS Name, IS_NULLABLE AS NotNullDB, DATA_TYPE AS Type, CHARACTER_MAXIMUM_LENGTH AS StringLength, NUMERIC_PRECISION AS Length, NUMERIC_SCALE AS PrecisionDB, EXTRA AS IdentityDB, COLUMN_COMMENT AS Comment
-//  FROM INFORMATION_SCHEMA.Columns 
-//  WHERE TABLE_NAME='{tableInfo.Table}' ;");
-                throw new NotImplementedException();
+                //                var tableByDB = Query<FieldByDB>(
+                //$@"SELECT COLUMN_NAME AS Name, IS_NULLABLE AS NotNullDB, DATA_TYPE AS Type, CHARACTER_MAXIMUM_LENGTH AS StringLength, NUMERIC_PRECISION AS Length, NUMERIC_SCALE AS PrecisionDB, EXTRA AS IdentityDB, COLUMN_COMMENT AS Comment
+                //  FROM INFORMATION_SCHEMA.Columns 
+                //  WHERE TABLE_NAME='{tableInfo.Table}' ;");
+                //throw new NotImplementedException(); todo 以后考虑实现
+                return;
             }
 
             var properties = tableType.GetProperties();
@@ -126,11 +123,11 @@ namespace ORM
             return length;
         }
 
-        private IEnumerable<FieldInfo> DifferentFields(IEnumerable<FieldInfo> that, IEnumerable<FieldByDB> db)
-        {
-            var result = new List<FieldInfo>();
+        //private IEnumerable<FieldInfo> DifferentFields(IEnumerable<FieldInfo> that, IEnumerable<FieldByDB> db)
+        //{
+        //    var result = new List<FieldInfo>();
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }

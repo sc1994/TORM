@@ -28,7 +28,8 @@ namespace ORM.Realizes
 
         public int Update(T model, Transaction transaction = null)
         {
-            throw new NotImplementedException();
+            var sql = GetUpdateByModel();
+            return Execute(sql, transaction, model);
         }
 
         public IUpdateSet<T> Set<TValue>(Expression<Func<T, TValue>> exp, TValue value)
@@ -78,6 +79,48 @@ namespace ORM.Realizes
 
                                    return result.TryRemove(result.Length - 1, 1);
                                });
+        }
+
+        //private string ToTop()
+        //{
+        //    var s = "";
+        //    if (GetTableInfo().DBType == DBTypeEnum.MySQL)
+        //    {
+
+        //    }
+        //}
+
+        /// <summary>
+        /// 获取 insert sql
+        /// </summary>
+        /// <returns></returns>
+        private string GetUpdateByModel()
+        {
+            var typeT = ChenkT();
+            var key = $"GetUpdateByModel_{typeT.Name}";
+            if (Stores.SqlDic.TryGetValue(key, out var sql))
+            {
+                return sql;
+            }
+            var properties = typeT.GetProperties();
+            var sqlField = new StringBuilder();
+            var fieldKey = string.Empty;
+            foreach (var item in properties)
+            {
+                var fieldInfo = GetFieldInfo(item);
+                if (!fieldInfo.Identity && !fieldInfo.Key)
+                {
+                    sqlField.Append($"\r\n  {item.Name} = @{item.Name}");
+                }
+                else if (fieldInfo.Key)
+                {
+                    fieldKey = fieldInfo.Name;
+                }
+            }
+
+            sql = $"UPDATE Test SET\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}WHERE\r\n  {fieldKey} = @{fieldKey};";
+            Stores.SqlDic.TryAdd(key, sql);
+            return sql;
         }
     }
 }

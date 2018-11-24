@@ -338,5 +338,19 @@ $@"
 
 ");
         }
+
+        /// <summary>
+        /// 验证T且返回类型
+        /// </summary>
+        /// <returns></returns>
+        protected Type ChenkT()
+        {
+            var type = typeof(T);
+            if (type.IsArray)
+            {
+                throw new Exception("勿使用嵌套数组");
+            }
+            return type;
+        }
     }
 }
