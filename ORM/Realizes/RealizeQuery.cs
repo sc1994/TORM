@@ -2,7 +2,6 @@
 using ORM.Interface;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -18,37 +17,65 @@ namespace ORM.Realizes
         /// <summary>
         /// 是否存在数据
         /// </summary>
-        /// <returns></returns>
+        /// <returns>是否存在</returns>
         public bool Exist()
         {
             return Count() > 0; // todo 也许有不需要COUNT的高效办法
         }
 
+        /// <summary>
+        /// 获取数量
+        /// </summary>
+        /// <returns>count</returns>
         public long Count()
         {
-            var sql = $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
-            return QueryFirst<long>(sql);
+            return QueryFirst<long>(CountSql());
+        }
+
+        /// <summary>
+        /// 获取数量
+        /// </summary>
+        /// <returns>sql</returns>
+        public string CountSql()
+        {
+            return $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
         }
 
         /// <summary>
         /// 查找第一条数据
         /// </summary>
-        /// <returns></returns>
+        /// <returns>T</returns>
         public T First()
         {
-            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
-            return QueryFirst<T>(sql);
+            return QueryFirst<T>(FirstSql());
+        }
+
+        /// <summary>
+        /// 查找第一条数据
+        /// </summary>
+        /// <returns>sql</returns>
+        public string FirstSql()
+        {
+            return $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
         }
 
         /// <summary>
         /// 查找第一条数据
         /// </summary>
         /// <typeparam name="TOther">重新定义返回数据的格式</typeparam>
-        /// <returns></returns>
+        /// <returns>TOther</returns>
         public TOther First<TOther>()
         {
-            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
-            return QueryFirst<TOther>(sql);
+            return QueryFirst<TOther>(FirstSql());
+        }
+
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
+        /// <returns></returns>
+        public string FindSql()
+        {
+            return $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
         }
 
         /// <summary>
@@ -57,8 +84,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find()
         {
-            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
-            return Query<T>(sql);
+            return Query<T>(FindSql());
         }
 
         /// <summary>
@@ -68,8 +94,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>()
         {
-            var sql = $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
-            return Query<TOther>(sql);
+            return Query<TOther>(FindSql());
         }
 
         /// <summary>
@@ -79,9 +104,18 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find(int top)
         {
+            return Query<T>(FindSql(top));
+        }
+
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
+        /// <param name="top">限制获取数量</param>
+        /// <returns></returns>
+        public string FindSql(int top)
+        {
             var t = ToTop(top);
-            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
-            return Query<T>(sql);
+            return string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
         }
 
         /// <summary>
@@ -103,11 +137,21 @@ namespace ORM.Realizes
         /// <param name="index">当前页</param>
         /// <param name="size">页大小</param>
         /// <returns></returns>
-        public (IEnumerable<T> data, long total) Page(int index, int size)
+        public string PageSql(int index, int size)
         {
             var t = ToPage(index, size);
-            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
-            return (Query<T>(sql), Count());
+            return string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
+        }
+
+        /// <summary>
+        /// 获取分页数据
+        /// </summary>
+        /// <param name="index">当前页</param>
+        /// <param name="size">页大小</param>
+        /// <returns></returns>
+        public (IEnumerable<T> data, long total) Page(int index, int size)
+        {
+            return (Query<T>(PageSql(index, size)), Count());
         }
 
         /// <summary>
@@ -119,9 +163,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public (IEnumerable<TOther> data, long total) Page<TOther>(int index, int size)
         {
-            var t = ToPage(index, size);
-            var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
-            return (Query<TOther>(sql), Count());
+            return (Query<TOther>(PageSql(index, size)), Count());
         }
 
         /// <summary>

@@ -311,7 +311,7 @@ namespace ORM.Realizes
             LogSql(sql, _params);
             using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
             {
-                return connection.QueryFirst<TOther>(sql, _params);
+                return connection.QueryFirstOrDefault<TOther>(sql, _params);
             }
         }
 

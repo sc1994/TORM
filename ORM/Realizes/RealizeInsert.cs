@@ -62,14 +62,14 @@ namespace ORM.Realizes
             foreach (var item in properties)
             {
                 var fieldInfo = GetFieldInfo(item);
-                if (!fieldInfo.Identity)
+                if (!fieldInfo.Identity && string.IsNullOrWhiteSpace(fieldInfo.Foreign))
                 {
                     sqlField.Append($"\r\n  {item.Name},");
                     sqlValue.Append($"\r\n  @{item.Name},");
                 }
             }
 
-            sql = $"INSERT INTO rules\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}\r\n)\r\nVALUES\r\n({sqlValue.TryRemove(sqlValue.Length - 1, 1)}\r\n);";
+            sql = $"INSERT INTO {GetTableName()}\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}\r\n)\r\nVALUES\r\n({sqlValue.TryRemove(sqlValue.Length - 1, 1)}\r\n);";
             Stores.SqlDic.TryAdd(key, sql);
             return sql;
         }

@@ -1,7 +1,9 @@
 ﻿using ORM;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
+using Dapper;
+using MySql.Data.MySqlClient;
 
 namespace Demo
 {
@@ -11,6 +13,32 @@ namespace Demo
         static void Main(string[] args)
         {
             TORM.AutoTable<Province>();
+            TORM.AutoTable<City>();
+
+            //TORM.Insert(new Province
+            //{
+            //    Name = "江苏"
+            //});
+            //TORM.Insert(new City
+            //{
+            //    Name = "淮安",
+            //    ProvinceId = 1
+            //});
+            //TORM.Insert(new City
+            //{
+            //    Name = "苏州",
+            //    ProvinceId = 1
+            //});
+
+            using (var con = new MySqlConnection("server=118.24.27.231;database=tally;uid=root;pwd=sun940622;"))
+            {
+                var result = con.QueryMultiple("select * from Province;select * from City;");
+                var province = result.ReadFirstOrDefault<Province>();
+                var citys = result.Read<City>();
+                province.Citys = citys.ToList();
+            }
+
+
 
 
             Console.WriteLine("OVER");
