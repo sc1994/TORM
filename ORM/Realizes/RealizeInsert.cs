@@ -5,6 +5,10 @@ using System.Text;
 
 namespace ORM.Realizes
 {
+    /// <summary>
+    /// 实现 insert
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RealizeInsert<T> : RealizeCommon<T>, IInsert<T>
     {
         /// <summary>
@@ -69,7 +73,7 @@ namespace ORM.Realizes
                 }
             }
 
-            sql = $"INSERT INTO {GetTableName()}\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}\r\n)\r\nVALUES\r\n({sqlValue.TryRemove(sqlValue.Length - 1, 1)}\r\n);";
+            sql = $"INSERT INTO {GetTableName()}\r\n({sqlField.SafeRemove(sqlField.Length - 1, 1)}\r\n)\r\nVALUES\r\n({sqlValue.SafeRemove(sqlValue.Length - 1, 1)}\r\n);";
             Stores.SqlDic.TryAdd(key, sql);
             return sql;
         }

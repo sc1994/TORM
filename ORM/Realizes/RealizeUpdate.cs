@@ -12,12 +12,23 @@ namespace ORM.Realizes
     /// <typeparam name="T"></typeparam>
     public class RealizeUpdate<T> : RealizeCommon<T>, IUpdateSet<T>
     {
+        /// <summary>
+        /// 执行更新
+        /// </summary>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public long Update(Transaction transaction = null)
         {
             var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()};";
             return Execute(sql, transaction);
         }
 
+        /// <summary>
+        /// 执行更新
+        /// </summary>
+        /// <param name="top"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public long Update(int top, Transaction transaction = null)
         {
             //var sql = ToTop(top);
@@ -26,18 +37,37 @@ namespace ORM.Realizes
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 更新model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         public long Update(T model, Transaction transaction = null)
         {
             var sql = GetUpdateByModel();
             return Execute(sql, transaction, model);
         }
 
+        /// <summary>
+        /// update set 设置
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="exp"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public IUpdateSet<T> Set<TValue>(Expression<Func<T, TValue>> exp, TValue value)
         {
             _set.Add((exp, value));
             return this;
         }
 
+        /// <summary>
+        /// update set 设置
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="exps"></param>
+        /// <returns></returns>
         public IUpdateSet<T> Set<TValue>(params (Expression<Func<T, TValue>> exp, TValue value)[] exps)
         {
             foreach (var (exp, value) in exps)
@@ -47,6 +77,11 @@ namespace ORM.Realizes
             return this;
         }
 
+        /// <summary>
+        /// update where 条件
+        /// </summary>
+        /// <param name="exps"></param>
+        /// <returns></returns>
         public IUpdateWhere<T> Where(params Expression<Func<T, bool>>[] exps)
         {
             _where.AddRange(exps);
@@ -77,7 +112,7 @@ namespace ORM.Realizes
                                        result.Append($"\r\n  {GetTableName(x.Table)}.{x.Field} = {param},");
                                    }
 
-                                   return result.TryRemove(result.Length - 1, 1);
+                                   return result.SafeRemove(result.Length - 1, 1);
                                });
         }
 
@@ -118,7 +153,7 @@ namespace ORM.Realizes
                 }
             }
             
-            sql = $"UPDATE Test SET\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}WHERE\r\n  {fieldKey} = @{fieldKey};";
+            sql = $"UPDATE Test SET\r\n({sqlField.SafeRemove(sqlField.Length - 1, 1)}WHERE\r\n  {fieldKey} = @{fieldKey};";
             Stores.SqlDic.TryAdd(key, sql);
             return sql;
         }

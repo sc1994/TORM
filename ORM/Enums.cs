@@ -3,35 +3,95 @@ using System.Linq.Expressions;
 
 namespace ORM
 {
+    /// <summary>
+    /// 联查
+    /// </summary>
     public enum JoinEnum
     {
+        /// <summary>
+        /// JOIN LEFT
+        /// </summary>
         LeftJoin,
+        /// <summary>
+        /// JOIN RIGHT
+        /// </summary>
         RightJoin,
+        /// <summary>
+        /// JOIN 
+        /// </summary>
         Join,
+        /// <summary>
+        /// JOIN FULL
+        /// </summary>
         FullJoin
     }
 
+    /// <summary>
+    /// 排序
+    /// </summary>
     public enum OrderEnum
     {
+        /// <summary>
+        /// ASC
+        /// </summary>
         Asc,
+        /// <summary>
+        /// DESC
+        /// </summary>
         Desc
     }
 
+    /// <summary>
+    /// sql 类型，用做存储sql的key
+    /// </summary>
     public enum SqlTypeEnum
     {
+        /// <summary>
+        /// Select
+        /// </summary>
         Select,
+        /// <summary>
+        /// Where
+        /// </summary>
         Where,
+        /// <summary>
+        /// Order
+        /// </summary>
         Order,
+        /// <summary>
+        /// Group
+        /// </summary>
         Group,
+        /// <summary>
+        /// Join
+        /// </summary>
         Join,
+        /// <summary>
+        /// Having
+        /// </summary>
         Having,
+        /// <summary>
+        /// Set
+        /// </summary>
         Set
     }
 
+    /// <summary>
+    /// 数据库类型
+    /// </summary>
     public enum DBTypeEnum
     {
+        /// <summary>
+        /// MYSQL
+        /// </summary>
         MySQL,
+        /// <summary>
+        /// MSSQL 2008及以下版本
+        /// </summary>
         SQLServer2008,
+        /// <summary>
+        /// MSSQL 2012及以上版本
+        /// </summary>
         SQLServer2012
     }
 

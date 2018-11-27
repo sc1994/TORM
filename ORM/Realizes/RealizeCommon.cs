@@ -329,6 +329,11 @@ namespace ORM.Realizes
             }
         }
 
+        /// <summary>
+        /// 打印 sql 到堆栈
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="param"></param>
         protected void LogSql(string sql, object param)
         {
             if (!Stores.Debug) return;

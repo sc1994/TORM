@@ -6,8 +6,17 @@ using System.Linq.Expressions;
 
 namespace ORM.Realizes
 {
+    /// <summary>
+    /// 实现 delete 操作
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RealizeDelete<T> : RealizeCommon<T>, IDeleteWhere<T>
     {
+        /// <summary>
+        /// delete 条件
+        /// </summary>
+        /// <param name="exps"></param>
+        /// <returns></returns>
         public IDeleteWhere<T> Where(params Expression<Func<T, bool>>[] exps)
         {
             _where.AddRange(exps);

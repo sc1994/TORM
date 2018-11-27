@@ -47,16 +47,7 @@ namespace ORM.Realizes
         /// <returns>T</returns>
         public T First()
         {
-            return QueryFirst<T>(FirstSql());
-        }
-
-        /// <summary>
-        /// 查找第一条数据
-        /// </summary>
-        /// <returns>sql</returns>
-        public string FirstSql()
-        {
-            return $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            return QueryFirst<T>(FindSql());
         }
 
         /// <summary>
@@ -66,7 +57,7 @@ namespace ORM.Realizes
         /// <returns>TOther</returns>
         public TOther First<TOther>()
         {
-            return QueryFirst<TOther>(FirstSql());
+            return QueryFirst<TOther>(FindSql());
         }
 
         /// <summary>
@@ -179,7 +170,7 @@ namespace ORM.Realizes
                 _selectAlias.ForEach(x => ToSelect(x.Item1, x.Item2, result));
                 if (result.ToString() != "SELECT")
                 {
-                    result.TryRemove(result.Length - 1, 1);
+                    result.SafeRemove(result.Length - 1, 1);
                 }
                 else
                 {
@@ -232,7 +223,7 @@ namespace ORM.Realizes
                 {
                     result.Insert(0, "\r\nGROUP BY");
                 }
-                return result.TryRemove(result.Length - 1, 1);
+                return result.SafeRemove(result.Length - 1, 1);
             });
         }
 
@@ -259,7 +250,7 @@ namespace ORM.Realizes
                 {
                     result.Insert(0, "\r\nORDER BY");
                 }
-                return result.TryRemove(result.Length - 1, 1);
+                return result.SafeRemove(result.Length - 1, 1);
             });
         }
 

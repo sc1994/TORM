@@ -5,8 +5,15 @@ using System.Text;
 
 namespace ORM
 {
+    /// <summary>
+    /// 杂项
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Others<T> : RealizeCommon<T>
     {
+        /// <summary>
+        /// 自动生成表（迁移模式）
+        /// </summary>
         public void AutoTable()
         {
             var tableType = ChenkT();
@@ -53,7 +60,7 @@ namespace ORM
                 }
                 sql.Append(",");
             }
-            sql.TryRemove(sql.Length - 1, 1);
+            sql.SafeRemove(sql.Length - 1, 1);
             sql.Append("\r\n)\r\nENGINE = INNODB;");
             Execute(sql.ToString());
         }

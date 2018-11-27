@@ -21,12 +21,23 @@ namespace ORM
         /// </summary>
         internal string Table { get; }
 
+        /// <summary>
+        /// 表对应实体特性
+        /// </summary>
+        /// <param name="db">指定数据库</param>
+        /// <param name="dbType">指定数据库类型</param>
         public TableAttribute(string db, DBTypeEnum dbType)
         {
             DB = db;
             DBType = dbType;
         }
 
+        /// <summary>
+        /// 表对应实体特性
+        /// </summary>
+        /// <param name="db">指定数据库</param>
+        /// <param name="dbType">指定数据库类型</param>
+        /// <param name="table">指定表名</param>
         public TableAttribute(string db, DBTypeEnum dbType, string table)
         {
             DB = db;
@@ -100,6 +111,10 @@ namespace ORM
     public class ForeignAttribute : Attribute
     {
         internal string Foreign { get; set; }
+        /// <summary>
+        /// 指定外键
+        /// </summary>
+        /// <param name="foreign"></param>
         public ForeignAttribute(string foreign)
         {
             Foreign = foreign;

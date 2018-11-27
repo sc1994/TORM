@@ -11,47 +11,111 @@ namespace ORM
     /// </summary>
     public static class Tools
     {
+        /// <summary>
+        /// NOT IN 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static bool NotIn<T>(this T field, T[] values) where T : struct
         {
             return true;
         }
 
+        /// <summary>
+        /// NOT IN
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static bool NotIn(this string field, string[] values)
         {
             return true;
         }
+
+        /// <summary>
+        /// NOT IN
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static bool NotIn(this DateTime field, DateTime[] values)
         {
             return true;
         }
 
+        /// <summary>
+        /// IN
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static bool In<T>(this T field, T[] values) where T : struct
         {
             return true;
         }
+
+        /// <summary>
+        /// IN
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static bool In(this string field, string[] values)
         {
             return true;
         }
+
+        /// <summary>
+        /// IN
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public static bool In(this DateTime field, DateTime[] values)
         {
             return true;
         }
 
+        /// <summary>
+        /// COUNT()函数
+        /// </summary>
+        /// <param name="value">字段信息</param>
+        /// <returns></returns>
         public static int Count(object value)
         {
             return 0;
         }
+
+        /// <summary>
+        /// MAX()函数
+        /// </summary>
+        /// <param name="value">字段信息</param>
+        /// <returns></returns>
         public static int Max(object value)
         {
             return 0;
         }
+
+        /// <summary>
+        /// MIN()函数
+        /// </summary>
+        /// <param name="value">字段信息</param>
+        /// <returns></returns>
         public static int Min(object value)
         {
             return 0;
         }
 
-        public static StringBuilder TryRemove(this StringBuilder that, int startIndex, int length)
+        /// <summary>
+        /// 安全移除
+        /// </summary>
+        /// <param name="that"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static StringBuilder SafeRemove(this StringBuilder that, int startIndex, int length)
         {
             if (startIndex >= 0 && that.Length >= startIndex + length)
                 return that.Remove(startIndex, length);
@@ -85,7 +149,7 @@ namespace ORM
     {
         internal int Sole;
 
-        public Transaction()
+        internal Transaction()
         {
             Sole = GetHashCode();
             Stores.ConnectionDic.TryAdd(Sole, new ConnectionInfo
@@ -94,11 +158,18 @@ namespace ORM
             });
         }
 
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        /// <returns></returns>
         public static Transaction Start()
         {
             return new Transaction();
         }
 
+        /// <summary>
+        /// 提交操作
+        /// </summary>
         public void Commit()
         {
             try
@@ -111,6 +182,9 @@ namespace ORM
             }
         }
 
+        /// <summary>
+        /// 回滚操作
+        /// </summary>
         public void Rollback()
         {
             try
@@ -129,7 +203,7 @@ namespace ORM
     /// </summary>
     internal class ConnectionInfo
     {
-        public MySqlConnection Connection { get; set; }
-        public MySqlTransaction Transaction { get; set; }
+        internal MySqlConnection Connection { get; set; }
+        internal MySqlTransaction Transaction { get; set; }
     }
 }
