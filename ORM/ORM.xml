@@ -1,0 +1,674 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ORM</name>
+    </assembly>
+    <members>
+        <member name="T:ORM.TableAttribute">
+            <summary>
+            表属性标记
+            </summary>
+        </member>
+        <member name="P:ORM.TableAttribute.DB">
+            <summary>
+            数据库
+            </summary>
+        </member>
+        <member name="P:ORM.TableAttribute.DBType">
+            <summary>
+            数据库类型
+            </summary>
+        </member>
+        <member name="P:ORM.TableAttribute.Table">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="T:ORM.KeyAttribute">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="T:ORM.IdentityAttribute">
+            <summary>
+            自增
+            </summary>
+        </member>
+        <member name="T:ORM.FieldAttribute">
+            <summary>
+            表属性
+            </summary>
+        </member>
+        <member name="P:ORM.FieldAttribute.Precision">
+            <summary>
+            精度
+            </summary>
+        </member>
+        <member name="M:ORM.FieldAttribute.#ctor(System.String,System.String,System.Boolean,System.String,System.Int32,System.Int32)">
+            <summary>
+            表属性
+            </summary>
+            <param name="Alias">别名</param>
+            <param name="DefaultValue">默认值</param>
+            <param name="NotNull">不可为空</param>
+            <param name="Comment">描述</param>
+            <param name="Length">长度</param>
+            <param name="Precision">精度</param>
+        </member>
+        <member name="T:ORM.ForeignAttribute">
+            <summary>
+            指定外键
+            </summary>
+        </member>
+        <member name="M:ORM.Others`1.ExistTable">
+            <summary>
+            表是否存在
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Others`1.SwithDataType(ORM.FieldInfo)">
+            <summary>
+            切换数据类型
+            </summary>
+            <param name="field"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Others`1.DefaultLength(System.Int32,System.Int32)">
+            <summary>
+            转到默认长度
+            </summary>
+            <param name="length"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ORM.Realizes.BaseRealize`3">
+            <summary>
+            多表实现基类
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TFunc"></typeparam>
+            <typeparam name="TFuncBool"></typeparam>
+        </member>
+        <member name="T:ORM.Realizes.Realize`1">
+            <summary>
+            单表实现
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:ORM.Realizes.RealizeCommon`1">
+            <summary>
+            一些解析的通用方法
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._join">
+            <summary>
+            存放 join 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._selects">
+            <summary>
+            存放 select 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._selectAlias">
+            <summary>
+            存放 有别名的 select 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._orders">
+            <summary>
+            存放 order 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._groups">
+            <summary>
+            存放 group 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._where">
+            <summary>
+            存放 where 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._having">
+            <summary>
+            存放 having 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._set">
+            <summary>
+            存放 set 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._params">
+            <summary>
+            存放参数
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._t">
+            <summary>
+            获取 T 属性，避免每次都计算
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1.useTables">
+            <summary>
+            已经用到的表（为了筛选当前 join 的那个表）
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1.allTables">
+            <summary>
+            全部的表
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._sqlDic">
+            <summary>
+            sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
+            </summary>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetWhere">
+            <summary>
+            获取where sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ToWhere(System.Collections.Generic.List{System.Linq.Expressions.Expression},System.Text.StringBuilder)">
+            <summary>
+            转到 条件筛选
+            </summary>
+            <param name="exps"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetSliceSql(ORM.SqlTypeEnum,System.Func{System.Text.StringBuilder})">
+            <summary>
+            将sql分块，前后加上字典，以优化性能。
+            </summary>
+            <param name="type"></param>
+            <param name="func"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableName">
+            <summary>
+            取主表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableName(System.Type)">
+            <summary>
+            取指定表名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableInfo">
+            <summary>
+            依据特性获取表信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableInfo(System.Type)">
+            <summary>
+            依据特性获取表信息
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetFieldInfo(System.Reflection.PropertyInfo)">
+            <summary>
+            获取字段属性
+            </summary>
+            <param name="field"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.Execute(System.String,ORM.Transaction,System.Object)">
+            <summary>
+            执行sql，返回受影响行数
+            </summary>
+            <param name="sql"></param>
+            <param name="transaction"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.QueryFirst``1(System.String)">
+            <summary>
+            获取单条数据
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.Query``1(System.String)">
+            <summary>
+            获取数据集合
+            </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT">
+            <summary>
+            验证T且返回类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeDelete`1.Delete(ORM.Transaction)">
+            <summary>
+            执行删除
+            </summary>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeDelete`1.Delete(System.Int32,ORM.Transaction)">
+            <summary>
+            执行删除
+            </summary>
+            <param name="top"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeDelete`1.Delete``1(``0,ORM.Transaction)">
+            <summary>
+            依据主键删除
+            </summary>
+            <typeparam name="TKey"></typeparam>
+            <param name="key"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeDelete`1.ToTop(System.Int32)">
+            <summary>
+            top 值
+            </summary>
+            <param name="top"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeInsert`1.Insert(`0,ORM.Transaction)">
+            <summary>
+            新增
+            </summary>
+            <param name="model"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeInsert`1.InsertBatch(System.Collections.Generic.IEnumerator{`0},ORM.Transaction)">
+            <summary>
+            新增
+            </summary>
+            <param name="models"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeInsert`1.InsertBatch(`0[],ORM.Transaction)">
+            <summary>
+            新增
+            </summary>
+            <param name="models"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeInsert`1.GetInsert">
+            <summary>
+            获取 insert sql
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ORM.Realizes.RealizeQuery`1">
+            <summary>
+            解析 查询 相关
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Exist">
+            <summary>
+            是否存在数据
+            </summary>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Count">
+            <summary>
+            获取数量
+            </summary>
+            <returns>count</returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.CountSql">
+            <summary>
+            获取数量
+            </summary>
+            <returns>sql</returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.First">
+            <summary>
+            查找第一条数据
+            </summary>
+            <returns>T</returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.FirstSql">
+            <summary>
+            查找第一条数据
+            </summary>
+            <returns>sql</returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.First``1">
+            <summary>
+            查找第一条数据
+            </summary>
+            <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+            <returns>TOther</returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.FindSql">
+            <summary>
+            获取数据列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Find">
+            <summary>
+            获取数据列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Find``1">
+            <summary>
+            获取数据列表
+            </summary>
+            <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Find(System.Int32)">
+            <summary>
+            获取数据列表
+            </summary>
+            <param name="top">限制获取数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.FindSql(System.Int32)">
+            <summary>
+            获取数据列表
+            </summary>
+            <param name="top">限制获取数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Find``1(System.Int32)">
+            <summary>
+            获取数据列表
+            </summary>
+            <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+            <param name="top">限制获取数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.PageSql(System.Int32,System.Int32)">
+            <summary>
+            获取分页数据
+            </summary>
+            <param name="index">当前页</param>
+            <param name="size">页大小</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Page(System.Int32,System.Int32)">
+            <summary>
+            获取分页数据
+            </summary>
+            <param name="index">当前页</param>
+            <param name="size">页大小</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.Page``1(System.Int32,System.Int32)">
+            <summary>
+            获取分页数据
+            </summary>
+            <typeparam name="TOther">重新定义返回数据的格式</typeparam>
+            <param name="index">当前页</param>
+            <param name="size">页大小</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetSelect">
+            <summary>
+            获取 select sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.ToSelect(System.Linq.Expressions.Expression,System.String,System.Text.StringBuilder)">
+            <summary>
+            转到 select
+            </summary>
+            <param name="item"></param>
+            <param name="alias"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetGroup">
+            <summary>
+            获取 group sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetOrder">
+            <summary>
+            获取 order sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.ToPage(System.Int32,System.Int32)">
+            <summary>
+            转成分页的
+            </summary>
+            <param name="index"></param>
+            <param name="size"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetJoin">
+            <summary>
+            获取 join sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetJoinTable">
+            <summary>
+            获取需要join 的表（取全部表，取已用表，未用过的就是需要join 的表）
+            todo 这样的计算方式不靠谱
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.ToTop(System.Int32)">
+            <summary>
+            转成top的
+            </summary>
+            <param name="top"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetHaving">
+            <summary>
+            获取 having sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ORM.Realizes.RealizeUpdate`1">
+            <summary>
+            解析 更新 相关
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.Realizes.RealizeUpdate`1.GetSet">
+            <summary>
+            获取 set sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeUpdate`1.GetUpdateByModel">
+            <summary>
+            获取 insert sql
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ORM.Stores">
+            <summary>
+            存储实例运行中不会变化的值
+            </summary>
+        </member>
+        <member name="P:ORM.Stores.TableInfoDic">
+            <summary>
+            表信息
+            </summary>
+        </member>
+        <member name="P:ORM.Stores.FieldInfoDic">
+            <summary>
+            存放字段信息
+            </summary>
+        </member>
+        <member name="P:ORM.Stores.ConnectionDic">
+            <summary>
+            存放连接和事务
+            </summary>
+        </member>
+        <member name="P:ORM.Stores.SqlDic">
+            <summary>
+            存放不会变化的sql，比如数据插入sql
+            </summary>
+        </member>
+        <member name="F:ORM.Stores.Debug">
+            <summary>
+            调试模式
+            </summary>
+        </member>
+        <member name="P:ORM.Stores.ConfigDic">
+            <summary>
+            存放一些项目配置
+            </summary>
+        </member>
+        <member name="P:ORM.TableInfo.DB">
+            <summary>
+            数据库
+            </summary>
+        </member>
+        <member name="P:ORM.TableInfo.DBType">
+            <summary>
+            数据库类型
+            </summary>
+        </member>
+        <member name="P:ORM.TableInfo.Table">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:ORM.TableInfo.ConnectionString">
+            <summary>
+            数据库连接字符串
+            </summary>
+        </member>
+        <member name="T:ORM.FieldInfo">
+            <summary>
+            字段信息
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Name">
+            <summary>
+            字段名
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.DefaultValue">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.NotNull">
+            <summary>
+            不可为空
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Comment">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Key">
+            <summary>
+            是否是主键
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Identity">
+            <summary>
+            是否自增
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Length">
+            <summary>
+            长度
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Precision">
+            <summary>
+            精度
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Type">
+            <summary>
+            数据类型
+            </summary>
+        </member>
+        <member name="P:ORM.FieldInfo.Foreign">
+            <summary>
+            外键
+            </summary>
+        </member>
+        <member name="T:ORM.FieldByDB">
+            <summary>
+            来自数据库的字段信息
+            </summary>
+        </member>
+        <member name="P:ORM.FieldByDB.StringLength">
+            <summary>
+            用于数据库读取表信息
+            </summary>
+        </member>
+        <member name="P:ORM.FieldByDB.PrecisionDB">
+            <summary>
+            精度，解决关键字冲突
+            </summary>
+        </member>
+        <member name="P:ORM.FieldByDB.IdentityDB">
+            <summary>
+            自增键
+            </summary>
+        </member>
+        <member name="T:ORM.Tools">
+            <summary>
+            自定义方法
+            </summary>
+        </member>
+        <member name="T:ORM.Transaction">
+            <summary>
+            事务
+            </summary>
+        </member>
+        <member name="T:ORM.ConnectionInfo">
+            <summary>
+            数据连接
+            </summary>
+        </member>
+        <member name="T:ORM.TORM">
+            <summary>
+            query 相关
+            </summary>
+            <summary>
+            update 相关
+            </summary>
+            <summary>
+            insert 相关 
+            </summary>
+            <summary>
+            delete 相关
+            </summary>
+            <summary>
+            其他
+            </summary>
+        </member>
+        <member name="M:ORM.TORM.Query``1">
+            <summary>
+            单表查询
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.TORM.Query``2">
+            <summary>
+            两表查询
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TJoin"></typeparam>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

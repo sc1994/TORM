@@ -2,8 +2,8 @@
 {
     public interface IUpdate<in T>
     {
-        int Update(Transaction transaction = null);
-        int Update(int top, Transaction transaction = null);
-        int Update(T model, Transaction transaction = null);
+        long Update(Transaction transaction = null);
+        long Update(int top, Transaction transaction = null);
+        long Update(T model, Transaction transaction = null);
     }
 }

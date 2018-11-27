@@ -2,10 +2,10 @@
 {
     public interface IDelete<in T>
     {
-        int Delete();
+        long Delete(Transaction transaction = null);
 
-        int Delete(int top);
+        long Delete(int top, Transaction transaction = null);
 
-        int Delete(T model);
+        long Delete<TKey>(TKey key, Transaction transaction = null);
     }
 }

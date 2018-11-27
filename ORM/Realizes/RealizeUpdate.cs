@@ -12,13 +12,13 @@ namespace ORM.Realizes
     /// <typeparam name="T"></typeparam>
     public class RealizeUpdate<T> : RealizeCommon<T>, IUpdateSet<T>
     {
-        public int Update(Transaction transaction = null)
+        public long Update(Transaction transaction = null)
         {
             var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()};";
             return Execute(sql, transaction);
         }
 
-        public int Update(int top, Transaction transaction = null)
+        public long Update(int top, Transaction transaction = null)
         {
             //var sql = ToTop(top);
             //sql = string.Format(sql, $"{GetSet()}{GetWhere()}");
@@ -26,7 +26,7 @@ namespace ORM.Realizes
             throw new NotImplementedException();
         }
 
-        public int Update(T model, Transaction transaction = null)
+        public long Update(T model, Transaction transaction = null)
         {
             var sql = GetUpdateByModel();
             return Execute(sql, transaction, model);

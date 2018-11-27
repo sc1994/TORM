@@ -1,13 +1,10 @@
 ﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
-using System;
 using System.Collections.Generic;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
-// todo 事务
 // todo 运行时抛出不支持的写法的异常
-// todo 收集sql存起来以备二次调用，无需每次调用方法都去解析一次表达式
 // todo sql 缓存，data 缓存
 // todo having 语句只能出现在group
 // todo 结构迁移
@@ -104,23 +101,28 @@ namespace ORM
             return new RealizeUpdate<T>();
         }
 
-        public static int Update<T>(T model, Transaction transaction = null)
+        public static long Update<T>(T model, Transaction transaction = null)
         {
             return new RealizeUpdate<T>().Update(model, transaction);
         }
     }
 
     /// <summary>
-    /// insert 相关  todo
+    /// insert 相关 
     /// </summary>
     public partial class TORM
     {
-        public static int Insert<T>(T model)
+        public static long Insert<T>(T model)
         {
             return new RealizeInsert<T>().Insert(model);
         }
 
-        public static int InsertBatch<T>(IEnumerator<T> models)
+        public static long InsertBatch<T>(IEnumerator<T> models)
+        {
+            return new RealizeInsert<T>().InsertBatch(models);
+        }
+
+        public static long InsertBatch<T>(T[] models)
         {
             return new RealizeInsert<T>().InsertBatch(models);
         }
@@ -136,9 +138,9 @@ namespace ORM
             return new RealizeDelete<T>();
         }
 
-        public int Delete<T>(long id)
+        public long Delete<T>(T model)
         {
-            throw new NotImplementedException();
+            return new RealizeDelete<T>().Delete(model);
         }
     }
 

@@ -13,7 +13,7 @@ namespace ORM.Realizes
         /// <param name="model"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public int Insert(T model, Transaction transaction = null)
+        public long Insert(T model, Transaction transaction = null)
         {
             var sql = GetInsert();
             return Execute(sql, transaction, model);
@@ -25,7 +25,7 @@ namespace ORM.Realizes
         /// <param name="models"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public int InsertBatch(IEnumerator<T> models, Transaction transaction = null)
+        public long InsertBatch(IEnumerator<T> models, Transaction transaction = null)
         {
             var sql = GetInsert();
             return Execute(sql, transaction, models);
@@ -37,7 +37,7 @@ namespace ORM.Realizes
         /// <param name="models"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public int InsertBatch(T[] models, Transaction transaction = null)
+        public long InsertBatch(T[] models, Transaction transaction = null)
         {
             var sql = GetInsert();
             return Execute(sql, transaction, models);

@@ -277,7 +277,7 @@ namespace ORM.Realizes
         /// <param name="transaction"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        protected int Execute(string sql, Transaction transaction = null, object param = null)
+        protected long Execute(string sql, Transaction transaction = null, object param = null)
         {
             MySqlConnection connection;
             // 决定是使用默认参数还是传入参数
