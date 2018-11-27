@@ -1,6 +1,7 @@
 ﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
 using System;
+using System.Collections.Generic;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -10,13 +11,14 @@ using System;
 // todo sql 缓存，data 缓存
 // todo having 语句只能出现在group
 // todo 结构迁移
+// todo 慢 sql 监测
 
 namespace ORM
 {
     /// <summary>
     /// query 相关
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         /// <summary>
         /// 单表查询
@@ -95,41 +97,66 @@ namespace ORM
     /// <summary>
     /// update 相关
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         public static RealizeUpdate<T> Update<T>()
         {
             return new RealizeUpdate<T>();
+        }
+
+        public static int Update<T>(T model, Transaction transaction = null)
+        {
+            return new RealizeUpdate<T>().Update(model, transaction);
         }
     }
 
     /// <summary>
     /// insert 相关  todo
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
-        public static int Insert<T>(params T[] models)
+        public static int Insert<T>(T model)
         {
-            throw new NotImplementedException();
+            return new RealizeInsert<T>().Insert(model);
         }
 
-        public static long Insert<T>(T model)
+        public static int InsertBatch<T>(IEnumerator<T> models)
         {
-            throw new NotImplementedException();
+            return new RealizeInsert<T>().InsertBatch(models);
         }
     }
 
     /// <summary>
     /// delete 相关
     /// </summary>
-    public partial class ORM
+    public partial class TORM
     {
         public IDelete<T> Delete<T>()
         {
             return new RealizeDelete<T>();
         }
+
+        public int Delete<T>(long id)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    
+    /// <summary>
+    /// 其他
+    /// </summary>
+    public partial class TORM
+    {
+        public static bool Debug
+        {
+            get => Stores.Debug;
+            set => Stores.Debug = value;
+        }
+
+        public static void AutoTable<T>()
+        {
+            new Others<T>().AutoTable();
+        }
+    }
 }
 

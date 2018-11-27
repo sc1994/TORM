@@ -67,7 +67,8 @@ namespace Explain
             }
 
             if (!string.IsNullOrWhiteSpace(Last.Field) &&
-                !string.IsNullOrWhiteSpace(Last.Method) &&
+                !(string.IsNullOrWhiteSpace(Last.Method) && Last.Type == null) &&
+                Last.Value != null &&
                 !Last.IsNewArray)
             {
                 Info.Add(new ExplainInfo());

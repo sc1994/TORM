@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.IO;
 using System.Text;
 
 namespace ORM
@@ -9,7 +9,7 @@ namespace ORM
     /// <summary>
     /// 自定义方法
     /// </summary>
-    public static class ORMTool
+    public static class Tools
     {
         public static bool NotIn<T>(this T field, T[] values) where T : struct
         {
@@ -53,29 +53,45 @@ namespace ORM
 
         public static StringBuilder TryRemove(this StringBuilder that, int startIndex, int length)
         {
-            if (that.Length > startIndex + length)
+            if (startIndex >= 0 && that.Length >= startIndex + length)
                 return that.Remove(startIndex, length);
             return that;
+        }
+
+        internal static string GetAppSetting(string key)
+        {
+            if (Stores.ConfigDic.TryGetValue(key, out var value))
+            {
+                return value;
+            }
+
+            var config = File.ReadAllText("appsettings.json");
+            var node = JObject.Parse(config)[key];
+            value = node.Value<string>();
+            return value;
+            //var builder = new ConfigurationBuilder()
+            //              .SetBasePath(Directory.GetCurrentDirectory())
+            //              .AddJsonFile(fileName);
+            //var config = builder.Build();
+
+            //return config.GetSection(key).Value;
         }
     }
 
     /// <summary>
     /// 事务
     /// </summary>
-    public class Transaction
+    public sealed class Transaction
     {
-        internal string Sole;
-
-        /// <summary>
-        /// 存放连接和事务
-        /// </summary>
-        internal static Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)> Connections = new Dictionary<string, (MySqlConnection connection, MySqlTransaction transaction)>();
+        internal int Sole;
 
         public Transaction()
         {
-            var con = new MySqlConnection();
-            Sole = MD5.Create().ToString();
-            Connections.Add(Sole, (con, con.BeginTransaction()));
+            Sole = GetHashCode();
+            Stores.ConnectionDic.TryAdd(Sole, new ConnectionInfo
+            {
+                Connection = new MySqlConnection()
+            });
         }
 
         public static Transaction Start()
@@ -85,45 +101,35 @@ namespace ORM
 
         public void Commit()
         {
-            // todo 
+            try
+            {
+                Stores.ConnectionDic[Sole].Transaction.Commit();
+            }
+            finally
+            {
+                Stores.ConnectionDic[Sole].Connection.Close();
+            }
         }
 
         public void Rollback()
         {
-            // todo 
+            try
+            {
+                Stores.ConnectionDic[Sole].Transaction.Rollback();
+            }
+            finally
+            {
+                Stores.ConnectionDic[Sole].Connection.Close();
+            }
         }
     }
 
     /// <summary>
-    /// 表属性标记
+    /// 数据连接
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
-    public class TableAttribute : Attribute
+    internal class ConnectionInfo
     {
-        /// <summary>
-        /// 数据库
-        /// </summary>
-        public string DB { get; }
-        /// <summary>
-        /// 数据库类型
-        /// </summary>
-        public DBTypeEnum DBType { get; }
-        /// <summary>
-        /// 表名
-        /// </summary>
-        public string Table { get; }
-
-        public TableAttribute(string db, DBTypeEnum dbType)
-        {
-            DB = db;
-            DBType = dbType;
-        }
-
-        public TableAttribute(string db, DBTypeEnum dbType, string table)
-        {
-            DB = db;
-            DBType = dbType;
-            Table = table;
-        }
+        public MySqlConnection Connection { get; set; }
+        public MySqlTransaction Transaction { get; set; }
     }
 }

@@ -1,8 +1,9 @@
-﻿using Dapper;
-using MySql.Data.MySqlClient;
-using ORM;
+﻿using ORM;
 using System;
-using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using Dapper;
+using MySql.Data.MySqlClient;
 
 namespace Demo
 {
@@ -11,78 +12,68 @@ namespace Demo
         private static int Count { get; set; }
         static void Main(string[] args)
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            TORM.AutoTable<Province>();
+            TORM.AutoTable<City>();
 
-            using (var con = new MySqlConnection())
+            //TORM.Insert(new Province
+            //{
+            //    Name = "江苏"
+            //});
+            //TORM.Insert(new City
+            //{
+            //    Name = "淮安",
+            //    ProvinceId = 1
+            //});
+            //TORM.Insert(new City
+            //{
+            //    Name = "苏州",
+            //    ProvinceId = 1
+            //});
+
+            using (var con = new MySqlConnection("server=118.24.27.231;database=tally;uid=root;pwd=sun940622;"))
             {
-                con.ConnectionString = "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;charset='gbk'";
-                con.Open();
-                Console.WriteLine(con.QueryFirst<int>("SELECT COUNT(1) FROM rules"));
+                var result = con.QueryMultiple("select * from Province;select * from City;");
+                var province = result.ReadFirstOrDefault<Province>();
+                var citys = result.Read<City>();
+                province.Citys = citys.ToList();
             }
 
-            Console.WriteLine("Hello World!");
 
-            //ORM.ORM.Query<Model>()
-            //    //.Select(x => x.Name)
-            //    //.Select(x => x.Name, x => x.Date, x => ORMTool.Max(x.Name1))
-            //    .Select(x => new object[]
-            //                 {
-            //                     x.Name,
-            //                     x.Date,
-            //                     ORMTool.Max(x.Name1)
-            //                 })
-            //    //.Select(x => x.Name1, "name")
-            //    //.Select((x => x.Name2, "name2"), (x => x.Name, "name3"))
-            //    //.Where(x => x.Name.StartsWith("1") && x.Name.EndsWith("2") && x.Name.Contains("3"))
-            //    //.Group(x => x.Name)
-            //    //.Having(x => x.Name == "1")
-            //    //.OrderA(x => x.Name1)
-            //    .Find()
-            //    ;
 
-            //ORM.ORM.Query<Model, Model3>()
-            //    .Select((x, y) => x.Name, (x, y) => y.Date3)
-            //    .Join((x, y) => x.Name == y.Name3 && x.Name == "1")
-            //    .Exist();
 
-            //ORM.ORM.Update<Model>().Set(x => x.Name, "1").Where(x => x.Date == DateTime.Now).Update();
-
-            //var info = new ContentWhere();
-            //Expression<Func<Model, bool>>
-            //    a = x => x.Name == "234" && x.Date == DateTime.Today && x.Name1 == "123";
-            //ExplainTool.Explain(a, info);
-
+            Console.WriteLine("OVER");
             Console.ReadLine();
         }
-
-        private static void Con_StateChange(object sender, System.Data.StateChangeEventArgs e)
-        {
-            //Console.WriteLine(e.OriginalState);
-            Console.WriteLine(e.OriginalState + " ---> " + e.CurrentState + " ---> " + Count++);
-        }
     }
 
-    [Table("test", DBTypeEnum.MySQL, "ModelTable")]
-    class Model
+    [Table("tally", DBTypeEnum.MySQL)]
+    class Province
     {
+        [Key, Identity, Field(Comment: "省份主键")]
+        public long Id { get; set; }
         public string Name { get; set; }
-        public string Name1 { get; set; }
-        public string Name2 { get; set; }
-        public DateTime Date { get; set; }
+        [Foreign("ProvinceId")]
+        public List<City> Citys { get; set; }
     }
 
-    class Model2
+    [Table("tally", DBTypeEnum.MySQL)]
+    class City
     {
-        public string Name2 { get; set; }
-        public string Name12 { get; set; }
-        public string Name22 { get; set; }
-        public DateTime Date2 { get; set; }
+        [Key, Identity]
+        public long Id { get; set; }
+        public string Name { get; set; }
+        [Foreign("CityId")]
+        public List<Town> Towns { get; set; }
+        public long ProvinceId { get; set; }
+
     }
-    class Model3
+
+    [Table("tally", DBTypeEnum.MySQL)]
+    class Town
     {
-        public string Name3 { get; set; }
-        public string Name13 { get; set; }
-        public string Name23 { get; set; }
-        public DateTime Date3 { get; set; }
+        [Key, Identity]
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public long CityId { get; set; }
     }
 }
