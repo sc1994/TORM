@@ -59,7 +59,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         private StringBuilder GetSet()
         {
-            return GetSliceSql(SqlTypeEnum.Order,
+            return GetSliceSql(SqlTypeEnum.Set,
                                () =>
                                {
                                    var result = new StringBuilder("\r\nSET");
@@ -117,7 +117,7 @@ namespace ORM.Realizes
                     fieldKey = fieldInfo.Name;
                 }
             }
-
+            
             sql = $"UPDATE Test SET\r\n({sqlField.TryRemove(sqlField.Length - 1, 1)}WHERE\r\n  {fieldKey} = @{fieldKey};";
             Stores.SqlDic.TryAdd(key, sql);
             return sql;
