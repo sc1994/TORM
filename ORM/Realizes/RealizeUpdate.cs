@@ -31,10 +31,8 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Update(int top, Transaction transaction = null)
         {
-            //var sql = ToTop(top);
-            //sql = string.Format(sql, $"{GetSet()}{GetWhere()}");
-            //return Execute(sql, transaction);
-            throw new NotImplementedException();
+            var sql = string.Format(ToTop(top), $"{GetTableName()}{GetSet()}{GetWhere()}");
+            return Execute(sql, transaction);
         }
 
         /// <summary>
@@ -45,7 +43,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Update(T model, Transaction transaction = null)
         {
-            var sql = GetUpdateByModel();
+            var sql = GetUpdateByModel(model);
             return Execute(sql, transaction, model);
         }
 
@@ -116,20 +114,20 @@ namespace ORM.Realizes
                                });
         }
 
-        //private string ToTop()
-        //{
-        //    var s = "";
-        //    if (GetTableInfo().DBType == DBTypeEnum.MySQL)
-        //    {
-
-        //    }
-        //}
+        private string ToTop(int top)
+        {
+            if (GetTableInfo().DBType == DBTypeEnum.MySQL)
+            {
+                return $"UPDATE {{0}}\r\nLIMIT {top};";
+            }
+            throw new NotImplementedException("为实现的top方式");
+        }
 
         /// <summary>
         /// 获取 insert sql
         /// </summary>
         /// <returns></returns>
-        private string GetUpdateByModel()
+        private string GetUpdateByModel(T model)
         {
             var typeT = ChenkT();
             var key = $"GetUpdateByModel_{typeT.Name}";
@@ -145,15 +143,16 @@ namespace ORM.Realizes
                 var fieldInfo = GetFieldInfo(item);
                 if (!fieldInfo.Identity && !fieldInfo.Key)
                 {
-                    sqlField.Append($"\r\n  {item.Name} = @{item.Name}");
+                    sqlField.Append($"\r\n  {item.Name} = @{item.Name},");
                 }
-                else if (fieldInfo.Key)
+                else if (fieldInfo.Key && fieldInfo.Identity)
                 {
                     fieldKey = fieldInfo.Name;
                 }
+                _params.Add(fieldInfo.Name, item.GetValue(model));
             }
-            
-            sql = $"UPDATE Test SET\r\n({sqlField.SafeRemove(sqlField.Length - 1, 1)}WHERE\r\n  {fieldKey} = @{fieldKey};";
+
+            sql = $"UPDATE {GetTableName()} SET{sqlField.SafeRemove(sqlField.Length - 1, 1)}\r\nWHERE\r\n  {fieldKey} = @{fieldKey};";
             Stores.SqlDic.TryAdd(key, sql);
             return sql;
         }

@@ -217,12 +217,15 @@ namespace ORM.Realizes
             }
 
             var info = (TableAttribute)attribute;
+            var fields = typeof(T).GetProperties().Select(GetFieldInfo);
             var r = new TableInfo
             {
                 DB = info.DB,
                 DBType = info.DBType,
                 Table = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
-                ConnectionString = Tools.GetAppSetting(info.DB)
+                ConnectionString = Tools.GetAppSetting(info.DB),
+                Key = fields.FirstOrDefault(x => x.Key),
+                Identity = fields.FirstOrDefault(x => x.Identity)
             };
             Stores.TableInfoDic.TryAdd(table.MetadataToken, r);
             return r;

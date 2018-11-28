@@ -305,7 +305,7 @@ namespace ORM
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IDelete<T> Delete<T>()
+        public static RealizeDelete<T> Delete<T>()
         {
             return new RealizeDelete<T>();
         }
@@ -317,7 +317,7 @@ namespace ORM
         /// <typeparam name="TKey">主键</typeparam>
         /// <param name="model"></param>
         /// <returns></returns>
-        public long Delete<T, TKey>(TKey model)
+        public static long Delete<T, TKey>(TKey model)
         {
             return new RealizeDelete<T>().Delete(model);
         }

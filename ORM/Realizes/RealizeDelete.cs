@@ -55,7 +55,8 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Delete<TKey>(TKey key, Transaction transaction = null)
         {
-            var keyInfo = typeof(T).GetProperties().Select(GetFieldInfo).FirstOrDefault(x => x.Identity || x.Key);
+            var tableInfo = GetTableInfo();
+            var keyInfo = tableInfo.Key ?? tableInfo.Identity;
             if (keyInfo == null) throw new Exception("未设置主键或者自增键");
             var sql = $"DELETE FROM {GetTableName()} WHERE {keyInfo.Name}=@{keyInfo.Name};";
             return Execute(sql, transaction, new Dictionary<string, TKey> { { keyInfo.Name, key } });
@@ -70,9 +71,9 @@ namespace ORM.Realizes
         {
             if (GetTableInfo().DBType == DBTypeEnum.MySQL)
             {
-                return $"DELETE FROM {{0}} LIMIT {top};";
+                return $"DELETE FROM {{0}}\r\nLIMIT {top};";
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException("为实现的top方式");
         }
     }
 }

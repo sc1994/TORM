@@ -46,17 +46,4 @@ namespace UnitTest
             Debug.Assert(result.data.Count() == 3 && result.total >= 3);
         }
     }
-
-    [Table("tally", DBTypeEnum.MySQL, "rules")]
-    class rules
-    {
-        [Key, Identity, Field(NotNull: false)]
-        public long id { get; set; }
-        public DateTime created_at { get; set; }
-        public DateTime updated_at { get; set; }
-        public DateTime deleted_at { get; set; }
-        public long schedule_id { get; set; }
-        public int type { get; set; }
-        public DateTime rule_date { get; set; }
-    }
 }

@@ -1343,7 +1343,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeUpdate`1.GetUpdateByModel">
+        <member name="M:ORM.Realizes.RealizeUpdate`1.GetUpdateByModel(`0)">
             <summary>
             获取 insert sql
             </summary>
@@ -1402,6 +1402,16 @@
         <member name="P:ORM.TableInfo.ConnectionString">
             <summary>
             数据库连接字符串
+            </summary>
+        </member>
+        <member name="P:ORM.TableInfo.Key">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:ORM.TableInfo.Identity">
+            <summary>
+            自增键
             </summary>
         </member>
         <member name="T:ORM.FieldInfo">

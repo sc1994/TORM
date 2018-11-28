@@ -57,6 +57,14 @@ namespace ORM
         /// 数据库连接字符串
         /// </summary>
         public string ConnectionString { get; set; }
+        /// <summary>
+        /// 主键
+        /// </summary>
+        public FieldInfo Key { get; set; }
+        /// <summary>
+        /// 自增键
+        /// </summary>
+        public FieldInfo Identity { get; set; }
     }
 
     /// <summary>
