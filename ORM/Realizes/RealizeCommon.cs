@@ -74,7 +74,7 @@ namespace ORM.Realizes
         /// <summary>
         /// 记录开始时间
         /// </summary>
-        private DateTime _starTime { get; set; } = DateTime.Now;
+        protected DateTime _starTime { get; set; }
         /// <summary>
         /// 解释时长
         /// </summary>
@@ -179,7 +179,6 @@ namespace ORM.Realizes
             {
                 return _sqlDic[type];
             }
-            ExplainTool.Log("GetSliceSql", $"记录GetSliceSql({type})计算频率。");
             // 字典中没有相应的值，执行委托
             var result = func();
             // 存入字典，以备下一次调用

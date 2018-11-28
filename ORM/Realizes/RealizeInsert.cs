@@ -19,6 +19,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Insert(T model, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = GetInsert();
             return Execute(sql, transaction, model);
         }
@@ -31,6 +32,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long InsertBatch(IEnumerator<T> models, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = GetInsert();
             return Execute(sql, transaction, models);
         }
@@ -43,6 +45,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long InsertBatch(T[] models, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = GetInsert();
             return Execute(sql, transaction, models);
         }

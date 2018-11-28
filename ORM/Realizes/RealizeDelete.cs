@@ -30,6 +30,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Delete(Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = $"DELETE FROM {GetTableName()}{GetWhere()};";
             return Execute(sql, transaction);
         }
@@ -42,6 +43,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Delete(int top, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = string.Format(ToTop(top), $"{GetTableName()}{GetWhere()}");
             return Execute(sql, transaction);
         }
@@ -55,6 +57,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Delete<TKey>(TKey key, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var tableInfo = GetTableInfo();
             var keyInfo = tableInfo.Key ?? tableInfo.Identity;
             if (keyInfo == null) throw new Exception("未设置主键或者自增键");

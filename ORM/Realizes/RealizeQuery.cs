@@ -20,6 +20,7 @@ namespace ORM.Realizes
         /// <returns>是否存在</returns>
         public bool Exist()
         {
+            _starTime = DateTime.Now;
             return Count() > 0; // todo 也许有不需要COUNT的高效办法
         }
 
@@ -29,6 +30,7 @@ namespace ORM.Realizes
         /// <returns>count</returns>
         public long Count()
         {
+            _starTime = DateTime.Now;
             return QueryFirst<long>(CountSql());
         }
 
@@ -38,7 +40,8 @@ namespace ORM.Realizes
         /// <returns>sql</returns>
         public string CountSql()
         {
-            return $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            _starTime = DateTime.Now;
+            return $"SELECT COUNT(1) FROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()};";
         }
 
         /// <summary>
@@ -47,6 +50,7 @@ namespace ORM.Realizes
         /// <returns>T</returns>
         public T First()
         {
+            _starTime = DateTime.Now;
             return QueryFirst<T>(FindSql());
         }
 
@@ -57,6 +61,7 @@ namespace ORM.Realizes
         /// <returns>TOther</returns>
         public TOther First<TOther>()
         {
+            _starTime = DateTime.Now;
             return QueryFirst<TOther>(FindSql());
         }
 
@@ -66,6 +71,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public string FindSql()
         {
+            _starTime = DateTime.Now;
             return $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
         }
 
@@ -75,6 +81,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find()
         {
+            _starTime = DateTime.Now;
             return Query<T>(FindSql());
         }
 
@@ -85,6 +92,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>()
         {
+            _starTime = DateTime.Now;
             return Query<TOther>(FindSql());
         }
 
@@ -95,6 +103,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<T> Find(int top)
         {
+            _starTime = DateTime.Now;
             return Query<T>(FindSql(top));
         }
 
@@ -105,6 +114,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public string FindSql(int top)
         {
+            _starTime = DateTime.Now;
             var t = ToTop(top);
             return string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
         }
@@ -117,6 +127,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public IEnumerable<TOther> Find<TOther>(int top)
         {
+            _starTime = DateTime.Now;
             var t = ToTop(top);
             var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return Query<TOther>(sql);
@@ -130,6 +141,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public string PageSql(int index, int size)
         {
+            _starTime = DateTime.Now;
             var t = ToPage(index, size);
             return string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
         }
@@ -142,6 +154,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public (IEnumerable<T> data, long total) Page(int index, int size)
         {
+            _starTime = DateTime.Now;
             return (Query<T>(PageSql(index, size)), Count());
         }
 
@@ -154,6 +167,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public (IEnumerable<TOther> data, long total) Page<TOther>(int index, int size)
         {
+            _starTime = DateTime.Now;
             return (Query<TOther>(PageSql(index, size)), Count());
         }
 

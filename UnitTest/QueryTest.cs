@@ -43,11 +43,15 @@ namespace UnitTest
         [TestMethod]
         public void PageTest()
         {
+
             var (data, total) = TORM.Query<rules>()
-                                    .Where(x => x.id > 0)
+                                    .Select(x => x.id, x => x.created_at, x => x.deleted_at)
+                                    .Where(x => x.id > 0 && x.schedule_id > 0 && x.type > 0)
                                     .OrderA(x => x.id)
+                                    .OrderD(x => x.created_at)
                                     .Page(1, 3);
-            Debug.Assert(data.Count() == 3 && total >= 3);
+
+            Debug.Assert(data.Count() > 3 && total > 3);
         }
     }
 }

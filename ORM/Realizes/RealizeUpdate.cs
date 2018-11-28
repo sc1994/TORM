@@ -19,6 +19,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Update(Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = $"UPDATE {GetTableName()}{GetSet()}{GetWhere()};";
             return Execute(sql, transaction);
         }
@@ -31,6 +32,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Update(int top, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = string.Format(ToTop(top), $"{GetTableName()}{GetSet()}{GetWhere()}");
             return Execute(sql, transaction);
         }
@@ -43,6 +45,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         public long Update(T model, Transaction transaction = null)
         {
+            _starTime = DateTime.Now;
             var sql = GetUpdateByModel(model);
             return Execute(sql, transaction, model);
         }
