@@ -58,8 +58,8 @@ namespace ORM.Realizes
             var tableInfo = GetTableInfo();
             var keyInfo = tableInfo.Key ?? tableInfo.Identity;
             if (keyInfo == null) throw new Exception("未设置主键或者自增键");
-            var sql = $"DELETE FROM {GetTableName()} WHERE {keyInfo.Name}=@{keyInfo.Name};";
-            return Execute(sql, transaction, new Dictionary<string, TKey> { { keyInfo.Name, key } });
+            var sql = $"DELETE FROM {GetTableName()} WHERE {keyInfo.Name}=@key;";
+            return Execute(sql, transaction, new { key });
         }
 
         /// <summary>

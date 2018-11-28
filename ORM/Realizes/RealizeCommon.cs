@@ -70,6 +70,25 @@ namespace ORM.Realizes
         /// </summary>
         private readonly Dictionary<SqlTypeEnum, StringBuilder> _sqlDic = new Dictionary<SqlTypeEnum, StringBuilder>();
 
+        #region 时间埋点
+        /// <summary>
+        /// 记录开始时间
+        /// </summary>
+        private DateTime _starTime { get; set; } = DateTime.Now;
+        /// <summary>
+        /// 解释时长
+        /// </summary>
+        private TimeSpan _explainSpan { get; set; }
+        /// <summary>
+        /// 连接时长
+        /// </summary>
+        private TimeSpan _connSpan { get; set; }
+        /// <summary>
+        /// 执行时长
+        /// </summary>
+        private TimeSpan _executeSpan { get; set; }
+        #endregion
+
         /// <summary>
         /// 获取where sql 代码
         /// </summary>
@@ -282,25 +301,41 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected long Execute(string sql, Transaction transaction = null, object param = null)
         {
-            MySqlConnection connection;
+            _explainSpan = DateTime.Now - _starTime;
+            _starTime = DateTime.Now;
             // 决定是使用默认参数还是传入参数
             var thatParam = param ?? _params;
-            LogSql(sql, thatParam);
-            if (transaction != null)
+            try
             {
-                var value = Stores.ConnectionDic[transaction.Sole];
-                if (value.Transaction == null) // 希望在 事务开始的时候尽量少的参数，所以连接的开启放在了这边
+                // 事务操作
+                if (transaction != null)
                 {
-                    value.Connection.ConnectionString = GetTableInfo().ConnectionString;
-                    value.Connection.Open();
-                    value.Transaction = value.Connection.BeginTransaction(); // 涉及到对字典中的值进行变动，不能预知当高并发的情况下，是否会产生问题。
+                    var value = Stores.ConnectionDic[transaction.Sole];
+                    if (value.Transaction == null) // 希望在 事务开始的时候尽量少的参数，所以连接的开启放在了这边
+                    {
+                        value.Connection.ConnectionString = GetTableInfo().ConnectionString;
+                        value.Connection.Open();
+                        value.Transaction = value.Connection.BeginTransaction(); // 涉及到对字典中的值进行变动，不能预知当高并发的情况下，是否会产生问题。
+                    }
+                    _connSpan = DateTime.Now - _starTime;
+                    _starTime = DateTime.Now;
+                    return value.Connection.Execute(sql, thatParam, Stores.ConnectionDic[transaction.Sole].Transaction);
                 }
-                return value.Connection.Execute(sql, thatParam, Stores.ConnectionDic[transaction.Sole].Transaction);
+                // 非事务
+                MySqlConnection connection;
+                using (connection = new MySqlConnection(GetTableInfo().ConnectionString))
+                {
+                    return connection.Execute(sql, thatParam);
+                }
             }
-
-            using (connection = new MySqlConnection(GetTableInfo().ConnectionString))
+            catch (Exception e)
             {
-                return connection.Execute(sql, thatParam);
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                LogSql(sql, thatParam);
             }
         }
 
@@ -311,10 +346,20 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected TOther QueryFirst<TOther>(string sql)
         {
-            LogSql(sql, _params);
-            using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+            _explainSpan = DateTime.Now - _starTime;
+            _starTime = DateTime.Now;
+            try
             {
-                return connection.QueryFirstOrDefault<TOther>(sql, _params);
+                using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+                {
+                    _connSpan = DateTime.Now - _starTime;
+                    _starTime = DateTime.Now;
+                    return connection.QueryFirstOrDefault<TOther>(sql, _params);
+                }
+            }
+            finally
+            {
+                LogSql(sql, _params);
             }
         }
 
@@ -325,10 +370,20 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected IEnumerable<TOther> Query<TOther>(string sql)
         {
-            LogSql(sql, _params);
-            using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+            _explainSpan = DateTime.Now - _starTime;
+            _starTime = DateTime.Now;
+            try
             {
-                return connection.Query<TOther>(sql, _params);
+                using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+                {
+                    _connSpan = DateTime.Now - _starTime;
+                    _starTime = DateTime.Now;
+                    return connection.Query<TOther>(sql, _params);
+                }
+            }
+            finally
+            {
+                LogSql(sql, _params);
             }
         }
 
@@ -340,15 +395,19 @@ namespace ORM.Realizes
         protected void LogSql(string sql, object param)
         {
             if (!Stores.Debug) return;
+            _executeSpan = DateTime.Now - _starTime;
             Trace.WriteLine(
 $@"
 
-================SQL>{DateTime.Now:u}<SQL================
+=================SQL><SQL=================
 {sql}
-==============Param>{DateTime.Now:u}<Param==============
+===============Param><Param===============
 {JsonConvert.SerializeObject(param, Formatting.Indented)}
-================End>{DateTime.Now:u}<End================
-
+================耗时><耗时================
+解释：{_explainSpan.TotalMilliseconds}ms
+连接：{_connSpan.TotalMilliseconds}ms
+执行：{_executeSpan.TotalMilliseconds}ms
+================End><End=================
 ");
         }
 

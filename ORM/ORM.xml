@@ -954,6 +954,26 @@
             sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
             </summary>
         </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._starTime">
+            <summary>
+            记录开始时间
+            </summary>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._explainSpan">
+            <summary>
+            解释时长
+            </summary>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._connSpan">
+            <summary>
+            连接时长
+            </summary>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._executeSpan">
+            <summary>
+            执行时长
+            </summary>
+        </member>
         <member name="M:ORM.Realizes.RealizeCommon`1.GetWhere">
             <summary>
             获取where sql 代码

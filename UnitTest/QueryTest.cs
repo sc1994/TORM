@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ORM;
-using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -9,6 +8,11 @@ namespace UnitTest
     [TestClass]
     public class QueryTest
     {
+        public QueryTest()
+        {
+            TORM.Debug = true;
+        }
+
         [TestMethod]
         public void CountTest()
         {
@@ -39,11 +43,11 @@ namespace UnitTest
         [TestMethod]
         public void PageTest()
         {
-            var result = TORM.Query<rules>()
-                             .Where(x => x.id > 0)
-                             .OrderA(x => x.id)
-                             .Page(1, 3);
-            Debug.Assert(result.data.Count() == 3 && result.total >= 3);
+            var (data, total) = TORM.Query<rules>()
+                                    .Where(x => x.id > 0)
+                                    .OrderA(x => x.id)
+                                    .Page(1, 3);
+            Debug.Assert(data.Count() == 3 && total >= 3);
         }
     }
 }
