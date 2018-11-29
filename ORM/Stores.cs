@@ -1,4 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ORM
 {
@@ -37,6 +42,41 @@ namespace ORM
         /// 存放一些项目配置
         /// </summary>
         internal static ConcurrentDictionary<string, string> ConfigDic => new ConcurrentDictionary<string, string>();
+
+        /// <summary>
+        /// 存放和消费Debug信息
+        /// </summary>
+        internal static readonly ConcurrentQueue<dynamic> DebugQueue = new ConcurrentQueue<dynamic>();
+
+        /// <summary>
+        /// 消费debug数据
+        /// </summary>
+        internal static void DebugDequeue()
+        {
+            lock ("只允许一个消费线程")
+            {
+                while (true)
+                {
+                    while (DebugQueue.TryDequeue(out object info))
+                    {
+                        var file = $"{Environment.CurrentDirectory}\\debug_{DateTime.Today:yyyyMMdd}.json";
+                        if (!File.Exists(file))
+                        {
+                            File.AppendAllText(
+                                file,
+                                "[\r\n");
+                        }
+
+                        var a = JsonConvert.SerializeObject(info, Formatting.Indented);
+                        File.AppendAllText(
+                            file,
+                            $"{a},\r\n");
+                    }
+                    Task.Delay(500).Wait();
+                    // todo 补全']'
+                }
+            }
+        }
     }
 
     internal class TableInfo
@@ -112,6 +152,49 @@ namespace ORM
         /// 外键
         /// </summary>
         internal string Foreign { get; set; }
+    }
+
+    /// <summary>
+    /// 调试信息
+    /// </summary>
+    internal class DebugInfo
+    {
+        /// <summary>
+        /// SQL
+        /// </summary>
+        internal string Sql { get; set; }
+        /// <summary>
+        /// 参数
+        /// </summary>
+        internal object 参数 { get; set; }
+        /// <summary>
+        /// 堆栈信息
+        /// </summary>
+        internal StackTrace 堆栈 { get; set; }
+        /// <summary>
+        /// 各项时间跨度
+        /// </summary>
+        internal TimeSpanInfo 时间跨度 { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        internal DateTime 结束时间 { get; set; }
+    }
+
+    internal class TimeSpanInfo
+    {
+        /// <summary>
+        /// 解析
+        /// </summary>
+        internal double 解析 { get; set; }
+        /// <summary>
+        /// 连接
+        /// </summary>
+        internal double 连接 { get; set; }
+        /// <summary>
+        /// 执行
+        /// </summary>
+        internal double 执行 { get; set; }
     }
 
     /// <summary>

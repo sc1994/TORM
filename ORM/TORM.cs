@@ -1,6 +1,9 @@
 ﻿using ORM.Interface.IDelete;
 using ORM.Realizes;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -334,7 +337,12 @@ namespace ORM
         public static bool Debug
         {
             get => Stores.Debug;
-            set => Stores.Debug = value;
+            set
+            {
+                if (value)
+                    Task.Run(() => { Stores.DebugDequeue(); });
+                Stores.Debug = value;
+            }
         }
 
         /// <summary>

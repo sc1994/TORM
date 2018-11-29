@@ -1,8 +1,23 @@
 ﻿using ORM;
 using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace UnitTest
 {
+    public class BaseTest
+    {
+        public BaseTest()
+        {
+            TORM.Debug = true;
+        }
+
+        ~BaseTest()
+        {
+            //Thread.Sleep(20000); todo 延迟整个数据的回收
+        }
+    }
+
     [Table("tally", DBTypeEnum.MySQL, "rules")]
     public class rules
     {

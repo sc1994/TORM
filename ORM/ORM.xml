@@ -1404,6 +1404,16 @@
             存放一些项目配置
             </summary>
         </member>
+        <member name="F:ORM.Stores.DebugQueue">
+            <summary>
+            存放和消费Debug信息
+            </summary>
+        </member>
+        <member name="M:ORM.Stores.DebugDequeue">
+            <summary>
+            消费debug数据
+            </summary>
+        </member>
         <member name="P:ORM.TableInfo.DB">
             <summary>
             数据库
@@ -1487,6 +1497,51 @@
         <member name="P:ORM.FieldInfo.Foreign">
             <summary>
             外键
+            </summary>
+        </member>
+        <member name="T:ORM.DebugInfo">
+            <summary>
+            调试信息
+            </summary>
+        </member>
+        <member name="P:ORM.DebugInfo.Sql">
+            <summary>
+            SQL
+            </summary>
+        </member>
+        <member name="P:ORM.DebugInfo.参数">
+            <summary>
+            参数
+            </summary>
+        </member>
+        <member name="P:ORM.DebugInfo.堆栈">
+            <summary>
+            堆栈信息
+            </summary>
+        </member>
+        <member name="P:ORM.DebugInfo.时间跨度">
+            <summary>
+            各项时间跨度
+            </summary>
+        </member>
+        <member name="P:ORM.DebugInfo.结束时间">
+            <summary>
+            结束时间
+            </summary>
+        </member>
+        <member name="P:ORM.TimeSpanInfo.解析">
+            <summary>
+            解析
+            </summary>
+        </member>
+        <member name="P:ORM.TimeSpanInfo.连接">
+            <summary>
+            连接
+            </summary>
+        </member>
+        <member name="P:ORM.TimeSpanInfo.执行">
+            <summary>
+            执行
             </summary>
         </member>
         <member name="T:ORM.FieldByDB">

@@ -43,7 +43,6 @@ namespace UnitTest
         [TestMethod]
         public void PageTest()
         {
-
             var (data, total) = TORM.Query<rules>()
                                     .Select(x => x.id, x => x.created_at, x => x.deleted_at)
                                     .Where(x => x.id > 0 && x.schedule_id > 0 && x.type > 0)

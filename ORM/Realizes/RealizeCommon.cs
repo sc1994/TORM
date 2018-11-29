@@ -3,6 +3,7 @@ using Explain;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -65,6 +66,7 @@ namespace ORM.Realizes
         /// 全部的表
         /// </summary>
         protected List<Type> allTables = new List<Type>();
+
         /// <summary>
         /// sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
         /// </summary>
@@ -395,19 +397,20 @@ namespace ORM.Realizes
         {
             if (!Stores.Debug) return;
             _executeSpan = DateTime.Now - _starTime;
-            Trace.WriteLine(
-$@"
-
-=================SQL><SQL=================
-{sql}
-===============Param><Param===============
-{JsonConvert.SerializeObject(param, Formatting.Indented)}
-================耗时><耗时================
-解释：{_explainSpan.TotalMilliseconds}ms
-连接：{_connSpan.TotalMilliseconds}ms
-执行：{_executeSpan.TotalMilliseconds}ms
-================End><End=================
-");
+            var info = new
+            {
+                Sql = sql,
+                参数 = param,
+                堆栈 = new StackTrace(true).ToString(),
+                结束时间 = DateTime.Now.ToString("O"),
+                时间跨度 = new
+                {
+                    执行 = _executeSpan.TotalMilliseconds,
+                    解析 = _explainSpan.TotalMilliseconds,
+                    连接 = _connSpan.TotalMilliseconds
+                }
+            };
+            Stores.DebugQueue.Enqueue(info);
         }
 
         /// <summary>

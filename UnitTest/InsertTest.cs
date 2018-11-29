@@ -8,6 +8,11 @@ namespace UnitTest
     [TestClass]
     public class InsertTest
     {
+        public InsertTest()
+        {
+            TORM.Debug = true;
+        }
+
         [TestMethod]
         public void InsertOneTest()
         {
@@ -23,19 +28,19 @@ namespace UnitTest
         {
             var result = TORM.InsertBatch(new[]
                                           {
-                                              new rules
-                                              {
-                                                  created_at = DateTime.Now.AddDays(-3)
-                                              },
-                                              new rules
-                                              {
-                                                  created_at = DateTime.Now.AddDays(-2)
-                                              },
-                                              new rules
-                                              {
-                                                  created_at = DateTime.Now.AddDays(-1)
-                                              }
-                                          });
+                                                  new rules
+                                                  {
+                                                      created_at = DateTime.Now.AddDays(-3)
+                                                  },
+                                                  new rules
+                                                  {
+                                                      created_at = DateTime.Now.AddDays(-2)
+                                                  },
+                                                  new rules
+                                                  {
+                                                      created_at = DateTime.Now.AddDays(-1)
+                                                  }
+                                              });
             Debug.Assert(result == 3);
         }
     }
