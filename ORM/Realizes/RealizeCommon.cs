@@ -403,12 +403,9 @@ namespace ORM.Realizes
                 Param = param,
                 StackTrace = new StackTrace(true).ToString(),
                 EndTime = DateTime.Now.ToString("O"),
-                TimeSpan = new
-                {
-                    Explain = _explainSpan.TotalMilliseconds,
-                    Connect = _connSpan.TotalMilliseconds,
-                    Execute = _executeSpan.TotalMilliseconds
-                }
+                ExplainSpan = _explainSpan.TotalMilliseconds,
+                ConnectSpan = _connSpan.TotalMilliseconds,
+                ExecuteSpan = _executeSpan.TotalMilliseconds
             };
             Redis.PublishAsync("LogSql", info);
         }

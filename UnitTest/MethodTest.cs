@@ -99,7 +99,6 @@ namespace UnitTest
                              .Group(x => x.schedule_id)
                              .Find();
             Debug.Assert(result.Any());
-            Thread.Sleep(10000);
         }
 
         [TestMethod]

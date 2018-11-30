@@ -1,79 +1,101 @@
-﻿using ORM;
+﻿using Newtonsoft.Json;
+using ORM;
+using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Dapper;
-using MySql.Data.MySqlClient;
+using System.Threading;
 
 namespace Demo
 {
     class Program
     {
-        private static int Count { get; set; }
         static void Main(string[] args)
         {
-            TORM.AutoTable<Province>();
-            TORM.AutoTable<City>();
+            //Console.WriteLine("start");
+            //TORM.AutoTable<SqlLog>();
+            //var config = "118.24.27.231:6379,password=sun940622";
+            //var conn = ConnectionMultiplexer.Connect(config);
+            //var sub = conn.GetSubscriber();
+            //sub.Subscribe("LogSql",
+            //              (channel, message) =>
+            //              {
+            //                  Console.WriteLine(message);
+            //                  var info = JsonConvert.DeserializeObject<SqlLog>(message);
+            //                  TORM.Insert(info);
+            //              });
+            //while (true)
+            //{
+            //    Console.WriteLine("pong");
+            //    Thread.Sleep(6000);
+            //}
 
-            //TORM.Insert(new Province
+            //var path = @"C:\Users\Administrator\Desktop\Untitled-1.txt";
+            //var lines = File.ReadAllText(path).Split("\r\n");
+            //var count = 0;
+            //foreach (var line in lines)
             //{
-            //    Name = "江苏"
-            //});
-            //TORM.Insert(new City
-            //{
-            //    Name = "淮安",
-            //    ProvinceId = 1
-            //});
-            //TORM.Insert(new City
-            //{
-            //    Name = "苏州",
-            //    ProvinceId = 1
-            //});
+            //    var sa = line.Split(new[] { "\\\"QuestionType\\\":" }, StringSplitOptions.RemoveEmptyEntries);
+            //    foreach (var s in sa)
+            //    {
+            //        if (s.Contains("\\\"QuestionId\\\":"))
+            //        {
+            //            var type = s.Split("\\\"")[0];
+            //            var qid = s.Split("\\\"QuestionId\\\":")[1].Split("\\\"")[0];
+            //            var pkey = s.Split("\\\"PostKey\\\":")[1].Split("\\\"")[1];
+            //            File.AppendAllLines(@"D:/4.txt", new[] { type + qid + pkey + "|" });
+            //            count++;
+            //        }
+            //    }
+            //}
 
-            using (var con = new MySqlConnection("server=118.24.27.231;database=tally;uid=root;pwd=sun940622;"))
+            //Console.WriteLine(count);
+            var coun = 0;
+
+            var lines = File.ReadAllLines(@"D:/all.txt");
+            lines = lines.Select(x => x.Trim()).Distinct().ToArray();
+            var g = lines.GroupBy(x => x.Split(',')[0] + "," + x.Split(',')[2]);
+            foreach (var item in g)
             {
-                var result = con.QueryMultiple("select * from Province;select * from City;");
-                var province = result.ReadFirstOrDefault<Province>();
-                var citys = result.Read<City>();
-                province.Citys = citys.ToList();
+                if (item.Count() > 1)
+                {
+                    //Console.WriteLine($"{item.Key}++++{item.Count()}");
+                    foreach (var v in item.Skip(1))
+                    {
+
+                        File.AppendAllLines("D:/5.txt", new []{ v });
+                        coun++;
+                    }
+                    File.AppendAllLines("D:/5.txt", new[] { "-------------" });
+                }
+
             }
 
+            Console.WriteLine(coun);
 
-
-
-            Console.WriteLine("OVER");
             Console.ReadLine();
+
+
         }
     }
 
-    [Table("tally", DBTypeEnum.MySQL)]
-    class Province
-    {
-        [Key, Identity, Field(Comment: "省份主键")]
-        public long Id { get; set; }
-        public string Name { get; set; }
-        [Foreign("ProvinceId")]
-        public List<City> Citys { get; set; }
-    }
-
-    [Table("tally", DBTypeEnum.MySQL)]
-    class City
+    [Table("Log", DBTypeEnum.MySQL)]
+    class SqlLog
     {
         [Key, Identity]
         public long Id { get; set; }
-        public string Name { get; set; }
-        [Foreign("CityId")]
-        public List<Town> Towns { get; set; }
-        public long ProvinceId { get; set; }
-
-    }
-
-    [Table("tally", DBTypeEnum.MySQL)]
-    class Town
-    {
-        [Key, Identity]
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public long CityId { get; set; }
+        [Field(Length: 5120)]
+        public string SqlStr { get; set; }
+        [Field(Length: 5120)]
+        public string Param { get; set; }
+        [Field(Length: 5120)]
+        public string StackTrace { get; set; }
+        public DateTime EndTime { get; set; }
+        [Field(Precision: 11)]
+        public double ExplainSpan { get; set; }
+        [Field(Precision: 11)]
+        public double ConnectSpan { get; set; }
+        [Field(Precision: 11)]
+        public double ExecuteSpan { get; set; }
     }
 }
