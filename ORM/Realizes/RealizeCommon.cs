@@ -400,17 +400,17 @@ namespace ORM.Realizes
             var info = new
             {
                 Sql = sql,
-                参数 = param,
-                堆栈 = new StackTrace(true).ToString(),
-                结束时间 = DateTime.Now.ToString("O"),
-                时间跨度 = new
+                Param = param,
+                StackTrace = new StackTrace(true).ToString(),
+                EndTime = DateTime.Now.ToString("O"),
+                TimeSpan = new
                 {
-                    执行 = _executeSpan.TotalMilliseconds,
-                    解析 = _explainSpan.TotalMilliseconds,
-                    连接 = _connSpan.TotalMilliseconds
+                    Explain = _explainSpan.TotalMilliseconds,
+                    Connect = _connSpan.TotalMilliseconds,
+                    Execute = _executeSpan.TotalMilliseconds
                 }
             };
-            Stores.DebugQueue.Enqueue(info);
+            Redis.PublishAsync("LogSql", info);
         }
 
         /// <summary>

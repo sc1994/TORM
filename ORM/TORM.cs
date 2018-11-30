@@ -337,12 +337,7 @@ namespace ORM
         public static bool Debug
         {
             get => Stores.Debug;
-            set
-            {
-                if (value)
-                    Task.Run(() => { Stores.DebugDequeue(); });
-                Stores.Debug = value;
-            }
+            set => Stores.Debug = value;
         }
 
         /// <summary>
