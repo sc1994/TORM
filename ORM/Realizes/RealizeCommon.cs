@@ -331,7 +331,7 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex);
+                LogSql(sql, _params, ex: ex);
                 throw;
             }
             finally
@@ -360,7 +360,7 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex);
+                LogSql(sql, _params, ex: ex);
                 throw;
             }
             finally
@@ -389,7 +389,7 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex);
+                LogSql(sql, _params, ex: ex);
                 throw;
             }
             finally
@@ -403,8 +403,9 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="param"></param>
+        /// <param name="otherTable">当多表联查时传入多表的表名</param>
         /// <param name="ex"></param>
-        protected void LogSql(string sql, object param, Exception ex = null)
+        protected void LogSql(string sql, object param, IEnumerable<string> otherTable = null, Exception ex = null)
         {
             if (!Stores.Debug) return;
             _executeSpan = DateTime.Now - _starTime;
@@ -420,7 +421,9 @@ namespace ORM.Realizes
                     ExplainSpan = _explainSpan.TotalMilliseconds,
                     ConnectSpan = _connSpan.TotalMilliseconds,
                     ExecuteSpan = _executeSpan.TotalMilliseconds,
-                    ExMessage = ex?.Message ?? ""
+                    ExMessage = ex?.Message ?? "",
+                    DbName = GetTableInfo().DB,
+                    TableName = GetTableInfo().Table
                 };
                 if (Stores.Debug)
                 {
