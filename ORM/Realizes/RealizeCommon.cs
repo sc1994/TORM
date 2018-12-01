@@ -445,8 +445,6 @@ $@"
                     Redis.PublishAsync("LogSql", info);
                 }
             }
-
-
         }
 
         /// <summary>
