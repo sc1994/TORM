@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using StackExchange.Redis;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -338,6 +339,15 @@ namespace ORM
         {
             get => Stores.Debug;
             set => Stores.Debug = value;
+        }
+
+        /// <summary>
+        /// 使用redis收集log信息（需要自己消费）
+        /// </summary>
+        public static ConnectionMultiplexer RedisLog
+        {
+            get => Stores.RedisLog;
+            set => Stores.RedisLog = value;
         }
 
         /// <summary>

@@ -107,9 +107,9 @@ namespace UnitTest
             var result = TORM.Query<rules>()
                              .Select(x => x.schedule_id)
                              .Group(x => x.schedule_id)
-                             .Having(x => x.schedule_id > 100)
+                             .Having(x => x.schedule_id > 0)
                              .Find();
-            Debug.Assert(result.Count() == 1);
+            Debug.Assert(result.Any());
         }
     }
 }

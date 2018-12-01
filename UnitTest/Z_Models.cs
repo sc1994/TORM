@@ -1,8 +1,7 @@
 ﻿using ORM;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+using StackExchange.Redis;
 
 namespace UnitTest
 {
@@ -11,6 +10,7 @@ namespace UnitTest
         public BaseTest()
         {
             TORM.Debug = true;
+            TORM.RedisLog = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
         }
 
         ~BaseTest()

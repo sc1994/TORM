@@ -6,13 +6,8 @@ using System.Linq;
 namespace UnitTest
 {
     [TestClass]
-    public class QueryTest
+    public class QueryTest : BaseTest
     {
-        public QueryTest()
-        {
-            TORM.Debug = true;
-        }
-
         [TestMethod]
         public void CountTest()
         {
@@ -50,7 +45,7 @@ namespace UnitTest
                                     .OrderD(x => x.created_at)
                                     .Page(1, 3);
 
-            Debug.Assert(data.Count() > 3 && total > 3);
+            Debug.Assert(data.Any() && total > 0);
         }
     }
 }

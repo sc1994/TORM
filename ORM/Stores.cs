@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
+using StackExchange.Redis;
 
 namespace ORM
 {
@@ -37,6 +33,11 @@ namespace ORM
         /// 调试模式
         /// </summary>
         internal static bool Debug = false;
+
+        /// <summary>
+        /// 调试模式
+        /// </summary>
+        internal static ConnectionMultiplexer RedisLog = null;
 
         /// <summary>
         /// 存放一些项目配置

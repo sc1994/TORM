@@ -329,14 +329,14 @@ namespace ORM.Realizes
                     return connection.Execute(sql, thatParam);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                LogSql(sql, _params, ex);
                 throw;
             }
             finally
             {
-                LogSql(sql, thatParam);
+                LogSql(sql, _params);
             }
         }
 
@@ -357,6 +357,11 @@ namespace ORM.Realizes
                     _starTime = DateTime.Now;
                     return connection.QueryFirstOrDefault<TOther>(sql, _params);
                 }
+            }
+            catch (Exception ex)
+            {
+                LogSql(sql, _params, ex);
+                throw;
             }
             finally
             {
@@ -382,6 +387,11 @@ namespace ORM.Realizes
                     return connection.Query<TOther>(sql, _params);
                 }
             }
+            catch (Exception ex)
+            {
+                LogSql(sql, _params, ex);
+                throw;
+            }
             finally
             {
                 LogSql(sql, _params);
@@ -393,21 +403,50 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="param"></param>
-        protected void LogSql(string sql, object param)
+        /// <param name="ex"></param>
+        protected void LogSql(string sql, object param, Exception ex = null)
         {
             if (!Stores.Debug) return;
             _executeSpan = DateTime.Now - _starTime;
-            var info = new
+            if (Stores.Debug ||
+                Stores.RedisLog != null)
             {
-                Sql = sql,
-                Param = param,
-                StackTrace = new StackTrace(true).ToString(),
-                EndTime = DateTime.Now.ToString("O"),
-                ExplainSpan = _explainSpan.TotalMilliseconds,
-                ConnectSpan = _connSpan.TotalMilliseconds,
-                ExecuteSpan = _executeSpan.TotalMilliseconds
-            };
-            Redis.PublishAsync("LogSql", info);
+                var info = new
+                {
+                    SqlStr = sql,
+                    Param = JsonConvert.SerializeObject(param, Formatting.Indented),
+                    StackTrace = new StackTrace(true).ToString(),
+                    EndTime = DateTime.Now.ToString("O"),
+                    ExplainSpan = _explainSpan.TotalMilliseconds,
+                    ConnectSpan = _connSpan.TotalMilliseconds,
+                    ExecuteSpan = _executeSpan.TotalMilliseconds,
+                    ExMessage = ex?.Message ?? ""
+                };
+                if (Stores.Debug)
+                {
+                    Trace.WriteLine(
+$@"
+===========>SQL<============
+{info.SqlStr}
+===========>参数<============
+{info.Param}
+===========>堆栈<============
+{info.StackTrace}
+===========>耗时<============
+解析：{info.ExplainSpan}ms
+连接：{info.ConnectSpan}ms
+执行：{info.ExecuteSpan}ms
+===>{info.EndTime}<===
+"
+                        );
+                }
+                if (Stores.RedisLog != null)
+                {
+                    Redis.PublishAsync("LogSql", info);
+                }
+            }
+
+
         }
 
         /// <summary>
