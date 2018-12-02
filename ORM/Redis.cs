@@ -5,14 +5,14 @@ namespace ORM
     internal class Redis
     {
         /// <summary>
-        /// 
+        /// 推送消息
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="msg"></param>
-        internal static long Publish(string channel, object msg)
+        internal static void Publish(string channel, object msg)
         {
             var sub = Stores.RedisLog.GetSubscriber();
-            return sub.Publish(channel, JsonConvert.SerializeObject(msg));
+            sub.PublishAsync(channel, JsonConvert.SerializeObject(msg));
         }
     }
 }

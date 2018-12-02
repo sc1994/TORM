@@ -1,9 +1,7 @@
-﻿using ORM.Interface.IDelete;
+﻿using System;
 using ORM.Realizes;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using System.Text;
 using StackExchange.Redis;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
@@ -357,6 +355,16 @@ namespace ORM
         public static void AutoTable<T>()
         {
             new Others<T>().AutoTable();
+        }
+
+        /// <summary>
+        /// 执行查询sql
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> Query<T>(string sql, object param = null)
+        {
+            return new Others<T>().Query(sql, param);
         }
     }
 }

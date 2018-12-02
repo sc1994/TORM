@@ -1,5 +1,6 @@
 ﻿using ORM.Realizes;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -63,6 +64,17 @@ namespace ORM
             sql.SafeRemove(sql.Length - 1, 1);
             sql.Append("\r\n)\r\nENGINE = INNODB;");
             Execute(sql.ToString());
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Query(string sql, object param = null)
+        {
+            return Query<T>(sql, param);
         }
 
         /// <summary>

@@ -188,7 +188,7 @@ namespace ORM.Realizes
                 }
                 else
                 {
-                    result.Append(" *");
+                    result.Append("\r\n  *");
                 }
                 return result;
             });

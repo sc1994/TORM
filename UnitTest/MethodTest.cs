@@ -17,7 +17,6 @@ namespace UnitTest
                               .JoinL((r, s) => r.schedule_id == s.id && r.id > 1)
                               .Find<view>();
             Debug.Assert(result1.Any());
-            Thread.Sleep(10000);
         }
 
         [TestMethod]
@@ -47,7 +46,6 @@ namespace UnitTest
             var result = TORM.Query<rules>()
                              .Where(x => x.id > 1)
                              .Find();
-            Thread.Sleep(10000);
             Debug.Assert(result.Any());
         }
     }

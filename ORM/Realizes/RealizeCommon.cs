@@ -353,27 +353,28 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        protected TOther QueryFirst<TOther>(string sql)
+        protected TOther QueryFirst<TOther>(string sql, object param = null)
         {
             _explainSpan = DateTime.Now - _starTime;
             _starTime = DateTime.Now;
+            var thatParam = param ?? _params;
             try
             {
                 using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
                 {
                     _connSpan = DateTime.Now - _starTime;
                     _starTime = DateTime.Now;
-                    return connection.QueryFirstOrDefault<TOther>(sql, _params);
+                    return connection.QueryFirstOrDefault<TOther>(sql, thatParam);
                 }
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex);
+                LogSql(sql, thatParam, ex);
                 throw;
             }
             finally
             {
-                LogSql(sql, _params);
+                LogSql(sql, thatParam);
             }
         }
 
@@ -381,28 +382,30 @@ namespace ORM.Realizes
         /// 获取数据集合
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="param"></param>
         /// <returns></returns>
-        protected IEnumerable<TOther> Query<TOther>(string sql)
+        protected IEnumerable<TOther> Query<TOther>(string sql, object param = null)
         {
             _explainSpan = DateTime.Now - _starTime;
             _starTime = DateTime.Now;
+            var thatParam = param ?? _params;
             try
             {
                 using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
                 {
                     _connSpan = DateTime.Now - _starTime;
                     _starTime = DateTime.Now;
-                    return connection.Query<TOther>(sql, _params);
+                    return connection.Query<TOther>(sql, thatParam);
                 }
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex);
+                LogSql(sql, thatParam, ex);
                 throw;
             }
             finally
             {
-                LogSql(sql, _params);
+                LogSql(sql, thatParam);
             }
         }
 
@@ -424,13 +427,13 @@ namespace ORM.Realizes
                     SqlStr = sql,
                     Param = JsonConvert.SerializeObject(param, Formatting.Indented),
                     StackTrace = new StackTrace(true).ToString(),
-                    EndTime = DateTime.Now.ToString("O"),
+                    EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     ExplainSpan = _explainSpan.TotalMilliseconds,
                     ConnectSpan = _connSpan.TotalMilliseconds,
                     ExecuteSpan = _executeSpan.TotalMilliseconds,
                     ExMessage = ex?.Message ?? "",
                     DbName = GetTableInfo().DB,
-                    TableName = string.Join(",", useTables.Select(GetTableName))
+                    TableName = string.Join(",", useTables.Select(GetTableName).Distinct())
                 };
                 if (Stores.Debug)
                 {
