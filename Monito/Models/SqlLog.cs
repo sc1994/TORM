@@ -8,17 +8,17 @@ namespace Monito.Models
     {
         [Key, Identity]
         public long Id { get; set; }
-        [Field(Length: 2048)]
+        [Field(Length: 4096)]
         public string SqlStr { get; set; }
         [Field(Length: 256)]
         public string DbName { get; set; }
         [Field(Length: 256)]
         public string TableName { get; set; }
-        [Field(Length: 2048)]
+        [Field(Length: 4096)]
         public string Param { get; set; }
-        [Field(Length: 2048)]
+        [Field(Length: 4096)]
         public string StackTrace { get; set; }
-        [Field(Length: 2048)]
+        [Field(Length: 4096)]
         public string ExMessage { get; set; }
         public DateTime EndTime { get; set; }
         [Field(Precision: 11)]

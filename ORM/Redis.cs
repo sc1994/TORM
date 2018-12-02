@@ -9,10 +9,10 @@ namespace ORM
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="msg"></param>
-        internal static void PublishAsync(string channel, object msg)
+        internal static long Publish(string channel, object msg)
         {
             var sub = Stores.RedisLog.GetSubscriber();
-            sub.PublishAsync(channel, JsonConvert.SerializeObject(msg));
+            return sub.Publish(channel, JsonConvert.SerializeObject(msg));
         }
     }
 }

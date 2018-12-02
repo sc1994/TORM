@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ORM;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace UnitTest
 {
@@ -14,81 +12,11 @@ namespace UnitTest
         [TestMethod]
         public void JoinAndTest()
         {
-            var result0 = TORM.Query<rules, schedules>()
+            var result1 = TORM.Query<rules, schedules>()
                               .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
                               .JoinL((r, s) => r.schedule_id == s.id && r.id > 1)
                               .Find<view>();
-            Debug.Assert(result0.Any());
-            Parallel.Invoke(() =>
-                            {
-                                var result1 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .JoinL((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result1.Any());
-                            },
-                            () =>
-                            {
-                                var result2 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .JoinR((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result2.Any());
-                            },
-                            () =>
-                            {
-                                var result3 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .Join((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result3.Any());
-                            }, () =>
-                               {
-                                   var result1 = TORM.Query<rules, schedules>()
-                                                     .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                     .JoinL((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                     .Find<view>();
-                                   Debug.Assert(result1.Any());
-                               },
-                            () =>
-                            {
-                                var result2 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .JoinR((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result2.Any());
-                            },
-                            () =>
-                            {
-                                var result3 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .Join((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result3.Any());
-                            }, () =>
-                               {
-                                   var result1 = TORM.Query<rules, schedules>()
-                                                     .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                     .JoinL((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                     .Find<view>();
-                                   Debug.Assert(result1.Any());
-                               },
-                            () =>
-                            {
-                                var result2 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .JoinR((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result2.Any());
-                            },
-                            () =>
-                            {
-                                var result3 = TORM.Query<rules, schedules>()
-                                                  .Select(((r, s) => r.id, "r_id"), ((r, s) => s.id, "s_id"))
-                                                  .Join((r, s) => r.schedule_id == s.id && r.id > 1)
-                                                  .Find<view>();
-                                Debug.Assert(result3.Any());
-                            });
+            Debug.Assert(result1.Any());
             Thread.Sleep(10000);
         }
 
@@ -117,11 +45,10 @@ namespace UnitTest
         public void WhereTest()
         {
             var result = TORM.Query<rules>()
-                             .Where(x => x.created_at > DateTime.Today
-                                         && x.deleted_at > DateTime.Now
-                                         && x.deleted_at > DateTime.MinValue)
+                             .Where(x => x.id > 1)
                              .Find();
-            Debug.Assert(true);
+            Thread.Sleep(10000);
+            Debug.Assert(result.Any());
         }
     }
 }

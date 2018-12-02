@@ -430,7 +430,7 @@ namespace ORM.Realizes
                     ExecuteSpan = _executeSpan.TotalMilliseconds,
                     ExMessage = ex?.Message ?? "",
                     DbName = GetTableInfo().DB,
-                    TableName = string.Join(",", useTables.Select(GetTableInfo))
+                    TableName = string.Join(",", useTables.Select(GetTableName))
                 };
                 if (Stores.Debug)
                 {
@@ -452,7 +452,7 @@ namespace ORM.Realizes
                 }
                 if (Stores.RedisLog != null)
                 {
-                    Redis.PublishAsync("LogSql", info);
+                    Redis.Publish("LogSql", info);
                 }
             }
         }
