@@ -22,10 +22,10 @@
 
   <ItemGroup>
     <Reference Include="ORM">
-      <HintPath>ORM.dll</HintPath>
+      <HintPath>ORM\ORM.dll</HintPath>
     </Reference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="ORM\ORM.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
