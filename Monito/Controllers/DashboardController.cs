@@ -23,11 +23,11 @@ namespace Monito.Controllers
         [HttpPost]
         public JsonResult GetData(DateTime start, DateTime end)
         {
-            var total = 100;
+            var total = 300;
             var particle = (end - start).TotalSeconds / total; // 确定粒度
             var date = new List<string>
                        {
-                           start.ToString("yyyy-M-d HH:mm:ss")
+                           start.ToString("yy-M-d HH:mm")
                        };
             var sql = new StringBuilder();
             for (var i = 0; i < total; i++)
@@ -45,7 +45,7 @@ namespace Monito.Controllers
                 }
 
                 start = s;
-                date.Add(s.ToString("yyyy-M-d HH:mm:ss"));
+                date.Add(s.ToString("M-d HH:mm"));
             }
             var data = TORM.Query<Data>(sql.ToString()).Select(x => x.Value);
             return Json((data, date));
