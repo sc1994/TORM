@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2E7C2584-D9A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{B74B21EC-A585-4F90-9928-726AA7FD9145}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monito", "Monito\Monito.csproj", "{8D2EDC91-2BE6-410A-96E9-8F8B0886537A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monito", "Monito\Monito.csproj", "{8D2EDC91-2BE6-410A-96E9-8F8B0886537A}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0AD482DD-DBC1-4BDB-BE77-14D8C88862FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{8D2EDC91-2BE6-410A-96E9-8F8B0886537A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2EDC91-2BE6-410A-96E9-8F8B0886537A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2EDC91-2BE6-410A-96E9-8F8B0886537A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD482DD-DBC1-4BDB-BE77-14D8C88862FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD482DD-DBC1-4BDB-BE77-14D8C88862FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD482DD-DBC1-4BDB-BE77-14D8C88862FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD482DD-DBC1-4BDB-BE77-14D8C88862FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
