@@ -62,11 +62,11 @@ namespace Explain
         }
 
         public static void Log(string module, string info)
-        {
-            lock ("d:/1.txt")
-            {
-                File.AppendAllLines("d:/1.txt", new[] { $"\r\n\r\n------{DateTime.Now:s}--{module}------\r\ninfo：{info}\r\n------{DateTime.Now:s}--{module}------\r\n" });
-            }
+        { // todo 输出到控制台
+            //lock ("d:/1.txt")
+            //{
+            //    File.AppendAllLines("d:/1.txt", new[] { $"\r\n\r\n------{DateTime.Now:s}--{module}------\r\ninfo：{info}\r\n------{DateTime.Now:s}--{module}------\r\n" });
+            //}
         }
 
         /// <summary>
