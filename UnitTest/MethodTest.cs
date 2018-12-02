@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ORM;
 using System.Diagnostics;
 using System.Linq;
@@ -110,6 +111,17 @@ namespace UnitTest
                              .Having(x => x.schedule_id > 0)
                              .Find();
             Debug.Assert(result.Any());
+        }
+
+        [TestMethod]
+        public void WhereTest()
+        {
+            var result = TORM.Query<rules>()
+                             .Where(x => x.created_at > DateTime.Today
+                                         && x.deleted_at > DateTime.Now
+                                         && x.deleted_at > DateTime.MinValue)
+                             .Find();
+            Debug.Assert(true);
         }
     }
 }

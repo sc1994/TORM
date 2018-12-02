@@ -93,7 +93,12 @@ namespace ORM
             switch (field.Type)
             {
                 case "string":
-                    return $"VARCHAR({DefaultLength(field.Length, 255)})";
+                    var dLength = DefaultLength(field.Length, 255);
+                    if (dLength > 2048)
+                    {
+                        return "TEXT";
+                    }
+                    return $"VARCHAR({dLength})";
                 case "int64":
                     return $"BIGINT({DefaultLength(field.Length, 20)})";
                 case "int32":

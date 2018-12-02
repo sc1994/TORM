@@ -3,7 +3,6 @@ using Explain;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -130,7 +129,16 @@ namespace ORM.Realizes
                     else
                     {
                         param = $"@{GetTableName(x.Table)}_{x.Field}_{_params.Count}";
-                        _params.Add(param, x.Value);
+                        if (x.Value is MemberInfo member)
+                        {
+                            _params.Add(param, SwitchTime(member));
+                        }
+                        else
+                        {
+                            _params.Add(param, x.Value);
+                        }
+
+
                     }
 
                     var ex = x.Prior.ToExplain();
@@ -331,7 +339,7 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex: ex);
+                LogSql(sql, _params, ex);
                 throw;
             }
             finally
@@ -360,7 +368,7 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex: ex);
+                LogSql(sql, _params, ex);
                 throw;
             }
             finally
@@ -389,7 +397,7 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex: ex);
+                LogSql(sql, _params, ex);
                 throw;
             }
             finally
@@ -403,9 +411,8 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="sql"></param>
         /// <param name="param"></param>
-        /// <param name="otherTable">当多表联查时传入多表的表名</param>
         /// <param name="ex"></param>
-        protected void LogSql(string sql, object param, IEnumerable<string> otherTable = null, Exception ex = null)
+        protected void LogSql(string sql, object param, Exception ex = null)
         {
             if (!Stores.Debug) return;
             _executeSpan = DateTime.Now - _starTime;
@@ -423,12 +430,12 @@ namespace ORM.Realizes
                     ExecuteSpan = _executeSpan.TotalMilliseconds,
                     ExMessage = ex?.Message ?? "",
                     DbName = GetTableInfo().DB,
-                    TableName = GetTableInfo().Table
+                    TableName = string.Join(",", useTables.Select(GetTableInfo))
                 };
                 if (Stores.Debug)
                 {
                     Trace.WriteLine(
-$@"
+    $@"
 ===========>SQL<============
 {info.SqlStr}
 ===========>参数<============
@@ -462,6 +469,24 @@ $@"
                 throw new Exception("勿使用嵌套数组");
             }
             return type;
+        }
+
+        private DateTime SwitchTime(MemberInfo member)
+        {
+            var arr = member.ToString().Split(' ');
+            if (arr.Length > 1)
+            {
+                switch (arr[1].ToLower())
+                {
+                    case "now": return DateTime.Now;
+                    case "today": return DateTime.Today;
+                    case "maxvalue": return DateTime.MaxValue;
+                    case "minvalue": return DateTime.MinValue;
+                    case "utcnow": return DateTime.UtcNow;
+                }
+                throw new NotImplementedException("意料之外的DateTime常量");
+            }
+            throw new NotImplementedException("意料之外的member数据");
         }
     }
 }
