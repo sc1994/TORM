@@ -4,7 +4,7 @@ EXPOSE 80
 
 FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /src
-COPY Monito.csproj Monito/
+COPY Monito/Monito.csproj Monito/
 RUN dotnet restore Monito/Monito.csproj
 COPY . .
 WORKDIR /src/Monito

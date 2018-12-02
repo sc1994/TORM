@@ -21,18 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ORM">
-      <HintPath>ORM\ORM.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\ORM\ORM.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="ORM\ORM.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-        <None Update="ORM\Explain.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  
 </Project>
