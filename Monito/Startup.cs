@@ -27,7 +27,6 @@ namespace Monito
                           (channel, message) =>
                           {
                               var info = JsonConvert.DeserializeObject<SqlLog>(message);
-                              File.AppendAllText("d:/33.txt", message);
                               TORM.Insert(info);
                           }); // 在这边消费数据
         }
