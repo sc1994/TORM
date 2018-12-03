@@ -352,6 +352,7 @@ namespace ORM.Realizes
         /// 获取单条数据
         /// </summary>
         /// <param name="sql"></param>
+        /// <param name="param"></param>
         /// <returns></returns>
         protected TOther QueryFirst<TOther>(string sql, object param = null)
         {
