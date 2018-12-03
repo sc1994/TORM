@@ -573,6 +573,14 @@
             自动生成表（迁移模式）
             </summary>
         </member>
+        <member name="M:ORM.Others`1.Query(System.String,System.Object)">
+            <summary>
+            查询
+            </summary>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
         <member name="M:ORM.Others`1.ExistTable">
             <summary>
             表是否存在
@@ -1036,26 +1044,28 @@
             <param name="param"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.QueryFirst``1(System.String)">
+        <member name="M:ORM.Realizes.RealizeCommon`1.QueryFirst``1(System.String,System.Object)">
             <summary>
             获取单条数据
             </summary>
             <param name="sql"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.Query``1(System.String)">
+        <member name="M:ORM.Realizes.RealizeCommon`1.Query``1(System.String,System.Object)">
             <summary>
             获取数据集合
             </summary>
             <param name="sql"></param>
+            <param name="param"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.LogSql(System.String,System.Object)">
+        <member name="M:ORM.Realizes.RealizeCommon`1.LogSql(System.String,System.Object,System.Exception)">
             <summary>
             打印 sql 到堆栈
             </summary>
             <param name="sql"></param>
             <param name="param"></param>
+            <param name="ex"></param>
         </member>
         <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT">
             <summary>
@@ -1369,6 +1379,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:ORM.Redis.Publish(System.String,System.Object)">
+            <summary>
+            推送消息
+            </summary>
+            <param name="channel"></param>
+            <param name="msg"></param>
+        </member>
         <member name="T:ORM.Stores">
             <summary>
             存储实例运行中不会变化的值
@@ -1395,6 +1412,11 @@
             </summary>
         </member>
         <member name="F:ORM.Stores.Debug">
+            <summary>
+            调试模式
+            </summary>
+        </member>
+        <member name="F:ORM.Stores.RedisLog">
             <summary>
             调试模式
             </summary>
@@ -1866,11 +1888,23 @@
             调试模式（会在调用堆栈中，输出sql以及参数信息）
             </summary>
         </member>
+        <member name="P:ORM.TORM.RedisLog">
+            <summary>
+            使用redis收集log信息（需要自己消费）
+            </summary>
+        </member>
         <member name="M:ORM.TORM.AutoTable``1">
             <summary>
             自动生成表（迁移模式）
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.TORM.Query``1(System.String,System.Object)">
+            <summary>
+            执行查询sql
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
         </member>
     </members>
 </doc>

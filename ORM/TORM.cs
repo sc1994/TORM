@@ -1,7 +1,5 @@
-﻿using System;
-using ORM.Realizes;
+﻿using ORM.Realizes;
 using System.Collections.Generic;
-using System.Text;
 using StackExchange.Redis;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
@@ -11,6 +9,8 @@ using StackExchange.Redis;
 // todo having 语句只能出现在group
 // todo 结构迁移
 // todo 慢 sql 监测
+// todo 优化事务开启的api
+// todo 优化配置api
 
 namespace ORM
 {
