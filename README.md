@@ -56,7 +56,7 @@ TORM.Options(options =>
 ```csharp
 TORM.Options(options =>
 {
-    var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
+    var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=xxx");
     options.RedisLog = redis; // 使用redis推送sql记录
     redis.ErrorMessage += Redis_ErrorMessage; //  redis各项设置
 });
