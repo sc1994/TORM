@@ -1049,6 +1049,7 @@
             获取单条数据
             </summary>
             <param name="sql"></param>
+            <param name="param"></param>
             <returns></returns>
         </member>
         <member name="M:ORM.Realizes.RealizeCommon`1.Query``1(System.String,System.Object)">
