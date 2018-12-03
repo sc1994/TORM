@@ -7,10 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Monito.Methods;
 using Monito.Models;
-using Newtonsoft.Json;
 using ORM;
-using StackExchange.Redis;
-using System;
 
 namespace Monito
 {

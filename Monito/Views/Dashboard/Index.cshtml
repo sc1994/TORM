@@ -41,15 +41,16 @@
     <el-row :gutter="20">
         <el-col :span="12">
             <el-card class="box-card" style="height: 390px;">
-                <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-                <div id="main" style="width: 100%; height: 360px;"></div>
+                <dashboard-all :start="start"
+                               :end="end">
+                </dashboard-all>
             </el-card>
         </el-col>
         <el-col :span="12">
-            <el-card class="box-card">
-                <div v-for="o in 4" :key="o">
-                    {{'列表内容 ' + o }}
-                </div>
+            <el-card class="box-card" style="height: 390px;">
+                <dashboard-db :start="start"
+                               :end="end">
+                </dashboard-db>
             </el-card>
         </el-col>
     </el-row>
@@ -73,103 +74,18 @@
 
 </div>
 <script src="https://cdn.bootcss.com/echarts/4.1.0-release/echarts.min.js"></script>
+<script src="js/dashboard-all.js"></script>
+<script src="js/dashboard-db.js"></script>
 <script type="text/javascript">
-    Date.prototype.addDays = function (days) {
-        var date = new Date(this.valueOf());
-        date.setDate(date.getDate() + days);
-        return date;
-    }
-
     var vm = new Vue({
-        el: "#app"
+        el: "#app",
+        data() {
+            return {
+                start: new Date().toISOString().split('T')[0],
+                end: new Date().addDays(1).toISOString().split('T')[0]
+            }
+        }
     });
-
-    var start = new Date().toISOString().split('T')[0];
-    var end = new Date().addDays(1).toISOString().split('T')[0];
-
-    axios.post(`Dashboard/GetData?start=${start}&end=${end}`, {
-    }).then(function (response) {
-        var myChart = window.echarts.init(document.getElementById('main'));
-
-        var date = response.data.item2;
-        var data = response.data.item1;
-
-        var option = {
-            tooltip: {
-                trigger: 'axis',
-                position: function (pt) {
-                    return [pt[0], '10%'];
-                }
-            },
-            title: {
-                left: 'center',
-                text: '总访问量'
-            },
-            toolbox: {
-                feature: {
-                    dataZoom: {
-                        yAxisIndex: 'none'
-                    },
-                    restore: {},
-                    saveAsImage: {}
-                }
-            },
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: date
-            },
-            yAxis: {
-                type: 'value',
-                boundaryGap: [0, '0%']
-            },
-            dataZoom: [{
-                type: 'inside',
-                start: 0,
-                end: 100
-            }, {
-                start: 0,
-                end: 10,
-                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                handleSize: '70%',
-                handleStyle: {
-                    color: '#fff',
-                    shadowBlur: 3,
-                    shadowColor: 'rgba(0, 0, 0, 0.6)',
-                    shadowOffsetX: 2,
-                    shadowOffsetY: 2
-                }
-            }],
-            series: [
-                {
-                    name: '请求量',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'none',
-                    sampling: 'average',
-                    itemStyle: {
-                        color: 'rgb(255, 70, 131)'
-                    },
-                    areaStyle: {
-                        color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                            offset: 0,
-                            color: 'rgb(255, 70, 180)'
-                        }, {
-                            offset: 1,
-                            color: 'rgb(255, 158, 50)'
-                        }])
-                    },
-                    data: data
-                }
-            ]
-        };
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-    }).catch(function (error) {
-        console.log(error);
-    });
-
-
 </script>
 
 

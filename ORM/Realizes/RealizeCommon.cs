@@ -432,7 +432,7 @@ namespace ORM.Realizes
                 ExecuteSpan = _executeSpan.TotalMilliseconds,
                 ExMessage = ex?.Message ?? "",
                 DbName = GetTableInfo().DB,
-                TableName = string.Join(",", useTables.Select(GetTableName).Distinct())
+                TableName = string.Join(",", useTables.Select(GetTableName).Distinct().OrderBy(x => x))
             };
             if (Stores.Debug)
             {
