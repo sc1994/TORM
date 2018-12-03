@@ -17,6 +17,7 @@ namespace ORM
         /// </summary>
         public void AutoTable()
         {
+            _starTime = DateTime.Now;
             var tableType = ChenkT();
             var tableInfo = GetTableInfo();
 

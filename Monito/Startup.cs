@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Monito.Methods;
 using Monito.Models;
 using Newtonsoft.Json;
 using ORM;
@@ -36,9 +37,6 @@ namespace Monito
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var config = "118.24.27.231:6379";
-            var conn = ConnectionMultiplexer.Connect(config);
-
             // 配置
             TORM.Options(options =>
                          {
@@ -46,22 +44,9 @@ namespace Monito
                          });
 
             TORM.AutoTable<SqlLog>();
+
             // 在消费redis
-            var sub = conn.GetSubscriber();
-            sub.Subscribe("LogSql",
-            (channel, message) =>
-            {
-                try
-                {
-                    _logger.LogInformation(message);
-                    var info = JsonConvert.DeserializeObject<SqlLog>(message);
-                    TORM.Insert(info);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogInformation("ERROR：", e.ToString());
-                }
-            });
+            Redis.Subscriber();
 
         }
 
