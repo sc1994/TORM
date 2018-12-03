@@ -1,6 +1,7 @@
 ﻿using ORM.Realizes;
-using System.Collections.Generic;
 using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
 
 // todo 尝试收集全部表达式，分组并发解析，提高解析速度
 // todo 子查询 where，select 
@@ -10,7 +11,6 @@ using StackExchange.Redis;
 // todo 结构迁移
 // todo 慢 sql 监测
 // todo 优化事务开启的api
-// todo 优化配置api
 
 namespace ORM
 {
@@ -331,24 +331,6 @@ namespace ORM
     public partial class TORM
     {
         /// <summary>
-        /// 调试模式（会在调用堆栈中，输出sql以及参数信息）
-        /// </summary>
-        public static bool Debug
-        {
-            get => Stores.Debug;
-            set => Stores.Debug = value;
-        }
-
-        /// <summary>
-        /// 使用redis收集log信息（需要自己消费）
-        /// </summary>
-        public static ConnectionMultiplexer RedisLog
-        {
-            get => Stores.RedisLog;
-            set => Stores.RedisLog = value;
-        }
-
-        /// <summary>
         /// 自动生成表（迁移模式）
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -366,6 +348,42 @@ namespace ORM
         {
             return new Others<T>().Query(sql, param);
         }
+
+        /// <summary>
+        /// 配置
+        /// </summary>
+        /// <param name="options"></param>
+        public static void Options(Action<Options> options)
+        {
+            var o = new Options();
+            options.Invoke(o);
+            Stores.Debug = o.Debug;
+            Stores.RedisLog = o.RedisLog;
+            foreach (var item in o.DbConfig)
+            {
+                if (!Stores.DbConfigDic.ContainsKey(item.Key))
+                    Stores.DbConfigDic.Add(item.Key, item.Value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 基础配置
+    /// </summary>
+    public class Options
+    {
+        /// <summary>
+        /// 开启调试模式（会在调试堆栈中打印信息）
+        /// </summary>
+        public bool Debug { get; set; }
+        /// <summary>
+        /// 将log信息push到redis中，key：SqlLog
+        /// </summary>
+        public ConnectionMultiplexer RedisLog { get; set; }
+        /// <summary>
+        /// 数据库连接配置
+        /// </summary>
+        public Dictionary<string, string> DbConfig { get; } = new Dictionary<string, string>();
     }
 }
 

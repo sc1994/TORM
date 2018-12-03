@@ -1,5 +1,6 @@
-﻿using System.Collections.Concurrent;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace ORM
 {
@@ -12,37 +13,37 @@ namespace ORM
         /// <summary>
         /// 表信息
         /// </summary>
-        internal static ConcurrentDictionary<int, TableInfo> TableInfoDic => new ConcurrentDictionary<int, TableInfo>();
+        internal static ConcurrentDictionary<int, TableInfo> TableInfoDic { get; } = new ConcurrentDictionary<int, TableInfo>();
 
         /// <summary>
         /// 存放字段信息
         /// </summary>
-        internal static ConcurrentDictionary<int, FieldInfo> FieldInfoDic => new ConcurrentDictionary<int, FieldInfo>();
+        internal static ConcurrentDictionary<int, FieldInfo> FieldInfoDic { get; } = new ConcurrentDictionary<int, FieldInfo>();
 
         /// <summary>
         /// 存放连接和事务
         /// </summary>
-        internal static ConcurrentDictionary<int, ConnectionInfo> ConnectionDic => new ConcurrentDictionary<int, ConnectionInfo>();
+        internal static ConcurrentDictionary<int, ConnectionInfo> ConnectionDic { get; } = new ConcurrentDictionary<int, ConnectionInfo>();
 
         /// <summary>
         /// 存放不会变化的sql，比如数据插入sql
         /// </summary>
-        internal static ConcurrentDictionary<string, string> SqlDic => new ConcurrentDictionary<string, string>();
+        internal static ConcurrentDictionary<string, string> SqlDic { get; } = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         /// 调试模式
         /// </summary>
-        internal static bool Debug = false;
+        internal static bool Debug { get; set; } = false;
 
         /// <summary>
         /// 调试模式
         /// </summary>
-        internal static ConnectionMultiplexer RedisLog = null;
+        internal static ConnectionMultiplexer RedisLog { get; set; } = null;
 
         /// <summary>
         /// 存放一些项目配置
         /// </summary>
-        internal static ConcurrentDictionary<string, string> ConfigDic => new ConcurrentDictionary<string, string>();
+        internal static Dictionary<string, string> DbConfigDic { get; } = new Dictionary<string, string>();
     }
 
     internal class TableInfo

@@ -33,22 +33,34 @@ class testTable
 > ### 配置
 
 - ORM 需要知道数据库对应的连接
-- 在应用层配置文件 `appsettings.json`
 
-```json
+```csharp
+TORM.Options(options =>
 {
-  "testDB": "server=localhost;database=testDB;uid=root;pwd=1233333;"
-}
+    options.DbConfig.Add("db1", "server=118.24.27.231;database=db1;uid=xxx;pwd=xxx;");
+    options.DbConfig.Add("db2", "server=118.24.27.231;database=db2;uid=xxx;pwd=xxx;");
+});
 ```
 
-- 修改应用层的 `.csproj` 文件，添加节点。目的是为了在项目生成的时候，将配置文件生成到对应的文件位置。
+- 调试模式
 
-```xml
-<ItemGroup>
-  <None Update="appsettings.json">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </None>
-</ItemGroup>
+```csharp
+TORM.Options(options =>
+{
+    options.Debug = true; // 调试模式
+});
+```
+
+- 记录sql
+
+```csharp
+TORM.Options(options =>
+{
+    var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
+    options.RedisLog = redis; // 使用redis推送sql记录
+    redis.ErrorMessage += Redis_ErrorMessage; //  redis各项设置
+});
+
 ```
 
 > ### 事项

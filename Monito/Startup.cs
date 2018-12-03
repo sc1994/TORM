@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,7 @@ using Monito.Models;
 using Newtonsoft.Json;
 using ORM;
 using StackExchange.Redis;
+using System;
 
 namespace Monito
 {
@@ -20,7 +20,6 @@ namespace Monito
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
-            TORM.AutoTable<SqlLog>();
             _logger = logger;
         }
 
@@ -37,10 +36,19 @@ namespace Monito
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // 在这边消费数据
-            TORM.AutoTable<SqlLog>();
             var config = "118.24.27.231:6379,password=sun940622";
             var conn = ConnectionMultiplexer.Connect(config);
+
+            // 配置
+            TORM.Options(options =>
+                         {
+                             options.RedisLog = conn;
+                             options.DbConfig.Add("tally", "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;");
+                             options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
+                         });
+
+            TORM.AutoTable<SqlLog>();
+            // 在消费redis
             var sub = conn.GetSubscriber();
             sub.Subscribe("LogSql",
             (channel, message) =>
@@ -56,6 +64,7 @@ namespace Monito
                     _logger.LogInformation("ERROR：", e.ToString());
                 }
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

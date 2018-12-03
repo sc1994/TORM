@@ -251,7 +251,7 @@ namespace ORM.Realizes
                 DB = info.DB,
                 DBType = info.DBType,
                 Table = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
-                ConnectionString = Tools.GetAppSetting(info.DB),
+                ConnectionString = Stores.DbConfigDic[info.DB],
                 Key = fields.FirstOrDefault(x => x.Key),
                 Identity = fields.FirstOrDefault(x => x.Identity)
             };

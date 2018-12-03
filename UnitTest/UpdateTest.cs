@@ -6,13 +6,8 @@ using System.Diagnostics;
 namespace UnitTest
 {
     [TestClass]
-    public class UpdateTest
+    public class UpdateTest : BaseTest
     {
-        public UpdateTest()
-        {
-            TORM.Debug = true;
-        }
-
         [TestMethod]
         public void UpdateAllTest()
         {

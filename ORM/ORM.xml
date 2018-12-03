@@ -1411,17 +1411,17 @@
             存放不会变化的sql，比如数据插入sql
             </summary>
         </member>
-        <member name="F:ORM.Stores.Debug">
+        <member name="P:ORM.Stores.Debug">
             <summary>
             调试模式
             </summary>
         </member>
-        <member name="F:ORM.Stores.RedisLog">
+        <member name="P:ORM.Stores.RedisLog">
             <summary>
             调试模式
             </summary>
         </member>
-        <member name="P:ORM.Stores.ConfigDic">
+        <member name="P:ORM.Stores.DbConfigDic">
             <summary>
             存放一些项目配置
             </summary>
@@ -1608,7 +1608,7 @@
         </member>
         <member name="M:ORM.Tools.SafeRemove(System.Text.StringBuilder,System.Int32,System.Int32)">
             <summary>
-            安全移除
+            移除
             </summary>
             <param name="that"></param>
             <param name="startIndex"></param>
@@ -1883,16 +1883,6 @@
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="P:ORM.TORM.Debug">
-            <summary>
-            调试模式（会在调用堆栈中，输出sql以及参数信息）
-            </summary>
-        </member>
-        <member name="P:ORM.TORM.RedisLog">
-            <summary>
-            使用redis收集log信息（需要自己消费）
-            </summary>
-        </member>
         <member name="M:ORM.TORM.AutoTable``1">
             <summary>
             自动生成表（迁移模式）
@@ -1905,6 +1895,32 @@
             </summary>
             <typeparam name="T"></typeparam>
             <returns></returns>
+        </member>
+        <member name="M:ORM.TORM.Options(System.Action{ORM.Options})">
+            <summary>
+            配置
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="T:ORM.Options">
+            <summary>
+            基础配置
+            </summary>
+        </member>
+        <member name="P:ORM.Options.Debug">
+            <summary>
+            开启调试模式（会在调试堆栈中打印信息）
+            </summary>
+        </member>
+        <member name="P:ORM.Options.RedisLog">
+            <summary>
+            将log信息push到redis中，key：SqlLog
+            </summary>
+        </member>
+        <member name="P:ORM.Options.DbConfig">
+            <summary>
+            数据库连接配置
+            </summary>
         </member>
     </members>
 </doc>

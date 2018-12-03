@@ -5,13 +5,8 @@ using System.Diagnostics;
 namespace UnitTest
 {
     [TestClass]
-    public class DeleteTest
+    public class DeleteTest : BaseTest
     {
-        public DeleteTest()
-        {
-            TORM.Debug = true;
-        }
-
         [TestMethod]
         public void DeleteByIdTest()
         {

@@ -1,7 +1,7 @@
 ﻿using ORM;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using StackExchange.Redis;
 
 namespace UnitTest
 {
@@ -9,13 +9,15 @@ namespace UnitTest
     {
         public BaseTest()
         {
-            TORM.Debug = true;
-            TORM.RedisLog = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
-        }
+            TORM.Options(options =>
+            {
+                options.Debug = true; // 调试模式
 
-        ~BaseTest()
-        {
-            //Thread.Sleep(20000); todo 延迟整个数据的回收
+                var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
+                options.RedisLog = redis; // 使用redis推送sql记录
+
+                options.DbConfig.Add("tally", "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;"); // 配置数据库连接
+            });
         }
     }
 

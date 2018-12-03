@@ -109,7 +109,7 @@ namespace ORM
         }
 
         /// <summary>
-        /// 安全移除
+        /// 移除
         /// </summary>
         /// <param name="that"></param>
         /// <param name="startIndex"></param>
@@ -120,25 +120,6 @@ namespace ORM
             if (startIndex >= 0 && that.Length >= startIndex + length)
                 return that.Remove(startIndex, length);
             return that;
-        }
-
-        internal static string GetAppSetting(string key)
-        {
-            if (Stores.ConfigDic.TryGetValue(key, out var value))
-            {
-                return value;
-            }
-
-            var config = File.ReadAllText("appsettings.json");
-            var node = JObject.Parse(config)[key];
-            value = node.Value<string>();
-            return value;
-            //var builder = new ConfigurationBuilder()
-            //              .SetBasePath(Directory.GetCurrentDirectory())
-            //              .AddJsonFile(fileName);
-            //var config = builder.Build();
-
-            //return config.GetSection(key).Value;
         }
     }
 
