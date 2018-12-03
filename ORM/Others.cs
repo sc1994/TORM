@@ -74,6 +74,7 @@ namespace ORM
         /// <returns></returns>
         public IEnumerable<T> Query(string sql, object param = null)
         {
+            _starTime = DateTime.Now;
             return Query<T>(sql, param);
         }
 

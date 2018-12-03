@@ -11,8 +11,8 @@ namespace UnitTest
         [TestMethod]
         public void CountTest()
         {
-            var result = TORM.Query<rules>()
-                             .Where(x => x.id > 0)
+            var result = TORM.Query<Rules>()
+                             .Where(x => x.Id > 0)
                              .Count();
             Debug.Assert(result > 3);
         }
@@ -20,8 +20,8 @@ namespace UnitTest
         [TestMethod]
         public void FindTest()
         {
-            var result = TORM.Query<rules>()
-                             .Where(x => x.id > 0)
+            var result = TORM.Query<Rules>()
+                             .Where(x => x.Id > 0)
                              .Find();
             Debug.Assert(result.Any());
         }
@@ -29,8 +29,8 @@ namespace UnitTest
         [TestMethod]
         public void FindTopTest()
         {
-            var result = TORM.Query<rules>()
-                             .Where(x => x.id > 0)
+            var result = TORM.Query<Rules>()
+                             .Where(x => x.Id > 0)
                              .Find(2);
             Debug.Assert(result.Count() == 2);
         }
@@ -38,11 +38,11 @@ namespace UnitTest
         [TestMethod]
         public void PageTest()
         {
-            var (data, total) = TORM.Query<rules>()
-                                    .Select(x => x.id, x => x.created_at, x => x.deleted_at)
-                                    .Where(x => x.id > 0 && x.schedule_id > 0 && x.type > 0)
-                                    .OrderA(x => x.id)
-                                    .OrderD(x => x.created_at)
+            var (data, total) = TORM.Query<Rules>()
+                                    .Select(x => x.Id, x => x.CreatedAt, x => x.DeletedAt)
+                                    .Where(x => x.Id > 0 && x.ScheduleId >= 0 && x.Type >= 0)
+                                    .OrderA(x => x.Id)
+                                    .OrderD(x => x.CreatedAt)
                                     .Page(1, 3);
 
             Debug.Assert(data.Any() && total > 0);
