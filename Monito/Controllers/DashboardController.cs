@@ -22,7 +22,7 @@ namespace Monito.Controllers
         [HttpPost]
         public JsonResult GetData(DateTime start, DateTime end)
         {
-            var total = 300;
+            var total = 1000;
             var particle = (end - start).TotalSeconds / total; // 确定粒度
             var date = new List<string>
                        {
