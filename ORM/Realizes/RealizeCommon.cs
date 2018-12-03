@@ -79,15 +79,15 @@ namespace ORM.Realizes
         /// <summary>
         /// 解释时长
         /// </summary>
-        private TimeSpan _explainSpan { get; set; }
+        protected TimeSpan _explainSpan { get; set; }
         /// <summary>
         /// 连接时长
         /// </summary>
-        private TimeSpan _connSpan { get; set; }
+        protected TimeSpan _connSpan { get; set; }
         /// <summary>
         /// 执行时长
         /// </summary>
-        private TimeSpan _executeSpan { get; set; }
+        protected TimeSpan _executeSpan { get; set; }
         #endregion
 
         /// <summary>

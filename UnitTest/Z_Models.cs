@@ -10,42 +10,51 @@ namespace UnitTest
         public BaseTest()
         {
             TORM.Options(options =>
-            {
-                options.Debug = true; // 调试模式
+                         {
+                             options.Debug = true; // 调试模式
 
-                var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
-                options.RedisLog = redis; // 使用redis推送sql记录
+                             var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
+                             options.RedisLog = redis; // 使用redis推送sql记录
 
-                options.DbConfig.Add("tally", "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;"); // 配置数据库连接
-            });
+                             // 配置数据库连接
+                             options.DbConfig.Add("Test", "server=118.24.27.231;database=Test;uid=root;pwd=sun940622;");
+                             options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
+                         });
+
+            TORM.AutoTable<Rules>();
+            TORM.AutoTable<Schedules>();
+            TORM.AutoTable<Province>();
+            TORM.AutoTable<City>();
+            TORM.AutoTable<Town>();
         }
     }
 
-    [Table("tally", DBTypeEnum.MySQL, "rules")]
-    public class rules
+    [Table("Test", DBTypeEnum.MySQL, "Rules")]
+    public class Rules
     {
         [Key, Identity, Field(NotNull: false)]
-        public long id { get; set; }
-        public DateTime created_at { get; set; } = DateTime.Now;
-        public DateTime updated_at { get; set; } = DateTime.Now;
-        public DateTime deleted_at { get; set; } = DateTime.Now;
-        public long schedule_id { get; set; }
-        public int type { get; set; }
-        public DateTime rule_date { get; set; } = DateTime.Now;
+        public long Id { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime DeletedAt { get; set; } = DateTime.Now;
+        public long ScheduleId { get; set; }
+        public int Type { get; set; }
+        public DateTime RuleDate { get; set; } = DateTime.Now;
     }
 
-    [Table("tally", DBTypeEnum.MySQL)]
-    public class schedules
+    [Table("Test", DBTypeEnum.MySQL)]
+    public class Schedules
     {
         [Key, Identity]
-        public long id { get; set; }
-        public DateTime created_at { get; set; } = DateTime.Now;
-        public DateTime updated_at { get; set; } = DateTime.Now;
-        public DateTime deleted_at { get; set; } = DateTime.Now;
-        public string content { get; set; }
+        public long Id { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime DeletedAt { get; set; } = DateTime.Now;
+        [Field(Length: 2048)]
+        public string Content { get; set; }
     }
 
-    [Table("tally", DBTypeEnum.MySQL)]
+    [Table("Test", DBTypeEnum.MySQL)]
     class Province
     {
         [Key, Identity, Field(Comment: "省份主键")]
@@ -55,7 +64,7 @@ namespace UnitTest
         public List<City> Citys { get; set; }
     }
 
-    [Table("tally", DBTypeEnum.MySQL)]
+    [Table("Test", DBTypeEnum.MySQL)]
     class City
     {
         [Key, Identity]
@@ -67,7 +76,7 @@ namespace UnitTest
 
     }
 
-    [Table("tally", DBTypeEnum.MySQL)]
+    [Table("Test", DBTypeEnum.MySQL)]
     class Town
     {
         [Key, Identity]

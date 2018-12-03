@@ -11,9 +11,9 @@ namespace UnitTest
         [TestMethod]
         public void InsertOneTest()
         {
-            var result = TORM.Insert(new rules
+            var result = TORM.Insert(new Rules
             {
-                created_at = DateTime.Now.AddDays(-3)
+                CreatedAt = DateTime.Now.AddDays(-3)
             });
             Debug.Assert(result == 1);
         }
@@ -23,17 +23,17 @@ namespace UnitTest
         {
             var result = TORM.InsertBatch(new[]
                                           {
-                                                  new rules
+                                                  new Rules
                                                   {
-                                                      created_at = DateTime.Now.AddDays(-3)
+                                                      CreatedAt = DateTime.Now.AddDays(-3)
                                                   },
-                                                  new rules
+                                                  new Rules
                                                   {
-                                                      created_at = DateTime.Now.AddDays(-2)
+                                                      CreatedAt = DateTime.Now.AddDays(-2)
                                                   },
-                                                  new rules
+                                                  new Rules
                                                   {
-                                                      created_at = DateTime.Now.AddDays(-1)
+                                                      CreatedAt = DateTime.Now.AddDays(-1)
                                                   }
                                               });
             Debug.Assert(result == 3);

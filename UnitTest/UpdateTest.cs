@@ -11,9 +11,9 @@ namespace UnitTest
         [TestMethod]
         public void UpdateAllTest()
         {
-            var result = TORM.Update<rules>()
-                             .Set(x => x.created_at, DateTime.Now)
-                             .Where(x => x.id > 1)
+            var result = TORM.Update<Rules>()
+                             .Set(x => x.CreatedAt, DateTime.Now)
+                             .Where(x => x.Id > 1)
                              .Update();
             Debug.Assert(result > 3);
         }
@@ -21,9 +21,9 @@ namespace UnitTest
         [TestMethod]
         public void UpdateTopTest()
         {
-            var result = TORM.Update<rules>()
-                             .Set(x => x.deleted_at, DateTime.Now)
-                             .Where(x => x.id > 1)
+            var result = TORM.Update<Rules>()
+                             .Set(x => x.DeletedAt, DateTime.Now)
+                             .Where(x => x.Id > 1)
                              .Update(3);
             Debug.Assert(result > 0 && result < 4);
         }
@@ -31,15 +31,15 @@ namespace UnitTest
         [TestMethod]
         public void UpdateModelTest()
         {
-            var result = TORM.Update(new rules
+            var result = TORM.Update(new Rules
             {
-                id = 2,
-                deleted_at = DateTime.Today,
-                created_at = DateTime.Today,
-                rule_date = DateTime.Today,
-                schedule_id = 999,
-                type = 888,
-                updated_at = DateTime.Now
+                Id = 2,
+                DeletedAt = DateTime.Today,
+                CreatedAt = DateTime.Today,
+                RuleDate = DateTime.Today,
+                ScheduleId = 999,
+                Type = 888,
+                UpdatedAt = DateTime.Now
             });
             Debug.Assert(result == 1);
         }
