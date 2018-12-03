@@ -36,14 +36,13 @@ namespace Monito
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var config = "118.24.27.231:6379,password=sun940622";
+            var config = "118.24.27.231:6379";
             var conn = ConnectionMultiplexer.Connect(config);
 
             // 配置
             TORM.Options(options =>
                          {
                              options.RedisLog = conn;
-                             options.DbConfig.Add("tally", "server=118.24.27.231;database=tally;uid=root;pwd=sun940622;");
                              options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
                          });
 

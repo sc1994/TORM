@@ -417,28 +417,26 @@ namespace ORM.Realizes
         /// <param name="ex"></param>
         protected void LogSql(string sql, object param, Exception ex = null)
         {
-            if (!Stores.Debug) return;
+            if (!Stores.Debug && Stores.RedisLog == null) return;
             _executeSpan = DateTime.Now - _starTime;
-            if (Stores.Debug ||
-                Stores.RedisLog != null)
+
+            var info = new
             {
-                var info = new
-                {
-                    SqlStr = sql,
-                    Param = JsonConvert.SerializeObject(param, Formatting.Indented),
-                    StackTrace = new StackTrace(true).ToString(),
-                    EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    ExplainSpan = _explainSpan.TotalMilliseconds,
-                    ConnectSpan = _connSpan.TotalMilliseconds,
-                    ExecuteSpan = _executeSpan.TotalMilliseconds,
-                    ExMessage = ex?.Message ?? "",
-                    DbName = GetTableInfo().DB,
-                    TableName = string.Join(",", useTables.Select(GetTableName).Distinct())
-                };
-                if (Stores.Debug)
-                {
-                    Trace.WriteLine(
-    $@"
+                SqlStr = sql,
+                Param = JsonConvert.SerializeObject(param, Formatting.Indented),
+                StackTrace = new StackTrace(true).ToString(),
+                EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                ExplainSpan = _explainSpan.TotalMilliseconds,
+                ConnectSpan = _connSpan.TotalMilliseconds,
+                ExecuteSpan = _executeSpan.TotalMilliseconds,
+                ExMessage = ex?.Message ?? "",
+                DbName = GetTableInfo().DB,
+                TableName = string.Join(",", useTables.Select(GetTableName).Distinct())
+            };
+            if (Stores.Debug)
+            {
+                Trace.WriteLine(
+$@"
 ===========>SQL<============
 {info.SqlStr}
 ===========>参数<============
@@ -451,12 +449,11 @@ namespace ORM.Realizes
 执行：{info.ExecuteSpan}ms
 ===>{info.EndTime}<===
 "
-                        );
-                }
-                if (Stores.RedisLog != null)
-                {
-                    Redis.Publish("LogSql", info);
-                }
+                    );
+            }
+            if (Stores.RedisLog != null)
+            {
+                Redis.Publish("LogSql", info);
             }
         }
 
