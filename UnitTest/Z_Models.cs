@@ -21,11 +21,11 @@ namespace UnitTest
                              options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
                          });
 
-            TORM.AutoTable<Rules>();
-            TORM.AutoTable<Schedules>();
-            TORM.AutoTable<Province>();
-            TORM.AutoTable<City>();
-            TORM.AutoTable<Town>();
+            //TORM.AutoTable<Rules>();
+            //TORM.AutoTable<Schedules>();
+            //TORM.AutoTable<Province>();
+            //TORM.AutoTable<City>();
+            //TORM.AutoTable<Town>();
         }
     }
 

@@ -38,5 +38,16 @@ namespace UnitTest
                                               });
             Debug.Assert(result == 3);
         }
+
+        [TestMethod]
+        public void InsertTest2()
+        {
+            var result = TORM.Insert(new City
+                                     {
+                                         Name = "123",
+                                         ProvinceId = 5
+                                     });
+            Debug.Assert(result == 1);
+        }
     }
 }

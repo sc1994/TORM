@@ -37,7 +37,7 @@
                             },
                             title: {
                                 left: 'center',
-                                text: '总访问量'
+                                text: '总请求量'
                             },
                             toolbox: {
                                 feature: {
@@ -69,7 +69,7 @@
                                 handleStyle: {
                                     color: '#fff',
                                     shadowBlur: 3,
-                                    shadowColor: 'rgba(0, 0, 0, 0.6)',
+                                    shadowColor: 'rgba(0, 0, 0, 0.3)',
                                     shadowOffsetX: 2,
                                     shadowOffsetY: 2
                                 }
@@ -82,15 +82,15 @@
                                     symbol: 'none',
                                     sampling: 'average',
                                     itemStyle: {
-                                        color: 'rgb(255, 70, 131)'
+                                        color: '#2962ff'
                                     },
                                     areaStyle: {
                                         color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                                             offset: 0,
-                                            color: 'rgb(255, 70, 180)'
+                                            color: "#2962ff"
                                         }, {
                                             offset: 1,
-                                            color: 'rgb(255, 158, 50)'
+                                            color: '#4fc3f7'
                                         }])
                                     },
                                     data: that.data

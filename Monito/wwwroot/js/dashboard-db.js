@@ -15,55 +15,59 @@
                     var that = this;
                     window.axios.post(`Dashboard/GetDbData?start=${this.start}&end=${this.end}`, {
                     }).then(function (response) {
-                        that.dataTyps = response.data.item1;
-                        that.data = response.data.item2;
-                        that.date = response.data.item3;
-
                         var myChart = window.echarts.init(document.getElementById('main-db'));
 
+                        that.date = response.data.item3;
+                        that.data = response.data.item2;
+
                         var option = {
-                            title: {
-                                text: '每个库的请求量'
-                            },
                             tooltip: {
                                 trigger: 'axis',
-                                axisPointer: {
-                                    type: 'cross',
-                                    label: {
-                                        backgroundColor: '#6a7985'
-                                    }
+                                position: function (pt) {
+                                    return [pt[0], '10%'];
                                 }
                             },
-                            legend: {
-                                data: that.dataTyps
+                            title: {
+                                left: 'center',
+                                text: '各库的请求量'
                             },
                             toolbox: {
                                 feature: {
+                                    dataZoom: {
+                                        yAxisIndex: 'none'
+                                    },
+                                    restore: {},
                                     saveAsImage: {}
                                 }
                             },
-                            grid: {
-                                left: '3%',
-                                right: '4%',
-                                bottom: '3%',
-                                containLabel: true
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: that.date
                             },
-                            xAxis: [
-                                {
-                                    type: 'category',
-                                    boundaryGap: false,
-                                    data: that.date
+                            yAxis: {
+                                type: 'value',
+                                boundaryGap: [0, '0%']
+                            },
+                            dataZoom: [{
+                                type: 'inside',
+                                start: response.data.item4[0],
+                                end: response.data.item4[1]
+                            }, {
+                                start: 0,
+                                end: 10,
+                                handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                                handleSize: '70%',
+                                handleStyle: {
+                                    color: '#fff',
+                                    shadowBlur: 3,
+                                    shadowColor: 'rgba(0, 0, 0, 0.3)',
+                                    shadowOffsetX: 2,
+                                    shadowOffsetY: 2
                                 }
-                            ],
-                            yAxis: [
-                                {
-                                    type: 'value'
-                                }
-                            ],
+                            }],
                             series: that.data
                         };
-
-
                         // 使用刚指定的配置项和数据显示图表。
                         myChart.setOption(option);
                     }).catch(function (error) {

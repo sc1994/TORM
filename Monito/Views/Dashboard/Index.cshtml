@@ -20,10 +20,10 @@
     <div>
         <ul style="list-style:none;">
             <li style="display: inline">
-                <el-button type="text">5分钟</el-button>&nbsp;|
+                <el-button type="text">30分钟</el-button>&nbsp;|
             </li>
             <li style="display: inline">
-                <el-button type="text">1小时</el-button>&nbsp;|
+                <el-button type="text">2小时</el-button>&nbsp;|
             </li>
             <li style="display: inline">
                 <el-button type="text">8小时</el-button>&nbsp;|
@@ -39,28 +39,21 @@
     <div class="line"></div>
     <br />
     <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="24">
             <el-card class="box-card" style="height: 390px;">
                 <dashboard-all :start="start"
                                :end="end">
                 </dashboard-all>
             </el-card>
         </el-col>
-        <el-col :span="12">
-            <el-card class="box-card" style="height: 390px;">
-                <dashboard-db :start="start"
-                               :end="end">
-                </dashboard-db>
-            </el-card>
-        </el-col>
     </el-row>
     <br />
     <el-row :gutter="20">
         <el-col :span="12">
-            <el-card class="box-card">
-                <div v-for="o in 4" :key="o">
-                    {{'列表内容 ' + o }}
-                </div>
+            <el-card class="box-card" style="height: 390px;">
+                <dashboard-db :start="start"
+                              :end="end">
+                </dashboard-db>
             </el-card>
         </el-col>
         <el-col :span="12">
