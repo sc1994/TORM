@@ -40,7 +40,7 @@
     <br />
     <el-row :gutter="20">
         <el-col :span="24">
-            <el-card class="box-card" style="height: 390px;">
+            <el-card class="box-card" style="height: 440px;">
                 <dashboard-all :start="start"
                                :end="end">
                 </dashboard-all>
@@ -50,32 +50,49 @@
     <br />
     <el-row :gutter="20">
         <el-col :span="12">
-            <el-card class="box-card" style="height: 390px;">
+            <el-card class="box-card" style="height: 380px;">
                 <dashboard-db :start="start"
                               :end="end">
                 </dashboard-db>
             </el-card>
         </el-col>
         <el-col :span="12">
-            <el-card class="box-card">
-                <div v-for="o in 4" :key="o">
-                    {{'列表内容 ' + o }}
-                </div>
+            <el-card class="box-card" style="height: 380px;">
+                <dashboard-error :start="start"
+                                 :end="end">
+                </dashboard-error>
+            </el-card>
+        </el-col>
+    </el-row>
+    <br />
+    <el-row :gutter="20">
+        <el-col :span="12">
+            <el-card class="box-card" style="height: 380px;">
+                <dashboard-explain :start="start"
+                                   :end="end">
+                </dashboard-explain>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card class="box-card" style="height: 380px;">
+
             </el-card>
         </el-col>
     </el-row>
 
 </div>
 <script src="https://cdn.bootcss.com/echarts/4.1.0-release/echarts.min.js"></script>
-<script src="js/dashboard-all.js"></script>
-<script src="js/dashboard-db.js"></script>
+<script src="js/dashboard/all.js"></script>
+<script src="js/dashboard/db.js"></script>
+<script src="js/dashboard/error.js"></script>
+<script src="js/dashboard/explain.js"></script>
 <script type="text/javascript">
     var vm = new Vue({
         el: "#app",
         data() {
             return {
-                start: new Date().toISOString().split('T')[0],
-                end: new Date().addDays(1).toISOString().split('T')[0]
+                start: new Date().addDays(-1).toISOString(),
+                end: new Date().toISOString()
             }
         }
     });

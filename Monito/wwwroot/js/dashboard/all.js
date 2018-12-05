@@ -1,24 +1,23 @@
-﻿Vue.component('dashboard-db',
+﻿Vue.component('dashboard-all',
     function (resolve) {
-        window.axios.get("/js/dashboard-db.html").then(function (res) {
+        window.axios.get("/js/dashboard/all.html").then(function (res) {
             resolve({
                 template: res.data,
                 props: ["start", "end"],
                 data() {
                     return {
                         date: [],
-                        data: [],
-                        dataTyps: []
+                        data: []
                     }
                 },
                 mounted() {
                     var that = this;
-                    window.axios.post(`Dashboard/GetDbData?start=${this.start}&end=${this.end}`, {
+                    window.axios.post(`Dashboard/GetAllData?start=${this.start}&end=${this.end}`, {
                     }).then(function (response) {
-                        var myChart = window.echarts.init(document.getElementById('main-db'));
+                        var myChart = window.echarts.init(document.getElementById('main-all'));
 
-                        that.date = response.data.item3;
-                        that.data = response.data.item2;
+                        that.date = response.data.date;
+                        that.data = response.data.data;
 
                         var option = {
                             tooltip: {
@@ -29,7 +28,7 @@
                             },
                             title: {
                                 left: 'center',
-                                text: '各库的请求量'
+                                text: `总请求量/粒度:${response.data.particle}s`
                             },
                             toolbox: {
                                 feature: {
@@ -47,12 +46,12 @@
                             },
                             yAxis: {
                                 type: 'value',
-                                boundaryGap: [0, '0%']
+                                boundaryGap: [0, '10%']
                             },
                             dataZoom: [{
                                 type: 'inside',
-                                start: response.data.item4[0],
-                                end: response.data.item4[1]
+                                start: 0,
+                                end: 100
                             }, {
                                 start: 0,
                                 end: 10,
@@ -66,7 +65,28 @@
                                     shadowOffsetY: 2
                                 }
                             }],
-                            series: that.data
+                            series: [
+                                {
+                                    name: '请求量',
+                                    type: 'line',
+                                    smooth: true,
+                                    symbol: 'none',
+                                    sampling: 'average',
+                                    itemStyle: {
+                                        color: '#2962ff'
+                                    },
+                                    areaStyle: {
+                                        color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                            offset: 0,
+                                            color: "#2962ff"
+                                        }, {
+                                            offset: 1,
+                                            color: '#4fc3f7'
+                                        }])
+                                    },
+                                    data: that.data
+                                }
+                            ]
                         };
                         // 使用刚指定的配置项和数据显示图表。
                         myChart.setOption(option);
