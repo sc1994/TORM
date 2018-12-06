@@ -91,8 +91,8 @@
         el: "#app",
         data() {
             return {
-                start: new Date().addDays(-1).toISOString(),
-                end: new Date().toISOString()
+                start: new Date().addDays(-1).format('yyyy-MM-dd hh:mm:ss'),
+                end: new Date().toISOString().format('yyyy-MM-dd hh:mm:ss')
             }
         }
     });
