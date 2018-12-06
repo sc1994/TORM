@@ -71,7 +71,7 @@ namespace ORM.Realizes
                 var fieldInfo = GetFieldInfo(item);
                 if (!fieldInfo.Identity && string.IsNullOrWhiteSpace(fieldInfo.Foreign))
                 {
-                    sqlField.Append($"\r\n  {item.Name},");
+                    sqlField.Append($"\r\n  `{item.Name}`,");
                     sqlValue.Append($"\r\n  @{item.Name},");
                 }
             }
