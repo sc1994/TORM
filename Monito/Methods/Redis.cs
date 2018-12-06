@@ -8,7 +8,7 @@ namespace Monito.Methods
 {
     public class Redis
     {
-        private static string _config = "118.24.27.231:6379";
+        private static readonly string _config = "118.24.27.231:6379";
         private static readonly ConnectionMultiplexer _conn = ConnectionMultiplexer.Connect(_config);
 
         public static void Subscriber()
