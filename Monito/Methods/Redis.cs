@@ -19,13 +19,25 @@ namespace Monito.Methods
                           {
                               try
                               {
-
                                   var info = JsonConvert.DeserializeObject<SqlLog>(message);
                                   TORM.Insert(info);
                               }
                               catch (Exception e)
                               {
-                                  _conn.GetDatabase().ListRightPush("Error:Subscriber:" + DateTime.Today.ToShortDateString(), e.ToString());
+                                  _conn.GetDatabase().ListRightPush("Error:Subscriber:LogSql:" + DateTime.Today.ToShortDateString(), e.ToString());
+                              }
+                          });
+            sub.Subscribe("ExplainErrorLog",
+                          (channel, message) =>
+                          {
+                              try
+                              {
+                                  var info = JsonConvert.DeserializeObject<ExplainErrorLog>(message);
+                                  TORM.Insert(info);
+                              }
+                              catch (Exception e)
+                              {
+                                  _conn.GetDatabase().ListRightPush("Error:Subscriber:ExplainErrorLog:" + DateTime.Today.ToShortDateString(), e.ToString());
                               }
                           });
         }

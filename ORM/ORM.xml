@@ -1380,13 +1380,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Redis.Publish(System.String,System.Object)">
-            <summary>
-            推送消息
-            </summary>
-            <param name="channel"></param>
-            <param name="msg"></param>
-        </member>
         <member name="T:ORM.Stores">
             <summary>
             存储实例运行中不会变化的值
@@ -1922,6 +1915,13 @@
             <summary>
             数据库连接配置
             </summary>
+        </member>
+        <member name="M:Explain.Redis.Publish(System.String,System.Object)">
+            <summary>
+            推送消息
+            </summary>
+            <param name="channel"></param>
+            <param name="msg"></param>
         </member>
     </members>
 </doc>

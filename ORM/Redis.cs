@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
+using ORM;
+using StackExchange.Redis;
 
-namespace ORM
+namespace Explain
 {
     internal class Redis
     {
+        private static readonly ISubscriber _sub = Stores.RedisLog.GetSubscriber();
         /// <summary>
         /// 推送消息
         /// </summary>
@@ -11,8 +14,7 @@ namespace ORM
         /// <param name="msg"></param>
         internal static void Publish(string channel, object msg)
         {
-            var sub = Stores.RedisLog.GetSubscriber();
-            sub.PublishAsync(channel, JsonConvert.SerializeObject(msg));
+            _sub.PublishAsync(channel, JsonConvert.SerializeObject(msg));
         }
     }
 }

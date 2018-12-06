@@ -235,8 +235,6 @@ namespace ORM.Realizes
                 return value;
             }
 
-            ExplainTool.Log("GetTableInfo", $"记录GetTableInfo({table.Name})计算频率");
-
             var attribute = table.GetCustomAttributes(typeof(TableAttribute), false).FirstOrDefault();
 
             if (attribute == null)

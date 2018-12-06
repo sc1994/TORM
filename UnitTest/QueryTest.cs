@@ -21,7 +21,7 @@ namespace UnitTest
         public void FindTest()
         {
             var result = TORM.Query<Rules>()
-                             .Where(x => x.Id > 0)
+                             .Where(x => x.Id  > 0 + 1)
                              .Find();
             Debug.Assert(result.Any());
         }

@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq.Expressions;
 
 namespace Explain
@@ -10,7 +11,7 @@ namespace Explain
         /// <summary>
         /// 目前支持解析的表达式类型，作用是为了能取出对应的自定义表达式扩展实例
         /// </summary>
-        private static readonly string[] Expressions =
+        internal static readonly string[] Expressions =
         {
             "LambdaExpression",
             "BinaryExpression",
@@ -36,17 +37,19 @@ namespace Explain
             "Min"
         };
 
-        public static string[] MethodLikes =
+        internal static string[] MethodLikes =
         {
             "Contains",
             "StartsWith",
             "EndsWith",
         };
 
+        internal static readonly ISubscriber RedisSub = ConnectionMultiplexer.Connect("118.24.27.231:6379").GetSubscriber();
+
         /// <summary>
         /// 表达式的扩展实例
         /// </summary>
-        private static readonly Dictionary<string, IExplain> Ports = InitPorts();
+        private static readonly Dictionary<string, IExplain> _ports = InitPorts();
 
         /// <summary>
         /// 解释器
@@ -57,16 +60,22 @@ namespace Explain
         {
             if (exp != null)
             {
-                GetPort(exp).Explain(exp, info);
+                try
+                {
+                    GetPort(exp).Explain(exp, info);
+                }
+                catch (Exception ex)
+                {
+                    RedisSub.PublishAsync("ExplainErrorLog", JsonConvert.SerializeObject(new
+                    {
+                        ex.Message,
+                        ex.HelpLink,
+                        ex.StackTrace,
+                        ex.Source
+                    }));
+                    throw;
+                }
             }
-        }
-
-        public static void Log(string module, string info)
-        { // todo 输出到控制台
-            //lock ("d:/1.txt")
-            //{
-            //    File.AppendAllLines("d:/1.txt", new[] { $"\r\n\r\n------{DateTime.Now:s}--{module}------\r\ninfo：{info}\r\n------{DateTime.Now:s}--{module}------\r\n" });
-            //}
         }
 
         /// <summary>
@@ -96,7 +105,7 @@ namespace Explain
         {
             var type = SwitchExpression(exp); // 筛选对应的表达式类型
 
-            return Ports[type]; // 依据表达式类型获取表达式扩展的实例
+            return _ports[type]; // 依据表达式类型获取表达式扩展的实例
         }
 
         /// <summary>

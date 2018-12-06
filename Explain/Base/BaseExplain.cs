@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using Newtonsoft.Json;
+using System;
+using System.Linq.Expressions;
 
 namespace Explain
 {
@@ -8,7 +10,22 @@ namespace Explain
 
         public void Explain(Expression exp, Content info)
         {
-            Explain(exp as T, info);
+            try
+            {
+                Explain(exp as T, info);
+            }
+            catch (Exception ex)
+            {
+                ExplainTool.RedisSub.PublishAsync("ExplainErrorLog", JsonConvert.SerializeObject(new
+                {
+                    ex.Message,
+                    ex.HelpLink,
+                    ex.StackTrace,
+                    ex.Source,
+                    All = ex.ToString()
+                }));
+                throw;
+            }
         }
     }
 }

@@ -141,7 +141,23 @@ namespace ORM
                     return "AND";
                 case ExpressionType.OrElse:
                     return "OR";
-                default: throw new Exception("错误的ExpressionType：" + nameof(that));
+                case ExpressionType.Add:
+                    return "+";
+                case ExpressionType.AddAssign:
+                    return "+=";
+                case ExpressionType.Multiply:
+                    return "*";
+                case ExpressionType.MultiplyAssign:
+                    return "*=";
+                case ExpressionType.Subtract:
+                    return "-";
+                case ExpressionType.SubtractAssign:
+                    return "-=";
+                case ExpressionType.Divide:
+                    return "/";
+                case ExpressionType.DivideAssign:
+                    return "/=";
+                default: throw new NotImplementedException("意料之外的ExpressionType类型" + that); ;
             }
         }
     }

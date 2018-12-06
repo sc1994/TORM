@@ -41,6 +41,7 @@ namespace Monito
                          });
 
             TORM.AutoTable<SqlLog>();
+            TORM.AutoTable<ExplainErrorLog>();
 
             // 在消费redis
             Redis.Subscriber();
