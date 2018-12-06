@@ -44,24 +44,53 @@ namespace Monito.Controllers
         [HttpPost]
         public JsonResult GetDbData(DateTime start, DateTime end)
         {
-            var result = Get<LongData, long>(start, end, "SELECT COUNT(1) as Value FROM SqlLog WHERE TableName = '{0}' AND EndTime > '{1}' AND EndTime < '{2}'");
+            var result = Get<LongData, long>(start, end, "SELECT COUNT(1) as Value FROM SqlLog WHERE DbName = '{0}' AND EndTime > '{1}' AND EndTime < '{2}'");
             return Json(result);
         }
 
         [HttpPost]
         public JsonResult GetErrorData(DateTime start, DateTime end)
         {
-            var result = Get<LongData, long>(start, end, "SELECT COUNT(1) as Value FROM SqlLog WHERE IsError = 1 AND TableName = '{0}' AND EndTime > '{1}' AND EndTime < '{2}'");
+            var result = Get<LongData, long>(start, end, "SELECT COUNT(1) as Value FROM SqlLog WHERE IsError = 1 AND DbName = '{0}' AND EndTime > '{1}' AND EndTime < '{2}'");
             return Json(result);
         }
 
         [HttpPost]
-        public JsonResult GetExplainData(DateTime start, DateTime end)
+        public JsonResult GetTotalSpanData(DateTime start, DateTime end)
         {
+            var date = new[] { "<0.1ms", "0.1ms~1ms", "1ms~5ms", "1ms~5ms", "5ms~20ms", "20ms~50ms", "50ms~100ms", "100ms~200ms", "200ms~500ms", "500ms~1000ms", "1s~5s", ">5s" };
+
+            var dataType = TORM.Query<SqlLog>()
+                               .Select(x => x.DbName)
+                               .Group(x => x.DbName)
+                               .Find<string>();
+
+            var sql = new StringBuilder();
+
+            foreach (var item in dataType)
+            {
+                for (int i = 0; i < date.Length; i++)
+                {
+                    if (i != 0)
+                    {
+                        sql.Append("\r\n");
+                    }
+                    sql.Append($"");
+                    if (i != _total - 1)
+                    {
+                        sql.Append(" UNION ALL");
+                    }
+                    //if (date.Count < _total)
+                    //    date.Add($"{e.ToString(_format)}");
+                }
+
+            }
+
+
             var result = Get<DecimalData, decimal>(
                 start,
                 end,
-                "SELECT AVG(ExplainSpan) as Value FROM SqlLog WHERE TableName = '{0}' AND EndTime > '{1}' AND EndTime < '{2}'");
+                "SELECT AVG(ExplainSpan) as Value FROM SqlLog WHERE DbName = '{0}' AND EndTime > '{1}' AND EndTime < '{2}'");
             return Json(result);
         }
 
@@ -74,8 +103,8 @@ namespace Monito.Controllers
                        };
 
             var dataType = TORM.Query<SqlLog>()
-                               .Select(x => x.TableName)
-                               .Group(x => x.TableName)
+                               .Select(x => x.DbName)
+                               .Group(x => x.DbName)
                                .Find<string>();
             var data = new ArrayList();
 
