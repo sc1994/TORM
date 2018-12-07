@@ -9,7 +9,7 @@ using System.Text;
 namespace ORM.Realizes
 {
     /// <summary>
-    /// 解析 查询 相关
+    /// 实现 SELECT
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RealizeQuery<T> : RealizeCommon<T>, IQuery<T>
@@ -101,7 +101,7 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="top">限制获取数量</param>
         /// <returns></returns>
-        public IEnumerable<T> Find(int top)
+        public IEnumerable<T> Limit(long top)
         {
             _starTime = DateTime.Now;
             return Query<T>(FindSql(top));
@@ -112,7 +112,7 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="top">限制获取数量</param>
         /// <returns></returns>
-        public string FindSql(int top)
+        public string FindSql(long top)
         {
             _starTime = DateTime.Now;
             var t = ToTop(top);
@@ -125,7 +125,7 @@ namespace ORM.Realizes
         /// <typeparam name="TOther">重新定义返回数据的格式</typeparam>
         /// <param name="top">限制获取数量</param>
         /// <returns></returns>
-        public IEnumerable<TOther> Find<TOther>(int top)
+        public IEnumerable<TOther> Limit<TOther>(long top)
         {
             _starTime = DateTime.Now;
             var t = ToTop(top);
@@ -139,7 +139,7 @@ namespace ORM.Realizes
         /// <param name="index">当前页</param>
         /// <param name="size">页大小</param>
         /// <returns></returns>
-        public string PageSql(int index, int size)
+        public string PageSql(long index, long size)
         {
             _starTime = DateTime.Now;
             var t = ToPage(index, size);
@@ -152,7 +152,7 @@ namespace ORM.Realizes
         /// <param name="index">当前页</param>
         /// <param name="size">页大小</param>
         /// <returns></returns>
-        public (IEnumerable<T> data, long total) Page(int index, int size)
+        public (IEnumerable<T> data, long total) Page(long index, long size)
         {
             _starTime = DateTime.Now;
             return (Query<T>(PageSql(index, size)), Count());
@@ -165,7 +165,7 @@ namespace ORM.Realizes
         /// <param name="index">当前页</param>
         /// <param name="size">页大小</param>
         /// <returns></returns>
-        public (IEnumerable<TOther> data, long total) Page<TOther>(int index, int size)
+        public (IEnumerable<TOther> data, long total) Page<TOther>(long index, long size)
         {
             _starTime = DateTime.Now;
             return (Query<TOther>(PageSql(index, size)), Count());
@@ -273,7 +273,7 @@ namespace ORM.Realizes
         /// </summary>
         /// <param name="index"></param>
         /// <param name="size"></param>
-        private string ToPage(int index, int size)
+        private string ToPage(long index, long size)
         {
             var t = GetTableInfo().DBType;
             var order = GetOrder();
@@ -376,7 +376,7 @@ namespace ORM.Realizes
         /// 转成top的
         /// </summary>
         /// <param name="top"></param>
-        private string ToTop(int top)
+        private string ToTop(long top)
         {
             var s = GetSelect();
             if (GetTableInfo().DBType == DBTypeEnum.MySQL)

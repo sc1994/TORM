@@ -7,7 +7,7 @@ using System.Text;
 namespace ORM.Realizes
 {
     /// <summary>
-    /// 解析 更新 相关
+    /// 实现 UPDATE
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RealizeUpdate<T> : RealizeCommon<T>, IUpdateSet<T>

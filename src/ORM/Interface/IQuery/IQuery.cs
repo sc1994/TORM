@@ -54,35 +54,35 @@ namespace ORM.Interface
         /// 查询
         /// </summary>
         /// <typeparam name="TOther">自定义返回数据格式</typeparam>
-        /// <param name="top"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        IEnumerable<TOther> Find<TOther>(int top);
+        IEnumerable<TOther> Limit<TOther>(long count);
         /// <summary>
         /// 查询
         /// </summary>
-        /// <param name="top"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        IEnumerable<T> Find(int top);
+        IEnumerable<T> Limit(long count);
         /// <summary>
         /// 查询sql
         /// </summary>
-        /// <param name="top">top值</param>
+        /// <param name="count">top值</param>
         /// <returns></returns>
-        string FindSql(int top);
+        string FindSql(long count);
         /// <summary>
         /// 分页
         /// </summary>
         /// <param name="index"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        (IEnumerable<T> data, long total) Page(int index, int size);
+        (IEnumerable<T> data, long total) Page(long index, long size);
         /// <summary>
         /// 分页sql
         /// </summary>
         /// <param name="index"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        string PageSql(int index, int size);
+        string PageSql(long index, long size);
         /// <summary>
         /// 分页
         /// </summary>
@@ -90,6 +90,6 @@ namespace ORM.Interface
         /// <param name="index"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        (IEnumerable<TOther> data, long total) Page<TOther>(int index, int size);
+        (IEnumerable<TOther> data, long total) Page<TOther>(long index, long size);
     }
 }

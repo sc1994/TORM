@@ -31,7 +31,7 @@ namespace UnitTest
         {
             var result = TORM.Query<Rules>()
                              .Where(x => x.Id > 0)
-                             .Find(2);
+                             .Limit(2);
             Debug.Assert(result.Count() == 2);
         }
 

@@ -1,13 +1,11 @@
 ﻿using ORM.Interface.IDelete;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace ORM.Realizes
 {
     /// <summary>
-    /// 实现 delete 操作
+    /// 实现 DELETE 操作
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RealizeDelete<T> : RealizeCommon<T>, IDeleteWhere<T>

@@ -316,29 +316,29 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery`1.Find``1(System.Int32)">
+        <member name="M:ORM.Interface.IQuery`1.Limit``1(System.Int64)">
             <summary>
             查询
             </summary>
             <typeparam name="TOther">自定义返回数据格式</typeparam>
-            <param name="top"></param>
+            <param name="count"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery`1.Find(System.Int32)">
+        <member name="M:ORM.Interface.IQuery`1.Limit(System.Int64)">
             <summary>
             查询
             </summary>
-            <param name="top"></param>
+            <param name="count"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery`1.FindSql(System.Int32)">
+        <member name="M:ORM.Interface.IQuery`1.FindSql(System.Int64)">
             <summary>
             查询sql
             </summary>
-            <param name="top">top值</param>
+            <param name="count">top值</param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery`1.Page(System.Int32,System.Int32)">
+        <member name="M:ORM.Interface.IQuery`1.Page(System.Int64,System.Int64)">
             <summary>
             分页
             </summary>
@@ -346,7 +346,7 @@
             <param name="size"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery`1.PageSql(System.Int32,System.Int32)">
+        <member name="M:ORM.Interface.IQuery`1.PageSql(System.Int64,System.Int64)">
             <summary>
             分页sql
             </summary>
@@ -354,7 +354,7 @@
             <param name="size"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery`1.Page``1(System.Int32,System.Int32)">
+        <member name="M:ORM.Interface.IQuery`1.Page``1(System.Int64,System.Int64)">
             <summary>
             分页
             </summary>
@@ -561,6 +561,12 @@
             </summary>
             <param name="exps"></param>
             <returns></returns>
+        </member>
+        <member name="T:ORM.ORMValue`1">
+            <summary>
+            重写返回值
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="T:ORM.Others`1">
             <summary>
@@ -1076,7 +1082,7 @@
         </member>
         <member name="T:ORM.Realizes.RealizeDelete`1">
             <summary>
-            实现 delete 操作
+            实现 DELETE 操作
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -1120,7 +1126,7 @@
         </member>
         <member name="T:ORM.Realizes.RealizeInsert`1">
             <summary>
-            实现 insert
+            实现 INSERT
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -1156,7 +1162,7 @@
         </member>
         <member name="T:ORM.Realizes.RealizeQuery`1">
             <summary>
-            解析 查询 相关
+            实现 SELECT
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -1210,21 +1216,21 @@
             <typeparam name="TOther">重新定义返回数据的格式</typeparam>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.Find(System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.Limit(System.Int64)">
             <summary>
             获取数据列表
             </summary>
             <param name="top">限制获取数量</param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.FindSql(System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.FindSql(System.Int64)">
             <summary>
             获取数据列表
             </summary>
             <param name="top">限制获取数量</param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.Find``1(System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.Limit``1(System.Int64)">
             <summary>
             获取数据列表
             </summary>
@@ -1232,7 +1238,7 @@
             <param name="top">限制获取数量</param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.PageSql(System.Int32,System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.PageSql(System.Int64,System.Int64)">
             <summary>
             获取分页数据
             </summary>
@@ -1240,7 +1246,7 @@
             <param name="size">页大小</param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.Page(System.Int32,System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.Page(System.Int64,System.Int64)">
             <summary>
             获取分页数据
             </summary>
@@ -1248,7 +1254,7 @@
             <param name="size">页大小</param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.Page``1(System.Int32,System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.Page``1(System.Int64,System.Int64)">
             <summary>
             获取分页数据
             </summary>
@@ -1283,7 +1289,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.ToPage(System.Int32,System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.ToPage(System.Int64,System.Int64)">
             <summary>
             转成分页的
             </summary>
@@ -1303,7 +1309,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.ToTop(System.Int32)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.ToTop(System.Int64)">
             <summary>
             转成top的
             </summary>
@@ -1317,7 +1323,7 @@
         </member>
         <member name="T:ORM.Realizes.RealizeUpdate`1">
             <summary>
-            解析 更新 相关
+            实现 UPDATE
             </summary>
             <typeparam name="T"></typeparam>
         </member>

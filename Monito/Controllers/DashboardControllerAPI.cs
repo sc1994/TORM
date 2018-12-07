@@ -144,8 +144,8 @@ namespace Monito.Controllers
 
             var t = end.Ticks - start.Ticks;
             var t2 = DateTime.Now.Ticks - start.Ticks;
-            var t3 = t2 / (t / 100);
-            var scope = new[] { t3 - 16, t3 };
+            //var t3 = t2 / (t / 100);
+            var scope = new[] { 100 - 16, 100 };
             return new
             {
                 dataType,

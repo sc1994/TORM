@@ -6,7 +6,7 @@ using System.Text;
 namespace ORM.Realizes
 {
     /// <summary>
-    /// 实现 insert
+    /// 实现 INSERT
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RealizeInsert<T> : RealizeCommon<T>, IInsert<T>
