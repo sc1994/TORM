@@ -239,7 +239,7 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="T:ORM.Interface.IQuery.IMultiple`1">
+        <member name="T:ORM.Interface.IQuery.IMultiple">
             <summary>
             todo 支持外键查询，当多表之间存在一对多，一对一，多对一关系时。主动查询数据
             </summary>
@@ -247,7 +247,7 @@
         </member>
         <member name="T:ORM.Interface.IQuery.IQueryHaving`3">
             <summary>
-            定义HAVING
+            HAVING
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TFunc"></typeparam>
@@ -365,7 +365,7 @@
         </member>
         <member name="T:ORM.Interface.IQueryGroup`3">
             <summary>
-            定义GROUP
+            GROUP
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TFunc"></typeparam>
@@ -380,7 +380,7 @@
         </member>
         <member name="T:ORM.Interface.IQueryJoin`3">
             <summary>
-            定义JOIN
+            JOIN
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TFunc"></typeparam>
@@ -437,7 +437,7 @@
         </member>
         <member name="T:ORM.Interface.IQuerySelect`1">
             <summary>
-            单表 select
+            单表 SELECT
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -457,7 +457,7 @@
         </member>
         <member name="T:ORM.Interface.IQuerySelect`3">
             <summary>
-            多表 select
+            多表 SELECT
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TFunc"></typeparam>
@@ -479,7 +479,7 @@
         </member>
         <member name="T:ORM.Interface.IQueryWhere`3">
             <summary>
-            实现
+            WHERE
             </summary>
             <typeparam name="T"></typeparam>
             <typeparam name="TFunc"></typeparam>
@@ -561,12 +561,6 @@
             </summary>
             <param name="exps"></param>
             <returns></returns>
-        </member>
-        <member name="T:ORM.ORMValue`1">
-            <summary>
-            重写返回值
-            </summary>
-            <typeparam name="T"></typeparam>
         </member>
         <member name="T:ORM.Others`1">
             <summary>

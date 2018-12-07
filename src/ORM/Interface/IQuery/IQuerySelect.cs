@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace ORM.Interface
 {
     /// <summary>
-    /// 单表 select
+    /// 单表 SELECT
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IQuerySelect<T> : IQueryWhere<T, Func<T, object>, Func<T, bool>>
@@ -25,7 +25,7 @@ namespace ORM.Interface
     }
 
     /// <summary>
-    /// 多表 select
+    /// 多表 SELECT
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TFunc"></typeparam>

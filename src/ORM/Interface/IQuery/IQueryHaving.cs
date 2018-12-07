@@ -3,7 +3,7 @@
 namespace ORM.Interface.IQuery
 {
     /// <summary>
-    /// 定义HAVING
+    /// HAVING
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TFunc"></typeparam>

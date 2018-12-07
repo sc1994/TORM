@@ -138,8 +138,10 @@ namespace ORM
                 case ExpressionType.LessThanOrEqual:
                     return "<=";
                 case ExpressionType.AndAlso:
+                case ExpressionType.And:
                     return "AND";
                 case ExpressionType.OrElse:
+                case ExpressionType.Or:
                     return "OR";
                 case ExpressionType.Add:
                     return "+";

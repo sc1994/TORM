@@ -230,6 +230,14 @@ namespace ORM
         #endregion
     }
 
+    public partial class TORM
+    {
+        public static void Multiple<T>()
+        {
+            return new RealizeMultiple<T>().Update();
+        }
+    }
+
     /// <summary>
     /// update 相关
     /// </summary>

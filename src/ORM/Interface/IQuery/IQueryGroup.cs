@@ -4,7 +4,7 @@ using ORM.Interface.IQuery;
 namespace ORM.Interface
 {
     /// <summary>
-    /// 定义GROUP
+    /// GROUP
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TFunc"></typeparam>

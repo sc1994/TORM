@@ -3,7 +3,7 @@
 namespace ORM.Interface
 {
     /// <summary>
-    /// 定义JOIN
+    /// JOIN
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TFunc"></typeparam>
