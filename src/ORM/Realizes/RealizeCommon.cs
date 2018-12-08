@@ -65,7 +65,6 @@ namespace ORM.Realizes
         /// 全部的表
         /// </summary>
         protected List<Type> allTables = new List<Type>();
-
         /// <summary>
         /// sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
         /// </summary>
@@ -89,6 +88,26 @@ namespace ORM.Realizes
         /// </summary>
         protected TimeSpan _executeSpan { get; set; }
         #endregion
+
+        /// <summary>
+        /// 转到 select
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="alias"></param>
+        /// <param name="result"></param>
+        protected void ToSelect(Expression item, string alias, StringBuilder result)
+        {
+            var c = new ContentEasy();
+            ExplainTool.Explain(item, c);
+            c.Rinse();
+            c.Info.ForEach(x =>
+            {
+                var a = string.IsNullOrWhiteSpace(alias) ? "" : $" AS {alias}";
+                result.Append(string.IsNullOrWhiteSpace(x.Method)
+                                  ? $"\r\n  {GetTableName(x.Table)}.{x.Field}{a},"
+                                  : $"\r\n  {x.Method.ToUpper()}({GetTableName(x.Table)}.{x.Field}){a},");
+            });
+        }
 
         /// <summary>
         /// 获取where sql 代码
@@ -211,7 +230,7 @@ namespace ORM.Realizes
         /// <returns></returns>
         protected string GetTableName(Type table)
         {
-            return GetTableInfo(table).Table;
+            return GetTableInfo(table).Name;
         }
 
         /// <summary>
@@ -248,7 +267,7 @@ namespace ORM.Realizes
             {
                 DB = info.DB,
                 DBType = info.DBType,
-                Table = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
+                Name = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
                 ConnectionString = Stores.DbConfigDic[info.DB],
                 Key = fields.FirstOrDefault(x => x.Key),
                 Identity = fields.FirstOrDefault(x => x.Identity)
@@ -463,6 +482,21 @@ $@"
         protected Type ChenkT()
         {
             var type = typeof(T);
+            if (type.IsArray)
+            {
+                throw new Exception("勿使用嵌套数组");
+            }
+            return type;
+        }
+
+        /// <summary>
+        /// 验证TOther且返回类型
+        /// </summary>
+        /// <typeparam name="TOther"></typeparam>
+        /// <returns></returns>
+        protected Type ChenkT<TOther>()
+        {
+            var type = typeof(TOther);
             if (type.IsArray)
             {
                 throw new Exception("勿使用嵌套数组");

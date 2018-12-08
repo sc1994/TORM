@@ -111,12 +111,16 @@ namespace ORM
     public class ForeignAttribute : Attribute
     {
         internal string Foreign { get; set; }
+        internal Type Table { get; set; }
+
         /// <summary>
         /// 指定外键
         /// </summary>
-        /// <param name="foreign"></param>
-        public ForeignAttribute(string foreign)
+        /// <param name="table">指定表</param>
+        /// <param name="foreign">指定外键</param>
+        public ForeignAttribute(Type table, string foreign)
         {
+            Table = table;
             Foreign = foreign;
         }
     }

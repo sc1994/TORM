@@ -16,10 +16,10 @@
         /// <summary>
         /// 执行删除
         /// </summary>
-        /// <param name="top"></param>
+        /// <param name="limit"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        long Delete(int top, Transaction transaction = null);
+        long Delete(long limit, Transaction transaction = null);
 
         /// <summary>
         /// 依据主键删除

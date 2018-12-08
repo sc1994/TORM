@@ -15,10 +15,10 @@
         /// <summary>
         /// 执行更新
         /// </summary>
-        /// <param name="top"></param>
+        /// <param name="limit"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        long Update(int top, Transaction transaction = null);
+        long Update(long limit, Transaction transaction = null);
         /// <summary>
         /// 更新 model
         /// </summary>

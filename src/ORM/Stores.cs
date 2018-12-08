@@ -59,7 +59,7 @@ namespace ORM
         /// <summary>
         /// 表名
         /// </summary>
-        public string Table { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// 数据库连接字符串
         /// </summary>

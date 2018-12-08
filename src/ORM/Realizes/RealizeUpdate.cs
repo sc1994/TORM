@@ -27,13 +27,13 @@ namespace ORM.Realizes
         /// <summary>
         /// 执行更新
         /// </summary>
-        /// <param name="top"></param>
+        /// <param name="limit"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public long Update(int top, Transaction transaction = null)
+        public long Update(long limit, Transaction transaction = null)
         {
             _starTime = DateTime.Now;
-            var sql = string.Format(ToTop(top), $"{GetTableName()}{GetSet()}{GetWhere()}");
+            var sql = string.Format(ToLimit(limit), $"{GetTableName()}{GetSet()}{GetWhere()}");
             return Execute(sql, transaction);
         }
 
@@ -117,13 +117,13 @@ namespace ORM.Realizes
                                });
         }
 
-        private string ToTop(int top)
+        private string ToLimit(long limit)
         {
             if (GetTableInfo().DBType == DBTypeEnum.MySQL)
             {
-                return $"UPDATE {{0}}\r\nLIMIT {top};";
+                return $"UPDATE {{0}}\r\nLIMIT {limit};";
             }
-            throw new NotImplementedException("为实现的top方式");
+            throw new NotImplementedException("未实现的limit方式");
         }
 
         /// <summary>

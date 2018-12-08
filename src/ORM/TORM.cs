@@ -234,7 +234,7 @@ namespace ORM
     {
         public static void Multiple<T>()
         {
-            return new RealizeMultiple<T>().Update();
+            throw new System.NotImplementedException();
         }
     }
 

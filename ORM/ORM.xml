@@ -194,11 +194,11 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IDelete.IDelete`1.Delete(System.Int32,ORM.Transaction)">
+        <member name="M:ORM.Interface.IDelete.IDelete`1.Delete(System.Int64,ORM.Transaction)">
             <summary>
             执行删除
             </summary>
-            <param name="top"></param>
+            <param name="limit"></param>
             <param name="transaction"></param>
             <returns></returns>
         </member>
@@ -239,11 +239,22 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="T:ORM.Interface.IQuery.IMultiple">
+        <member name="T:ORM.Interface.IQuery.IMultiple`1">
             <summary>
             todo 支持外键查询，当多表之间存在一对多，一对一，多对一关系时。主动查询数据
             </summary>
-            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.Interface.IQuery.IMultiple`1.First``1(System.Int64)">
+            <summary>
+            查询一条
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Interface.IQuery.IMultiple`1.First``2(System.Int64,System.Int64)">
+            <summary>
+            查询一条
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:ORM.Interface.IQuery.IQueryHaving`3">
             <summary>
@@ -498,11 +509,11 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IUpdate`1.Update(System.Int32,ORM.Transaction)">
+        <member name="M:ORM.Interface.IUpdate`1.Update(System.Int64,ORM.Transaction)">
             <summary>
             执行更新
             </summary>
-            <param name="top"></param>
+            <param name="limit"></param>
             <param name="transaction"></param>
             <returns></returns>
         </member>
@@ -982,6 +993,14 @@
             执行时长
             </summary>
         </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ToSelect(System.Linq.Expressions.Expression,System.String,System.Text.StringBuilder)">
+            <summary>
+            转到 select
+            </summary>
+            <param name="item"></param>
+            <param name="alias"></param>
+            <param name="result"></param>
+        </member>
         <member name="M:ORM.Realizes.RealizeCommon`1.GetWhere">
             <summary>
             获取where sql 代码
@@ -1074,6 +1093,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT``1">
+            <summary>
+            验证TOther且返回类型
+            </summary>
+            <typeparam name="TOther"></typeparam>
+            <returns></returns>
+        </member>
         <member name="T:ORM.Realizes.RealizeDelete`1">
             <summary>
             实现 DELETE 操作
@@ -1094,11 +1120,11 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeDelete`1.Delete(System.Int32,ORM.Transaction)">
+        <member name="M:ORM.Realizes.RealizeDelete`1.Delete(System.Int64,ORM.Transaction)">
             <summary>
             执行删除
             </summary>
-            <param name="top"></param>
+            <param name="limit"></param>
             <param name="transaction"></param>
             <returns></returns>
         </member>
@@ -1111,11 +1137,11 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeDelete`1.ToTop(System.Int32)">
+        <member name="M:ORM.Realizes.RealizeDelete`1.ToLimit(System.Int64)">
             <summary>
-            top 值
+            限制
             </summary>
-            <param name="top"></param>
+            <param name="limit"></param>
             <returns></returns>
         </member>
         <member name="T:ORM.Realizes.RealizeInsert`1">
@@ -1151,6 +1177,18 @@
         <member name="M:ORM.Realizes.RealizeInsert`1.GetInsert">
             <summary>
             获取 insert sql
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ORM.Realizes.RealizeMultiple`1">
+            <summary>
+            多查询
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.Realizes.RealizeMultiple`1.GetSelect">
+            <summary>
+            获取 select sql 代码
             </summary>
             <returns></returns>
         </member>
@@ -1191,12 +1229,6 @@
             <typeparam name="TOther">重新定义返回数据的格式</typeparam>
             <returns>TOther</returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.FindSql">
-            <summary>
-            获取数据列表
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:ORM.Realizes.RealizeQuery`1.Find">
             <summary>
             获取数据列表
@@ -1215,6 +1247,12 @@
             获取数据列表
             </summary>
             <param name="top">限制获取数量</param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeQuery`1.FindSql">
+            <summary>
+            获取数据列表
+            </summary>
             <returns></returns>
         </member>
         <member name="M:ORM.Realizes.RealizeQuery`1.FindSql(System.Int64)">
@@ -1263,14 +1301,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.ToSelect(System.Linq.Expressions.Expression,System.String,System.Text.StringBuilder)">
-            <summary>
-            转到 select
-            </summary>
-            <param name="item"></param>
-            <param name="alias"></param>
-            <param name="result"></param>
-        </member>
         <member name="M:ORM.Realizes.RealizeQuery`1.GetGroup">
             <summary>
             获取 group sql 代码
@@ -1303,11 +1333,11 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.ToTop(System.Int64)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.ToLimit(System.Int64)">
             <summary>
             转成top的
             </summary>
-            <param name="top"></param>
+            <param name="limit"></param>
         </member>
         <member name="M:ORM.Realizes.RealizeQuery`1.GetHaving">
             <summary>
@@ -1328,11 +1358,11 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeUpdate`1.Update(System.Int32,ORM.Transaction)">
+        <member name="M:ORM.Realizes.RealizeUpdate`1.Update(System.Int64,ORM.Transaction)">
             <summary>
             执行更新
             </summary>
-            <param name="top"></param>
+            <param name="limit"></param>
             <param name="transaction"></param>
             <returns></returns>
         </member>
@@ -1430,7 +1460,7 @@
             数据库类型
             </summary>
         </member>
-        <member name="P:ORM.TableInfo.Table">
+        <member name="P:ORM.TableInfo.Name">
             <summary>
             表名
             </summary>

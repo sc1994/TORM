@@ -51,7 +51,7 @@ namespace ORM.Realizes
         public T First()
         {
             _starTime = DateTime.Now;
-            return QueryFirst<T>(FindSql());
+            return QueryFirst<T>(FindSql(1));
         }
 
         /// <summary>
@@ -62,17 +62,7 @@ namespace ORM.Realizes
         public TOther First<TOther>()
         {
             _starTime = DateTime.Now;
-            return QueryFirst<TOther>(FindSql());
-        }
-
-        /// <summary>
-        /// 获取数据列表
-        /// </summary>
-        /// <returns></returns>
-        public string FindSql()
-        {
-            _starTime = DateTime.Now;
-            return $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+            return QueryFirst<TOther>(FindSql(1));
         }
 
         /// <summary>
@@ -110,12 +100,22 @@ namespace ORM.Realizes
         /// <summary>
         /// 获取数据列表
         /// </summary>
+        /// <returns></returns>
+        public string FindSql()
+        {
+            _starTime = DateTime.Now;
+            return $"{GetSelect()}\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()};";
+        }
+
+        /// <summary>
+        /// 获取数据列表
+        /// </summary>
         /// <param name="top">限制获取数量</param>
         /// <returns></returns>
         public string FindSql(long top)
         {
             _starTime = DateTime.Now;
-            var t = ToTop(top);
+            var t = ToLimit(top);
             return string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
         }
 
@@ -128,7 +128,7 @@ namespace ORM.Realizes
         public IEnumerable<TOther> Limit<TOther>(long top)
         {
             _starTime = DateTime.Now;
-            var t = ToTop(top);
+            var t = ToLimit(top);
             var sql = string.Format(t, $"\r\nFROM {GetTableName()}{GetJoin()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}");
             return Query<TOther>(sql);
         }
@@ -191,26 +191,6 @@ namespace ORM.Realizes
                     result.Append("\r\n  *");
                 }
                 return result;
-            });
-        }
-
-        /// <summary>
-        /// 转到 select
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="alias"></param>
-        /// <param name="result"></param>
-        private void ToSelect(Expression item, string alias, StringBuilder result)
-        {
-            var c = new ContentEasy();
-            ExplainTool.Explain(item, c);
-            c.Rinse();
-            c.Info.ForEach(x =>
-            {
-                var a = string.IsNullOrWhiteSpace(alias) ? "" : $" AS {alias}";
-                result.Append(string.IsNullOrWhiteSpace(x.Method)
-                    ? $"\r\n  {GetTableName(x.Table)}.{x.Field}{a},"
-                    : $"\r\n  {x.Method.ToUpper()}({GetTableName(x.Table)}.{x.Field}){a},");
             });
         }
 
@@ -375,16 +355,16 @@ namespace ORM.Realizes
         /// <summary>
         /// 转成top的
         /// </summary>
-        /// <param name="top"></param>
-        private string ToTop(long top)
+        /// <param name="limit"></param>
+        private string ToLimit(long limit)
         {
             var s = GetSelect();
             if (GetTableInfo().DBType == DBTypeEnum.MySQL)
             {
-                return $"{s} {{0}} \r\nLIMIT {top};";
+                return $"{s} {{0}} \r\nLIMIT {limit};";
             }
 
-            return $"{s.Replace("SELECT", $"SELECT TOP ({top})")} {{0}};";
+            return $"{s.Replace("SELECT", $"SELECT TOP ({limit})")} {{0}};";
         }
 
         /// <summary>

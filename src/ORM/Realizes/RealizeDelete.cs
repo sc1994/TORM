@@ -36,13 +36,13 @@ namespace ORM.Realizes
         /// <summary>
         /// 执行删除
         /// </summary>
-        /// <param name="top"></param>
+        /// <param name="limit"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public long Delete(int top, Transaction transaction = null)
+        public long Delete(long limit, Transaction transaction = null)
         {
             _starTime = DateTime.Now;
-            var sql = string.Format(ToTop(top), $"{GetTableName()}{GetWhere()}");
+            var sql = string.Format(ToLimit(limit), $"{GetTableName()}{GetWhere()}");
             return Execute(sql, transaction);
         }
 
@@ -64,17 +64,17 @@ namespace ORM.Realizes
         }
 
         /// <summary>
-        /// top 值
+        /// 限制
         /// </summary>
-        /// <param name="top"></param>
+        /// <param name="limit"></param>
         /// <returns></returns>
-        private string ToTop(int top)
+        private string ToLimit(long limit)
         {
             if (GetTableInfo().DBType == DBTypeEnum.MySQL)
             {
-                return $"DELETE FROM {{0}}\r\nLIMIT {top};";
+                return $"DELETE FROM {{0}}\r\nLIMIT {limit};";
             }
-            throw new NotImplementedException("为实现的top方式");
+            throw new NotImplementedException("未实现的 limit 方式");
         }
     }
 }

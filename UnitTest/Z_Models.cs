@@ -60,7 +60,7 @@ namespace UnitTest
         [Key, Identity, Field(Comment: "省份主键")]
         public long Id { get; set; }
         public string Name { get; set; }
-        [Foreign("ProvinceId")]
+        [Foreign(typeof(City), "ProvinceId")]
         public List<City> Citys { get; set; }
     }
 
@@ -70,7 +70,7 @@ namespace UnitTest
         [Key, Identity]
         public long Id { get; set; }
         public string Name { get; set; }
-        [Foreign("CityId")]
+        [Foreign(typeof(Town), "CityId")]
         public List<Town> Towns { get; set; }
         public long ProvinceId { get; set; }
 

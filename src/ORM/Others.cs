@@ -26,13 +26,13 @@ namespace ORM
                 //                var tableByDB = Query<FieldByDB>(
                 //$@"SELECT COLUMN_NAME AS Name, IS_NULLABLE AS NotNullDB, DATA_TYPE AS Type, CHARACTER_MAXIMUM_LENGTH AS StringLength, NUMERIC_PRECISION AS Length, NUMERIC_SCALE AS PrecisionDB, EXTRA AS IdentityDB, COLUMN_COMMENT AS Comment
                 //  FROM INFORMATION_SCHEMA.Columns 
-                //  WHERE TABLE_NAME='{tableInfo.Table}' ;");
+                //  WHERE TABLE_NAME='{tableInfo.Name}' ;");
                 //throw new NotImplementedException(); todo 以后考虑实现
                 return;
             }
 
             var properties = tableType.GetProperties();
-            var sql = new StringBuilder($"CREATE TABLE {tableInfo.DB}.{tableInfo.Table} (");
+            var sql = new StringBuilder($"CREATE TABLE {tableInfo.DB}.{tableInfo.Name} (");
             foreach (var item in properties)
             {
                 var fieldInfo = GetFieldInfo(item);
@@ -88,8 +88,8 @@ namespace ORM
             var tableInfo = GetTableInfo();
             if (tableInfo.DBType == DBTypeEnum.MySQL)
             {
-                var tableName = Query<string>($"SELECT table_name FROM information_schema.TABLES WHERE table_name ='{tableInfo.Table}';");
-                return tableName.FirstOrDefault() == tableInfo.Table;
+                var tableName = Query<string>($"SELECT table_name FROM information_schema.TABLES WHERE table_name ='{tableInfo.Name}';");
+                return tableName.FirstOrDefault() == tableInfo.Name;
             }
             else
             {
