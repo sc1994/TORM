@@ -156,8 +156,6 @@ namespace ORM.Realizes
                         {
                             _params.Add(param, x.Value);
                         }
-
-
                     }
 
                     var ex = x.Prior.ToExplain();

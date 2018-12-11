@@ -16,7 +16,17 @@ namespace ORM.Realizes
             var sql = new StringBuilder($"{GetSelect()}\r\nFROM {GetTableName()}{GetWhere()} LIMIT 1;");
             var table = ChenkT();
             var f = ChenkT<TForeign>();
-            //table.GetProperties().Where(x=>x.Name == )
+            foreach (var item in table.GetProperties())
+            {
+                var foreign = item.GetCustomAttributes(typeof(ForeignAttribute), true).FirstOrDefault();
+                if (foreign != null)
+                {
+                    if(foreign is ForeignAttribute fValue)
+                    {
+                        
+                    }
+                }
+            }
             sql.AppendLine($"");
             throw new System.NotImplementedException();
         }

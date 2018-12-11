@@ -237,6 +237,18 @@ namespace ORM.Realizes
         /// <summary>
         /// SELECT
         /// </summary>
+        /// <param name="exp"></param>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        public IQuerySelect<T> Select(Expression<Func<T, object>> exp, string alias)
+        {
+            _selectAlias.Add((exp, alias));
+            return this;
+        }
+
+        /// <summary>
+        /// SELECT
+        /// </summary>
         /// <param name="exps"></param>
         /// <returns></returns>
         public IQuerySelect<T> Select(params (Expression<Func<T, object>> exp, string alias)[] exps)

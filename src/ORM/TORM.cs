@@ -232,10 +232,10 @@ namespace ORM
 
     public partial class TORM
     {
-        public static void Multiple<T>()
-        {
-            throw new System.NotImplementedException();
-        }
+        //public static void Multiple<T>()
+        //{
+        //    throw new System.NotImplementedException();
+        //}
     }
 
     /// <summary>

@@ -274,7 +274,7 @@ namespace ORM.Realizes
 
             if (t == DBTypeEnum.MySQL)
             {
-                return $"{select}{{0}}\r\nLIMIT {(index - 1) * size + 1}, {index * size};";
+                return $"{select}{{0}}\r\nLIMIT {(index - 1) * size + 1}, {size};";
             }
             else
             {

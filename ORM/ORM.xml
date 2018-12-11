@@ -75,11 +75,12 @@
             指定外键
             </summary>
         </member>
-        <member name="M:ORM.ForeignAttribute.#ctor(System.String)">
+        <member name="M:ORM.ForeignAttribute.#ctor(System.Type,System.String)">
             <summary>
             指定外键
             </summary>
-            <param name="foreign"></param>
+            <param name="table">指定表</param>
+            <param name="foreign">指定外键</param>
         </member>
         <member name="T:ORM.JoinEnum">
             <summary>
@@ -459,6 +460,14 @@
             <param name="exps"></param>
             <returns></returns>
         </member>
+        <member name="M:ORM.Interface.IQuerySelect`1.Select(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            SELECT
+            </summary>
+            <param name="exp"></param>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
         <member name="M:ORM.Interface.IQuerySelect`1.Select(System.ValueTuple{System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String}[])">
             <summary>
             SELECT
@@ -744,6 +753,14 @@
             SELECT
             </summary>
             <param name="exps"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.Realize`1.Select(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String)">
+            <summary>
+            SELECT
+            </summary>
+            <param name="exp"></param>
+            <param name="alias"></param>
             <returns></returns>
         </member>
         <member name="M:ORM.Realizes.Realize`1.Select(System.ValueTuple{System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.String}[])">

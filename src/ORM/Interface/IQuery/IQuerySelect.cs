@@ -19,6 +19,14 @@ namespace ORM.Interface
         /// <summary>
         /// SELECT
         /// </summary>
+        /// <param name="exp"></param>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        IQuerySelect<T> Select(Expression<Func<T, object>> exp, string alias);
+
+        /// <summary>
+        /// SELECT
+        /// </summary>
         /// <param name="exps"></param>
         /// <returns></returns>
         IQuerySelect<T> Select(params (Expression<Func<T, object>> exp, string alias)[] exps);
