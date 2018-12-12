@@ -251,12 +251,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Interface.IQuery.IMultiple`1.First``2(System.Int64,System.Int64)">
-            <summary>
-            查询一条
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:ORM.Interface.IQuery.IQueryHaving`3">
             <summary>
             HAVING
@@ -622,6 +616,243 @@
             <param name="def"></param>
             <returns></returns>
         </member>
+        <member name="T:ORM.Realizes.RealizeCommon`1">
+            <summary>
+            基础信息
+            </summary>
+            <summary>
+            基础信息
+            </summary>
+            <summary>
+            sql 执行
+            </summary>
+            <typeparam name="T"></typeparam>
+            <summary>
+            时间节点
+            </summary>
+            <summary>
+            to sql
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._join">
+            <summary>
+            存放 join 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._selects">
+            <summary>
+            存放 select 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._selectAlias">
+            <summary>
+            存放 有别名的 select 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._orders">
+            <summary>
+            存放 order 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._groups">
+            <summary>
+            存放 group 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._where">
+            <summary>
+            存放 where 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._having">
+            <summary>
+            存放 having 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._set">
+            <summary>
+            存放 set 表达式
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._params">
+            <summary>
+            存放参数
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._t">
+            <summary>
+            获取 T 属性，避免每次都计算
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1.useTables">
+            <summary>
+            已经用到的表（为了筛选当前 join 的那个表）
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1.allTables">
+            <summary>
+            全部的表
+            </summary>
+        </member>
+        <member name="F:ORM.Realizes.RealizeCommon`1._sqlDic">
+            <summary>
+            sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
+            </summary>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT">
+            <summary>
+            验证T且返回类型
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT``1">
+            <summary>
+            验证TOther且返回类型
+            </summary>
+            <typeparam name="TOther"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableName">
+            <summary>
+            取主表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableName(System.Type)">
+            <summary>
+            取指定表名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableInfo">
+            <summary>
+            依据特性获取表信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableInfo(System.Type)">
+            <summary>
+            依据特性获取表信息
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetFieldInfo(System.Reflection.PropertyInfo)">
+            <summary>
+            获取字段属性
+            </summary>
+            <param name="field"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.Execute(System.String,ORM.Transaction,System.Object)">
+            <summary>
+            执行sql，返回受影响行数
+            </summary>
+            <param name="sql"></param>
+            <param name="transaction"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.QueryFirst``1(System.String,System.Object)">
+            <summary>
+            获取单条数据
+            </summary>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.Query``1(System.String,System.Object)">
+            <summary>
+            获取数据集合
+            </summary>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.QueryMultiple``1(System.String,System.Object)">
+            <summary>
+            执行多个
+            </summary>
+            <typeparam name="TForeign"></typeparam>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._starTime">
+            <summary>
+            记录开始时间
+            </summary>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._explainSpan">
+            <summary>
+            解释时长
+            </summary>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._connSpan">
+            <summary>
+            连接时长
+            </summary>
+        </member>
+        <member name="P:ORM.Realizes.RealizeCommon`1._executeSpan">
+            <summary>
+            执行时长
+            </summary>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.LogSql(System.String,System.Object,System.Exception)">
+            <summary>
+            打印 sql 到堆栈
+            </summary>
+            <param name="sql"></param>
+            <param name="param"></param>
+            <param name="ex"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ToSelect(System.Linq.Expressions.Expression,System.String,System.Text.StringBuilder)">
+            <summary>
+            转到 select
+            </summary>
+            <param name="item"></param>
+            <param name="alias"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetWhere">
+            <summary>
+            获取where sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.ToWhere(System.Collections.Generic.List{System.Linq.Expressions.Expression},System.Text.StringBuilder)">
+            <summary>
+            转到 条件筛选
+            </summary>
+            <param name="exps"></param>
+            <param name="result"></param>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetGroup">
+            <summary>
+            获取 group sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetOrder">
+            <summary>
+            获取 order sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetHaving">
+            <summary>
+            获取 having sql 代码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetSliceSql(ORM.SqlTypeEnum,System.Func{System.Text.StringBuilder})">
+            <summary>
+            将sql分块，前后加上字典，以优化性能。
+            </summary>
+            <param name="type"></param>
+            <param name="func"></param>
+            <returns></returns>
+        </member>
         <member name="T:ORM.Realizes.BaseRealize`3">
             <summary>
             多表实现基类
@@ -920,203 +1151,6 @@
             <typeparam name="TJoin11"></typeparam>
             <typeparam name="TJoin12"></typeparam>
         </member>
-        <member name="T:ORM.Realizes.RealizeCommon`1">
-            <summary>
-            一些解析的通用方法
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._join">
-            <summary>
-            存放 join 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._selects">
-            <summary>
-            存放 select 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._selectAlias">
-            <summary>
-            存放 有别名的 select 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._orders">
-            <summary>
-            存放 order 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._groups">
-            <summary>
-            存放 group 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._where">
-            <summary>
-            存放 where 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._having">
-            <summary>
-            存放 having 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._set">
-            <summary>
-            存放 set 表达式
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._params">
-            <summary>
-            存放参数
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._t">
-            <summary>
-            获取 T 属性，避免每次都计算
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1.useTables">
-            <summary>
-            已经用到的表（为了筛选当前 join 的那个表）
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1.allTables">
-            <summary>
-            全部的表
-            </summary>
-        </member>
-        <member name="F:ORM.Realizes.RealizeCommon`1._sqlDic">
-            <summary>
-            sql（为了防止多次调用同一个方法而多次解析，将sql存放在这边）
-            </summary>
-        </member>
-        <member name="P:ORM.Realizes.RealizeCommon`1._starTime">
-            <summary>
-            记录开始时间
-            </summary>
-        </member>
-        <member name="P:ORM.Realizes.RealizeCommon`1._explainSpan">
-            <summary>
-            解释时长
-            </summary>
-        </member>
-        <member name="P:ORM.Realizes.RealizeCommon`1._connSpan">
-            <summary>
-            连接时长
-            </summary>
-        </member>
-        <member name="P:ORM.Realizes.RealizeCommon`1._executeSpan">
-            <summary>
-            执行时长
-            </summary>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.ToSelect(System.Linq.Expressions.Expression,System.String,System.Text.StringBuilder)">
-            <summary>
-            转到 select
-            </summary>
-            <param name="item"></param>
-            <param name="alias"></param>
-            <param name="result"></param>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetWhere">
-            <summary>
-            获取where sql 代码
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.ToWhere(System.Collections.Generic.List{System.Linq.Expressions.Expression},System.Text.StringBuilder)">
-            <summary>
-            转到 条件筛选
-            </summary>
-            <param name="exps"></param>
-            <param name="result"></param>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetSliceSql(ORM.SqlTypeEnum,System.Func{System.Text.StringBuilder})">
-            <summary>
-            将sql分块，前后加上字典，以优化性能。
-            </summary>
-            <param name="type"></param>
-            <param name="func"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableName">
-            <summary>
-            取主表
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableName(System.Type)">
-            <summary>
-            取指定表名
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableInfo">
-            <summary>
-            依据特性获取表信息
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetTableInfo(System.Type)">
-            <summary>
-            依据特性获取表信息
-            </summary>
-            <param name="table"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.GetFieldInfo(System.Reflection.PropertyInfo)">
-            <summary>
-            获取字段属性
-            </summary>
-            <param name="field"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.Execute(System.String,ORM.Transaction,System.Object)">
-            <summary>
-            执行sql，返回受影响行数
-            </summary>
-            <param name="sql"></param>
-            <param name="transaction"></param>
-            <param name="param"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.QueryFirst``1(System.String,System.Object)">
-            <summary>
-            获取单条数据
-            </summary>
-            <param name="sql"></param>
-            <param name="param"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.Query``1(System.String,System.Object)">
-            <summary>
-            获取数据集合
-            </summary>
-            <param name="sql"></param>
-            <param name="param"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.LogSql(System.String,System.Object,System.Exception)">
-            <summary>
-            打印 sql 到堆栈
-            </summary>
-            <param name="sql"></param>
-            <param name="param"></param>
-            <param name="ex"></param>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT">
-            <summary>
-            验证T且返回类型
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeCommon`1.ChenkT``1">
-            <summary>
-            验证TOther且返回类型
-            </summary>
-            <typeparam name="TOther"></typeparam>
-            <returns></returns>
-        </member>
         <member name="T:ORM.Realizes.RealizeDelete`1">
             <summary>
             实现 DELETE 操作
@@ -1202,6 +1236,14 @@
             多查询
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.Realizes.RealizeMultiple`1.First``1(System.Int64)">
+            <summary>
+            一对多
+            </summary>
+            <typeparam name="TForeign"></typeparam>
+            <param name="limit"></param>
+            <returns></returns>
         </member>
         <member name="M:ORM.Realizes.RealizeMultiple`1.GetSelect">
             <summary>
@@ -1318,18 +1360,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.GetGroup">
-            <summary>
-            获取 group sql 代码
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.GetOrder">
-            <summary>
-            获取 order sql 代码
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:ORM.Realizes.RealizeQuery`1.ToPage(System.Int64,System.Int64)">
             <summary>
             转成分页的
@@ -1355,12 +1385,6 @@
             转成top的
             </summary>
             <param name="limit"></param>
-        </member>
-        <member name="M:ORM.Realizes.RealizeQuery`1.GetHaving">
-            <summary>
-            获取 having sql 代码
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:ORM.Realizes.RealizeUpdate`1">
             <summary>
@@ -1867,6 +1891,12 @@
             <typeparam name="TJoin11"></typeparam>
             <typeparam name="TJoin12"></typeparam>
             <returns></returns>
+        </member>
+        <member name="M:ORM.TORM.Multiple``1">
+            <summary>
+            查询关联数据
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:ORM.TORM.Update``1">
             <summary>

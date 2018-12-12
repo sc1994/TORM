@@ -1,4 +1,5 @@
 ﻿using ORM.Interface.IQuery;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,9 +18,10 @@ namespace ORM.Realizes
         /// <typeparam name="TForeign"></typeparam>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public (T main, IEnumerable<TForeign> foreign) First<TForeign>(long limit)
+        public (T main, IEnumerable<TForeign> foreign) First<TForeign>(long limit = 0)
         {
-            var sql = new StringBuilder($"{GetSelect()}\r\nFROM {GetTableName()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()} LIMIT 1;");
+            _starTime = DateTime.Now;
+            var sql = new StringBuilder($"{GetSelect()}\r\nFROM {GetTableName()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}\r\nLIMIT 1;");
             var table = ChenkT();
             var f = ChenkT<TForeign>();
             foreach (var item in table.GetProperties())
@@ -28,23 +30,16 @@ namespace ORM.Realizes
                 if (foreign != null && foreign is ForeignAttribute fValue && fValue.Table.Name == f.Name)
                 {
                     var fTable = GetTableInfo(f);
-                    sql.AppendLine($"SELECT * FROM {fTable.Name} WHERE {fValue.Foreign} = @Key;");
+                    sql.Append($"\r\n\r\nSELECT\r\n  * \r\nFROM {fTable.Name} \r\nWHERE\r\n  {fValue.Foreign} = @ForeignKey");
+                    if (limit > 0)
+                    {
+                        sql.Append($"\r\nLIMIT {limit}");
+                    }
+                    sql.Append(";");
                 }
             }
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// 一对多
-        /// </summary>
-        /// <typeparam name="TForeign1"></typeparam>
-        /// <typeparam name="TForeign2"></typeparam>
-        /// <param name="limit1"></param>
-        /// <param name="limit2"></param>
-        /// <returns></returns>
-        public (T main, IEnumerable<TForeign1> foreign1, IEnumerable<TForeign2> foreign2) First<TForeign1, TForeign2>(long limit1, long limit2)
-        {
-            throw new System.NotImplementedException();
+            var read = QueryMultiple<TForeign>(sql.ToString());
+            return (read.Item1, read.Item2);
         }
 
         /// <summary>
@@ -63,7 +58,7 @@ namespace ORM.Realizes
                     result.SafeRemove(result.Length - 1, 1);
                     var table = GetTableInfo();
                     var key = table.Key ?? table.Identity;
-                    result.Append($"\r\n  {table.Name}.{key.Name} INTO @Key");
+                    result.Append($"\r\n  {table.Name}.{key.Name} INTO @ForeignKey");
                 }
                 else
                 {

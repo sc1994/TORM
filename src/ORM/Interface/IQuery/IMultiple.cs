@@ -12,11 +12,5 @@ namespace ORM.Interface.IQuery
         /// </summary>
         /// <returns></returns>
         (T main, IEnumerable<TForeign> foreign) First<TForeign>(long limit);
-
-        /// <summary>
-        /// 查询一条
-        /// </summary>
-        /// <returns></returns>
-        (T main, IEnumerable<TForeign1> foreign1, IEnumerable<TForeign2> foreign2) First<TForeign1, TForeign2>(long limit1, long limit2);
     }
 }

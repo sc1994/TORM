@@ -71,9 +71,8 @@ namespace UnitTest
         public long Id { get; set; }
         public string Name { get; set; }
         [Foreign(typeof(Town), "CityId")]
-        public List<Town> Towns { get; set; }
+        public List<Town> Towns { get; set; } = new List<Town>();
         public long ProvinceId { get; set; }
-
     }
 
     [Table("Test", DBTypeEnum.MySQL)]

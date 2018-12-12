@@ -120,5 +120,38 @@ namespace ORM.Realizes
                 LogSql(sql, thatParam);
             }
         }
+
+        /// <summary>
+        /// 执行多个
+        /// </summary>
+        /// <typeparam name="TForeign"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        protected (T, IEnumerable<TForeign>) QueryMultiple<TForeign>(string sql, object param = null)
+        {
+            _explainSpan = DateTime.Now - _starTime;
+            _starTime = DateTime.Now;
+            var thatParam = param ?? _params;
+            try
+            {
+                using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
+                {
+                    _connSpan = DateTime.Now - _starTime;
+                    _starTime = DateTime.Now;
+                    var read = connection.QueryMultiple(sql, thatParam);
+                    return (read.ReadSingle<T>(), read.Read<TForeign>());
+                }
+            }
+            catch (Exception ex)
+            {
+                LogSql(sql, thatParam, ex);
+                throw;
+            }
+            finally
+            {
+                LogSql(sql, thatParam);
+            }
+        }
     }
 }
