@@ -232,10 +232,14 @@ namespace ORM
 
     public partial class TORM
     {
-        //public static void Multiple<T>()
-        //{
-        //    throw new System.NotImplementedException();
-        //}
+        /// <summary>
+        /// 查询关联数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static RealizeMultiple<T> Multiple<T>()
+        {
+            return new RealizeMultiple<T>();
+        }
     }
 
     /// <summary>

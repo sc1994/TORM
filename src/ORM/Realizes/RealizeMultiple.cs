@@ -11,26 +11,37 @@ namespace ORM.Realizes
     /// <typeparam name="T"></typeparam>
     public class RealizeMultiple<T> : RealizeCommon<T>, IMultiple<T>
     {
+        /// <summary>
+        /// 一对多
+        /// </summary>
+        /// <typeparam name="TForeign"></typeparam>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         public (T main, IEnumerable<TForeign> foreign) First<TForeign>(long limit)
         {
-            var sql = new StringBuilder($"{GetSelect()}\r\nFROM {GetTableName()}{GetWhere()} LIMIT 1;");
+            var sql = new StringBuilder($"{GetSelect()}\r\nFROM {GetTableName()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()} LIMIT 1;");
             var table = ChenkT();
             var f = ChenkT<TForeign>();
             foreach (var item in table.GetProperties())
             {
                 var foreign = item.GetCustomAttributes(typeof(ForeignAttribute), true).FirstOrDefault();
-                if (foreign != null)
+                if (foreign != null && foreign is ForeignAttribute fValue && fValue.Table.Name == f.Name)
                 {
-                    if(foreign is ForeignAttribute fValue)
-                    {
-                        
-                    }
+                    var fTable = GetTableInfo(f);
+                    sql.AppendLine($"SELECT * FROM {fTable.Name} WHERE {fValue.Foreign} = @Key;");
                 }
             }
-            sql.AppendLine($"");
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// 一对多
+        /// </summary>
+        /// <typeparam name="TForeign1"></typeparam>
+        /// <typeparam name="TForeign2"></typeparam>
+        /// <param name="limit1"></param>
+        /// <param name="limit2"></param>
+        /// <returns></returns>
         public (T main, IEnumerable<TForeign1> foreign1, IEnumerable<TForeign2> foreign2) First<TForeign1, TForeign2>(long limit1, long limit2)
         {
             throw new System.NotImplementedException();

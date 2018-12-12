@@ -195,60 +195,6 @@ namespace ORM.Realizes
         }
 
         /// <summary>
-        /// 获取 group sql 代码
-        /// </summary>
-        /// <returns></returns>
-        private StringBuilder GetGroup()
-        {
-            return GetSliceSql(SqlTypeEnum.Group, () =>
-            {
-                var result = new StringBuilder();
-                _groups.ForEach(item =>
-                {
-                    var c = new ContentEasy();
-                    ExplainTool.Explain(item, c);
-                    c.Rinse();
-                    foreach (var info in c.Info)
-                    {
-                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field},");
-                    }
-                });
-                if (result.Length > 0)
-                {
-                    result.Insert(0, "\r\nGROUP BY");
-                }
-                return result.SafeRemove(result.Length - 1, 1);
-            });
-        }
-
-        /// <summary>
-        /// 获取 order sql 代码
-        /// </summary>
-        /// <returns></returns>
-        private StringBuilder GetOrder()
-        {
-            return GetSliceSql(SqlTypeEnum.Order, () =>
-            {
-                var result = new StringBuilder();
-                _orders.ForEach(item =>
-                {
-                    var c = new ContentEasy();
-                    ExplainTool.Explain(item.Item1, c);
-                    c.Rinse();
-                    foreach (var info in c.Info)
-                    {
-                        result.Append($"\r\n  {GetTableName(info.Table)}.{info.Field} {item.Item2.ToExplain()},");
-                    }
-                });
-                if (result.Length > 0)
-                {
-                    result.Insert(0, "\r\nORDER BY");
-                }
-                return result.SafeRemove(result.Length - 1, 1);
-            });
-        }
-
-        /// <summary>
         /// 转成分页的
         /// </summary>
         /// <param name="index"></param>
@@ -365,23 +311,6 @@ namespace ORM.Realizes
             }
 
             return $"{s.Replace("SELECT", $"SELECT TOP ({limit})")} {{0}};";
-        }
-
-        /// <summary>
-        /// 获取 having sql 代码
-        /// </summary>
-        /// <returns></returns>
-        private StringBuilder GetHaving()
-        {
-            return GetSliceSql(SqlTypeEnum.Having,
-            () =>
-            {
-                var result = new StringBuilder("\r\nHAVING 1=1");
-                ToWhere(_having, result);
-                if (result.ToString() == "\r\nHAVING 1=1")
-                    result.Clear();
-                return result;
-            });
         }
     }
 }
