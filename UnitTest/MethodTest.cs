@@ -12,9 +12,9 @@ namespace UnitTest
         public void JoinAndTest()
         {
             var result1 = TORM.Query<Rules, Schedules>()
-                              .Select(((r, s) => r.Id, "r_id"), ((r, s) => s.Id, "s_id"))
+                              .Select(((r, s) => r.Id, "RId"), ((r, s) => s.Id, "SId"))
                               .JoinL((r, s) => r.ScheduleId == s.Id && r.Id > 1)
-                              .Find<view>();
+                              .Find<View>();
             Debug.Assert(result1.Any());
         }
 

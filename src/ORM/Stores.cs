@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace ORM
 {
-
     /// <summary>
     /// 存储实例运行中不会变化的值
     /// </summary>

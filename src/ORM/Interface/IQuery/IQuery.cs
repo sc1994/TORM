@@ -6,7 +6,7 @@ namespace ORM.Interface
     /// 定义Query
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IQuery<T>
+    public partial interface IQuery<T>
     {
         /// <summary>
         /// 是否存在

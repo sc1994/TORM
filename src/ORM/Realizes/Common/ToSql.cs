@@ -42,7 +42,7 @@ namespace ORM.Realizes
         {
             return GetSliceSql(SqlTypeEnum.Where, () =>
             {
-                var result = new StringBuilder("\r\nWHERE 1=1");
+                var result = new StringBuilder("\r\nWHERE\r\n  1=1");
                 ToWhere(_where, result);
                 return result;
             });
@@ -189,6 +189,24 @@ namespace ORM.Realizes
         }
 
         /// <summary>
+        /// 获取 select *
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        protected StringBuilder GetAllSelect(Type type)
+        {
+            var table = GetTableInfo(type);
+            var properties = type.GetProperties();
+            var result = new StringBuilder();
+            foreach (var item in properties)
+            {
+                var field = GetFieldInfo(item);
+                result.Append($"  {table.Name}.{field.Name},");
+            }
+            return result.SafeRemove(0, 1);
+        }
+
+        /// <summary>
         /// 将sql分块，前后加上字典，以优化性能。
         /// </summary>
         /// <param name="type"></param>
@@ -207,5 +225,7 @@ namespace ORM.Realizes
             _sqlDic.Add(type, result);
             return result;
         }
+
+
     }
 }

@@ -240,37 +240,20 @@
             <param name="transaction"></param>
             <returns></returns>
         </member>
-        <member name="T:ORM.Interface.IQuery.IMultiple`1">
+        <member name="T:ORM.Interface.IQuery`1">
             <summary>
             todo 支持外键查询，当多表之间存在一对多，一对一，多对一关系时。主动查询数据
             </summary>
-        </member>
-        <member name="M:ORM.Interface.IQuery.IMultiple`1.First``1(System.Int64)">
-            <summary>
-            查询一条
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:ORM.Interface.IQuery.IQueryHaving`3">
-            <summary>
-            HAVING
-            </summary>
-            <typeparam name="T"></typeparam>
-            <typeparam name="TFunc"></typeparam>
-            <typeparam name="TFuncBool"></typeparam>
-        </member>
-        <member name="M:ORM.Interface.IQuery.IQueryHaving`3.Having(System.Linq.Expressions.Expression{`2}[])">
-            <summary>
-            HAVING
-            </summary>
-            <param name="exps"></param>
-            <returns></returns>
-        </member>
-        <member name="T:ORM.Interface.IQuery`1">
             <summary>
             定义Query
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:ORM.Interface.IQuery`1.Foreign``1(System.Int64)">
+            <summary>
+            外键
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:ORM.Interface.IQuery`1.Exist">
             <summary>
@@ -380,6 +363,21 @@
         <member name="M:ORM.Interface.IQueryGroup`3.Group(System.Linq.Expressions.Expression{`1}[])">
             <summary>
             GROUP BY
+            </summary>
+            <param name="exps"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ORM.Interface.IQuery.IQueryHaving`3">
+            <summary>
+            HAVING
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TFunc"></typeparam>
+            <typeparam name="TFuncBool"></typeparam>
+        </member>
+        <member name="M:ORM.Interface.IQuery.IQueryHaving`3.Having(System.Linq.Expressions.Expression{`2}[])">
+            <summary>
+            HAVING
             </summary>
             <param name="exps"></param>
             <returns></returns>
@@ -845,6 +843,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:ORM.Realizes.RealizeCommon`1.GetAllSelect(System.Type)">
+            <summary>
+            获取 select *
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="M:ORM.Realizes.RealizeCommon`1.GetSliceSql(ORM.SqlTypeEnum,System.Func{System.Text.StringBuilder})">
             <summary>
             将sql分块，前后加上字典，以优化性能。
@@ -1231,13 +1236,16 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:ORM.Realizes.RealizeMultiple`1">
+        <member name="T:ORM.Realizes.RealizeQuery`1">
             <summary>
-            多查询
+            多查询 // todo 目前诸多问题不能搞定
             </summary>
             <typeparam name="T"></typeparam>
+            <summary>
+            实现 SELECT
+            </summary>
         </member>
-        <member name="M:ORM.Realizes.RealizeMultiple`1.First``1(System.Int64)">
+        <member name="M:ORM.Realizes.RealizeQuery`1.Foreign``1(System.Int64)">
             <summary>
             一对多
             </summary>
@@ -1245,17 +1253,11 @@
             <param name="limit"></param>
             <returns></returns>
         </member>
-        <member name="M:ORM.Realizes.RealizeMultiple`1.GetSelect">
+        <member name="M:ORM.Realizes.RealizeQuery`1.GetMultipleSelect">
             <summary>
             获取 select sql 代码
             </summary>
             <returns></returns>
-        </member>
-        <member name="T:ORM.Realizes.RealizeQuery`1">
-            <summary>
-            实现 SELECT
-            </summary>
-            <typeparam name="T"></typeparam>
         </member>
         <member name="M:ORM.Realizes.RealizeQuery`1.Exist">
             <summary>
@@ -1891,12 +1893,6 @@
             <typeparam name="TJoin11"></typeparam>
             <typeparam name="TJoin12"></typeparam>
             <returns></returns>
-        </member>
-        <member name="M:ORM.TORM.Multiple``1">
-            <summary>
-            查询关联数据
-            </summary>
-            <typeparam name="T"></typeparam>
         </member>
         <member name="M:ORM.TORM.Update``1">
             <summary>

@@ -91,10 +91,8 @@ namespace ORM
                 var tableName = Query<string>($"SELECT table_name FROM information_schema.TABLES WHERE table_name ='{tableInfo.Name}';");
                 return tableName.FirstOrDefault() == tableInfo.Name;
             }
-            else
-            {
-                throw new NotImplementedException();
-            }
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace ORM
             {
                 case "string":
                     var dLength = DefaultLength(field.Length, 255);
-                    if (dLength > 2048)
+                    if (dLength >= 2048)
                     {
                         return "TEXT";
                     }
@@ -147,12 +145,5 @@ namespace ORM
             }
             return length;
         }
-
-        //private IEnumerable<FieldInfo> DifferentFields(IEnumerable<FieldInfo> that, IEnumerable<FieldByDB> db)
-        //{
-        //    var result = new List<FieldInfo>();
-
-        //    return result;
-        //}
     }
 }

@@ -108,7 +108,7 @@ namespace ORM
     /// 指定外键
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class ForeignAttribute : Attribute
+    internal class ForeignAttribute : Attribute
     {
         internal string Foreign { get; set; }
         internal Type Table { get; set; }

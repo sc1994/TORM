@@ -57,12 +57,18 @@ namespace ORM.Realizes
 
             var info = (TableAttribute)attribute;
             var fields = typeof(T).GetProperties().Select(GetFieldInfo);
+            var conn = Stores.DbConfigDic[info.DB];
+            if (!conn.ToLower().Contains("allow user variables=true;"))
+            {
+                conn += "Allow User Variables=True;"; // 允许 sql 中定义变量
+            }
+
             var r = new TableInfo
             {
                 DB = info.DB,
                 DBType = info.DBType,
                 Name = string.IsNullOrWhiteSpace(info.Table) ? table.Name : info.Table,
-                ConnectionString = Stores.DbConfigDic[info.DB],
+                ConnectionString = conn,
                 Key = fields.FirstOrDefault(x => x.Key),
                 Identity = fields.FirstOrDefault(x => x.Identity)
             };

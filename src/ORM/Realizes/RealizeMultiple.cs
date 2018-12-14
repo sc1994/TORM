@@ -1,5 +1,4 @@
-﻿using ORM.Interface.IQuery;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +6,10 @@ using System.Text;
 namespace ORM.Realizes
 {
     /// <summary>
-    /// 多查询
+    /// 多查询 // todo 目前诸多问题不能搞定
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RealizeMultiple<T> : RealizeCommon<T>, IMultiple<T>
+    public partial class RealizeQuery<T>
     {
         /// <summary>
         /// 一对多
@@ -18,10 +17,10 @@ namespace ORM.Realizes
         /// <typeparam name="TForeign"></typeparam>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public (T main, IEnumerable<TForeign> foreign) First<TForeign>(long limit = 0)
+        public (T main, IEnumerable<TForeign> foreign) Foreign<TForeign>(long limit = 0)
         {
             _starTime = DateTime.Now;
-            var sql = new StringBuilder($"{GetSelect()}\r\nFROM {GetTableName()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}\r\nLIMIT 1;");
+            var sql = new StringBuilder($"SET @ForeignKey := 0;\r\n{GetMultipleSelect()}\r\nFROM {GetTableName()}{GetWhere()}{GetGroup()}{GetHaving()}{GetOrder()}\r\nLIMIT 1;");
             var table = ChenkT();
             var f = ChenkT<TForeign>();
             foreach (var item in table.GetProperties())
@@ -30,7 +29,7 @@ namespace ORM.Realizes
                 if (foreign != null && foreign is ForeignAttribute fValue && fValue.Table.Name == f.Name)
                 {
                     var fTable = GetTableInfo(f);
-                    sql.Append($"\r\n\r\nSELECT\r\n  * \r\nFROM {fTable.Name} \r\nWHERE\r\n  {fValue.Foreign} = @ForeignKey");
+                    sql.Append($"\r\n\r\nSELECT\r\n  *\r\nFROM {fTable.Name} \r\nWHERE\r\n  {fValue.Foreign} = @ForeignKey");
                     if (limit > 0)
                     {
                         sql.Append($"\r\nLIMIT {limit}");
@@ -46,7 +45,7 @@ namespace ORM.Realizes
         /// 获取 select sql 代码
         /// </summary>
         /// <returns></returns>
-        private StringBuilder GetSelect()
+        private StringBuilder GetMultipleSelect()
         {
             return GetSliceSql(SqlTypeEnum.Select, () =>
             {
@@ -58,11 +57,11 @@ namespace ORM.Realizes
                     result.SafeRemove(result.Length - 1, 1);
                     var table = GetTableInfo();
                     var key = table.Key ?? table.Identity;
-                    result.Append($"\r\n  {table.Name}.{key.Name} INTO @ForeignKey");
+                    result.Append($",\r\n  @ForeignKey := {table.Name}.{key.Name} AS _");
                 }
                 else
                 {
-                    result.Append("\r\n  *");
+                    result.Append(GetAllSelect(_t));
                 }
                 return result;
             });

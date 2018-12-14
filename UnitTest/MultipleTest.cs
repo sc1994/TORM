@@ -8,11 +8,13 @@ namespace UnitTest
     [TestClass]
     public class MultipleTest : BaseTest
     {
-        [TestMethod]
-        public void Test()
-        {
-            var result = TORM.Multiple<City>().First<Town>();
-            Debug.Assert(result.foreign.Any());
-        }
+        //[TestMethod]
+        //public void Test()
+        //{
+        //    var result = TORM.Query<City>()
+        //                     .Select(x => x.Name)
+        //                     .Foreign<Town>();
+        //    Debug.Assert(result.foreign.Any());
+        //}
     }
 }

@@ -11,8 +11,7 @@ namespace ORM.Realizes
     /// <summary>
     /// 实现 SELECT
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class RealizeQuery<T> : RealizeCommon<T>, IQuery<T>
+    public partial class RealizeQuery<T> : RealizeCommon<T>, IQuery<T>
     {
         /// <summary>
         /// 是否存在数据

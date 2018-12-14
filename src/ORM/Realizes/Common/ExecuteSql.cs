@@ -25,6 +25,7 @@ namespace ORM.Realizes
             _starTime = DateTime.Now;
             // 决定是使用默认参数还是传入参数
             var thatParam = param ?? _params;
+            var isError = false;
             try
             {
                 // 事务操作
@@ -50,12 +51,13 @@ namespace ORM.Realizes
             }
             catch (Exception ex)
             {
-                LogSql(sql, _params, ex);
+                LogSql(sql, thatParam, ex);
+                isError = true;
                 throw;
             }
             finally
             {
-                LogSql(sql, _params);
+                if (!isError) LogSql(sql, thatParam);
             }
         }
 
@@ -70,6 +72,7 @@ namespace ORM.Realizes
             _explainSpan = DateTime.Now - _starTime;
             _starTime = DateTime.Now;
             var thatParam = param ?? _params;
+            var isError = false;
             try
             {
                 using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
@@ -82,11 +85,12 @@ namespace ORM.Realizes
             catch (Exception ex)
             {
                 LogSql(sql, thatParam, ex);
+                isError = true;
                 throw;
             }
             finally
             {
-                LogSql(sql, thatParam);
+                if (!isError) LogSql(sql, thatParam);
             }
         }
 
@@ -101,6 +105,7 @@ namespace ORM.Realizes
             _explainSpan = DateTime.Now - _starTime;
             _starTime = DateTime.Now;
             var thatParam = param ?? _params;
+            var isError = false;
             try
             {
                 using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
@@ -113,11 +118,12 @@ namespace ORM.Realizes
             catch (Exception ex)
             {
                 LogSql(sql, thatParam, ex);
+                isError = true;
                 throw;
             }
             finally
             {
-                LogSql(sql, thatParam);
+                if (!isError) LogSql(sql, thatParam);
             }
         }
 
@@ -128,11 +134,12 @@ namespace ORM.Realizes
         /// <param name="sql"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        protected (T, IEnumerable<TForeign>) QueryMultiple<TForeign>(string sql, object param = null)
+        protected (T main, IEnumerable<TForeign> foreign) QueryMultiple<TForeign>(string sql, object param = null)
         {
             _explainSpan = DateTime.Now - _starTime;
             _starTime = DateTime.Now;
             var thatParam = param ?? _params;
+            var isError = false;
             try
             {
                 using (var connection = new MySqlConnection(GetTableInfo().ConnectionString))
@@ -140,17 +147,20 @@ namespace ORM.Realizes
                     _connSpan = DateTime.Now - _starTime;
                     _starTime = DateTime.Now;
                     var read = connection.QueryMultiple(sql, thatParam);
-                    return (read.ReadSingle<T>(), read.Read<TForeign>());
+                    var a = read.Read();
+                    var b = read.Read(); // todo 暂时不能实现 搞不定
+                    return (default(T), new List<TForeign>());
                 }
             }
             catch (Exception ex)
             {
                 LogSql(sql, thatParam, ex);
+                isError = true;
                 throw;
             }
             finally
             {
-                LogSql(sql, thatParam);
+                if (!isError) LogSql(sql, thatParam);
             }
         }
     }

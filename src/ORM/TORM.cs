@@ -230,18 +230,6 @@ namespace ORM
         #endregion
     }
 
-    public partial class TORM
-    {
-        /// <summary>
-        /// 查询关联数据
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public static RealizeMultiple<T> Multiple<T>()
-        {
-            return new RealizeMultiple<T>();
-        }
-    }
-
     /// <summary>
     /// update 相关
     /// </summary>

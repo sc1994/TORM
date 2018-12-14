@@ -16,6 +16,9 @@ namespace UnitTest
                              var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
                              options.RedisLog = redis; // 使用redis推送sql记录
 
+                             redis.ErrorMessage += Redis_ErrorMessage;
+                             redis.ConnectionFailed += Redis_ConnectionFailed;
+
                              // 配置数据库连接
                              options.DbConfig.Add("Test", "server=118.24.27.231;database=Test;uid=root;pwd=sun940622;");
                              options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
@@ -26,6 +29,16 @@ namespace UnitTest
             //TORM.AutoTable<Province>();
             //TORM.AutoTable<City>();
             //TORM.AutoTable<Town>();
+        }
+
+        private void Redis_ConnectionFailed(object sender, ConnectionFailedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Redis_ErrorMessage(object sender, RedisErrorEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -60,23 +73,19 @@ namespace UnitTest
         [Key, Identity, Field(Comment: "省份主键")]
         public long Id { get; set; }
         public string Name { get; set; }
-        [Foreign(typeof(City), "ProvinceId")]
-        public List<City> Citys { get; set; }
     }
 
     [Table("Test", DBTypeEnum.MySQL)]
-    class City
+    public class City
     {
         [Key, Identity]
         public long Id { get; set; }
         public string Name { get; set; }
-        [Foreign(typeof(Town), "CityId")]
-        public List<Town> Towns { get; set; } = new List<Town>();
         public long ProvinceId { get; set; }
     }
 
     [Table("Test", DBTypeEnum.MySQL)]
-    class Town
+    public class Town
     {
         [Key, Identity]
         public long Id { get; set; }
@@ -84,9 +93,9 @@ namespace UnitTest
         public long CityId { get; set; }
     }
 
-    public class view
+    public class View
     {
-        public long r_id { get; set; }
-        public long s_id { get; set; }
+        public long RId { get; set; }
+        public long SId { get; set; }
     }
 }
