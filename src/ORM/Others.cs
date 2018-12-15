@@ -40,10 +40,10 @@ namespace ORM
                     continue; // 屏蔽掉设置了外键的字段 todo 考虑设置主外键
                 if (fieldInfo.Key)
                 {
-                    sql.Append($"\r\n  PRIMARY KEY ({fieldInfo.Name}),");
+                    sql.Append($"\r\n  PRIMARY KEY (`{fieldInfo.Name}`),");
                 }
 
-                sql.Append($"\r\n  {fieldInfo.Name} {SwithDataType(fieldInfo)}");
+                sql.Append($"\r\n  `{fieldInfo.Name}` {SwithDataType(fieldInfo)}");
                 if (fieldInfo.NotNull)
                 {
                     sql.Append(" NOT NULL");
