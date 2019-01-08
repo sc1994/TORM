@@ -1,9 +1,9 @@
-﻿using Dapper;
-using MySql.Data.MySqlClient;
+﻿using Newtonsoft.Json;
 using ORM;
 using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Demo
 {
@@ -11,38 +11,28 @@ namespace Demo
     {
         static void Main(string[] args)
         {
+            File.Delete("D:/1.log");
 
-            var sql =
-@"SET @ForeignKey := 0;
-SELECT
-  City.Name,
-  @ForeignKey := City.Id AS _
-FROM City
-WHERE
-  1=1
-LIMIT 1;
+            var a = new[] { 1L, 2L, 3L, 4L }.ToList();
+            var b = 0L;
+            var c = DateTime.Now;
 
-SELECT
-  *
-FROM Town 
-WHERE
-  CityId = @ForeignKey;";
+            var d = new City { };
 
-            var sql1 = @"select * from City;select * from Town;";
-            using (var connection = new MySqlConnection("server=118.24.27.231;database=Test;uid=root;pwd=sun940622;Allow User Variables=True;"))
-            {
+            Expression<Func<City, bool>> exp1 = x => x.Date.AddDays(5) == d.Date.AddDays(3);
 
-                //var read1 = connection.QueryMultiple(sql1);
-                var read = connection.QueryMultiple(sql);
-                var c = read.ReadFirstOrDefault<City>();
-            }
+            var (sql, param) = new Visitor().Translate(exp1);
 
+            Console.WriteLine("WHERE 1 = 1 \r\nAND   " + sql); // .TrimEnd(typeof(City).Name.ToArray())
+            Console.WriteLine("-----------------------------------------------------------");
+            Console.WriteLine(JsonConvert.SerializeObject(param, Formatting.Indented));
 
-            while (true)
-            {
-                Console.WriteLine("keep live");
-                Thread.Sleep(6000);
-            }
+            //while (true)
+            //{
+            //    Console.WriteLine("keep live");
+            //    Thread.Sleep(6000);
+            //}
+            Console.ReadLine();
         }
 
         [Table("Test", DBTypeEnum.MySQL)]
@@ -52,6 +42,7 @@ WHERE
             public long Id { get; set; }
             public string Name { get; set; }
             public long ProvinceId { get; set; }
+            public DateTime Date { get; set; }
         }
 
         [Table("Test", DBTypeEnum.MySQL)]
