@@ -62,7 +62,7 @@ namespace Demo
         };
         private static readonly Dictionary<string, string> _dateMethod = new Dictionary<string, string>
                                                                         {
-                                                                            { "AddDays", "DATE_ADD({0},INTERVAL {1} DAY)" }
+                                                                            { "AddDays", "DATE_ADD({1},INTERVAL {0} DAY)" }
                                                                         };
         /// <summary>
         /// 负责将不同的类型分发到不同的字典中
@@ -134,6 +134,15 @@ namespace Demo
             {
                 that += s;
             }
+
+            for (int i = 1; i <= 10; i++)
+            {
+                if (that.Contains($"{{{i}}}"))
+                {
+                    that = that.Replace($"{{{i}}}", $"{{{i - 1}}}");
+                }
+            }
+
             return that;
         }
     }

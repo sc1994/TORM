@@ -33,6 +33,8 @@ namespace Demo
             //    Thread.Sleep(6000);
             //}
             Console.ReadLine();
+
+            
         }
 
         [Table("Test", DBTypeEnum.MySQL)]

@@ -116,27 +116,8 @@ namespace Demo
                 return node; // todo null的特殊处理
             }
 
-            if (!node.Object.ToString().StartsWith("value("))// 很low的判断
-            {
-                // 对模型字段直接进行方法操作，需将方法转译成t-sql语法
-                if (_typeMethod.TryGetValue(node.Object.Type, out var methods))
-                {
-                    if (methods.TryGetValue(node.Method.Name, out var m))
-                    {
-                        _sql = _sql.Append(m);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException(); // 需要适配
-                    }
-                }
-                else
-                {
-                    throw new NotImplementedException(); // 需要适配
-                }
-            }
-            else if (node.Object.Type.IsArray ||
-                 node.Object.Type.IsGenericType) // array 类型的特殊处理
+            if (node.Object.Type.IsArray ||
+                   node.Object.Type.IsGenericType) // array 类型的特殊处理
             {
                 if (_arrayMethod.TryGetValue(node.Method.Name, out var m))
                 {
@@ -153,8 +134,8 @@ namespace Demo
                     }
                 }
             }
+            Visit(node.Arguments); // 解析方法传入的变量
             Visit(node.Object);
-            //Visit(node.Arguments); // 解析方法传入的变量
             return node;
         }
 
