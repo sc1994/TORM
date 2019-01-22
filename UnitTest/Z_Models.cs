@@ -13,15 +13,15 @@ namespace UnitTest
                          {
                              options.Debug = true; // 调试模式
 
-                             var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=sun940622");
+                             var redis = ConnectionMultiplexer.Connect("118.24.27.231:6379,password=suncheng1994");
                              options.RedisLog = redis; // 使用redis推送sql记录
 
                              redis.ErrorMessage += Redis_ErrorMessage;
                              redis.ConnectionFailed += Redis_ConnectionFailed;
 
                              // 配置数据库连接
-                             options.DbConfig.Add("Test", "server=118.24.27.231;database=Test;uid=root;pwd=sun940622;");
-                             options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
+                             options.DbConfig.Add("Test", "server=118.24.27.231;database=Test;uid=root;pwd=suncheng1994;");
+                             options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=suncheng1994;");
                          });
 
             //TORM.AutoTable<Rules>();

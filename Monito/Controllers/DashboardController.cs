@@ -6,7 +6,7 @@ namespace Monito.Controllers
 {
     public partial class DashboardController : Controller
     {
-        private int _total = 1000;
+        private int _total = 300;
         private readonly string _format = "M-d H:m:s";
         /// <summary>
         /// color

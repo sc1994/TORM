@@ -37,7 +37,7 @@ namespace Monito
             // 配置
             TORM.Options(options =>
                          {
-                             options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=sun940622;");
+                             options.DbConfig.Add("Log", "server=118.24.27.231;database=Log;uid=root;pwd=suncheng1994;");
                          });
 
             TORM.AutoTable<SqlLog>();
